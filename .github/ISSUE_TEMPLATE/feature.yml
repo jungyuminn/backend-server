@@ -3,22 +3,24 @@ description: Request new Feature
 title: '[FEAT]'
 labels: ['feature']
 body:
-- type: textarea
-  id: new-feature
-  attributes:
-  label: 작업 사항
-  description: 추가하려는 기능에 대해 간결하게 설명해주세요.
-  validations:
-  required: true
-- type: textarea
-  id: todo
-  attributes:
-  label: 작업 상세 내용
-  description: 작업사항을 나누어 작성해주세요.
-  value: |
-  - [ ] todo1
-- type: textarea
-  id: etc
-  attributes:
-  label: 기타사항
-  description: 참고할만한 자료(선택) 등을 작성해주세요.
+  - type: textarea
+    id: new-feature
+    attributes:
+      label: 작업 사항
+      description: 추가하려는 기능에 대해 간결하게 설명해주세요.
+    validations:
+      required: true
+
+  - type: textarea
+    id: todo
+    attributes:
+      label: 작업 상세 내용
+      description: 작업사항을 나누어 작성해주세요.
+      value: |
+        - [ ] todo1
+
+  - type: textarea
+    id: etc
+    attributes:
+      label: 기타사항
+      description: 참고할만한 자료(선택) 등을 작성해주세요.
