@@ -1,4 +1,4 @@
-name: 이미지 빌드 & 푸쉬
+name: 이미지 build & push
 on:
   workflow_call:
     inputs:
@@ -26,7 +26,7 @@ on:
 jobs:
   build:
     runs-on: [ubuntu-latest]
-    name: 이미지 빌드
+    name: 이미지 build
 
     permissions:
       id-token: write
