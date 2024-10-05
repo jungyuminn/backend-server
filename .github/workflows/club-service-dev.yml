@@ -42,7 +42,7 @@ jobs:
     if: github.event_name == 'push'
     needs: [prepare-variables]
     name: 이미지 build & push
-    uses: ./.github/workflows/jib-build.yaml
+    uses: .github/workflows/jib-build.yaml
     permissions:
       id-token: write
       contents: read
