@@ -1,4 +1,4 @@
-name: 동아리 service development build & docker hub push
+name: club service development build & docker hub push
 on:
   push:
     branches: ["development"]
