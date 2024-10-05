@@ -1,4 +1,4 @@
-name: 동아리 서비스 development 환경 build & docker hub push
+name: 동아리 서비스 development build & docker hub push
 on:
   push:
     branches: ["development"]
