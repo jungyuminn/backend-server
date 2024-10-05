@@ -64,8 +64,8 @@ jib {
 		image = imageName
 		tags = [imageTag, "latest"]
 	}
+	
 	container {
-		container {
 			jvmFlags = [
 				"-Dspring.profiles.active=${activeProfile}",
 				"-Dserver.port=${serverPort}",
@@ -79,7 +79,7 @@ jib {
 				"-XX:MaxHeapSize=512m",      // 최대 힙 사이즈도 조정
 				"-XX:+DisableExplicitGC",
 				"-server"
-			]
+		]
 			ports = [serverPort]
-		}
+	}
 }

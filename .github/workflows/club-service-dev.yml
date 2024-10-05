@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [call-build-workflow]
     steps:
-      - name: EC2에 SSH로 접속하여 Docker 이미지를 Pull 및 배포
+      - name: EC2에 SSH로 접속하여 Docker image Pull & Run
         uses: appleboy/ssh-action@v0.1.0
         with:
           host: ${{ secrets.EC2_HOST }}
