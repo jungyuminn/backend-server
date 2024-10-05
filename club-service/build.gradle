@@ -65,7 +65,8 @@ jib {
 		tags = [imageTag, "latest"]
 	}
 	container {
-		jvmFlags = [
+		container {
+			jvmFlags = [
 				"-Dspring.profiles.active=${activeProfile}",
 				"-Dserver.port=${serverPort}",
 				"-Djava.security.egd=file:/dev/./urandom",
@@ -73,12 +74,12 @@ jib {
 				"-Duser.timezone=Asia/Seoul",
 				"-XX:+UnlockExperimentalVMOptions",
 				"-XX:+UseContainerSupport",
-				"-XX:+UseG1GC",
-				"-XX:InitialHeapSize=1g",
-				"-XX:MaxHeapSize=1g",
+				"-XX:+UseG1GC",  // 필요 시 UseSerialGC로 변경 가능
+				"-XX:InitialHeapSize=256m",  // 힙 사이즈를 더 낮게 설정
+				"-XX:MaxHeapSize=512m",      // 최대 힙 사이즈도 조정
 				"-XX:+DisableExplicitGC",
 				"-server"
-		]
-		ports = [serverPort]
-	}
+			]
+			ports = [serverPort]
+		}
 }

@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: gachdong
+      MYSQL_USER: gachdong
+      MYSQL_PASSWORD: gachdong123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  club-service:
+    image: dlckdals6183/club-service-dev:latest
+    container_name: club-service
+    environment:
+      MYSQL_URL: jdbc:mysql://mysql:3306/gachdong
+      MYSQL_USERNAME: gachdong
+      MYSQL_PASSWORD: gachdong123
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+
+volumes:
+  mysql-data:
