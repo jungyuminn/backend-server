@@ -1,7 +1,9 @@
 package club.gach_dong.club.api;
 
 
+import club.gach_dong.club.dto.response.ArrayResponse;
 import club.gach_dong.club.dto.response.ClubResponse;
+import club.gach_dong.club.dto.response.ClubSummaryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,13 +20,20 @@ import org.springframework.web.bind.annotation.RestController;
 public interface ClubApiSpecification {
 
     @Operation(
-            summary = "동아리 조회",
-            description = "동아리 ID를 이용하여 동아리 정보를 조회합니다."
+            summary = "동아리 목록 조회",
+            description = "모든 동아리 정보를 조회합니다."
     )
-    @GetMapping("/{clubId}")
+    @GetMapping("/")
+    ArrayResponse<ClubSummaryResponse> getClubs();
+
+    @Operation(
+            summary = "동아리 조회",
+            description = "동아리 이름을 이용하여 동아리 정보를 조회합니다."
+    )
+    @GetMapping("/{clubName}")
     ClubResponse getClub(
-            @Parameter(description = "동아리 ID", example = "01HGW2N7EHJVJ4CJ999RRS2E97", required = true)
+            @Parameter(description = "동아리 이름", example = "GDSC", required = true)
             @PathVariable
-            String clubId
+            String clubName
     );
 }
