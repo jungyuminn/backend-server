@@ -8,10 +8,9 @@ on:
 
 env:
   SPRING_PROFILE: dev
-  IMAGE_NAME: eeeasycode/club-service-dev
+  IMAGE_NAME: eeeasycode/user-service-dev
   MODULE_PATH: club-service
   SERVER_PORT: 8080
-  GIT_ENVIRONMENT: dev (club-service)
 
 concurrency:
   group: club-service
@@ -26,7 +25,6 @@ jobs:
       spring-profile: ${{ steps.setup-env.outputs.spring-profile }}
       server-port: ${{ steps.setup-env.outputs.server-port }}
       image-name: ${{ steps.setup-env.outputs.image-name }}
-      git-environment: ${{ steps.setup-env.outputs.git-environment }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -39,7 +37,6 @@ jobs:
           echo "spring-profile=$SPRING_PROFILE" >> $GITHUB_OUTPUT
           echo "server-port=$SERVER_PORT" >> $GITHUB_OUTPUT
           echo "image-name=$IMAGE_NAME" >> $GITHUB_OUTPUT
-          echo "git-environment=$GIT_ENVIRONMENT" >> $GITHUB_OUTPUT
 
   call-build-workflow:
     if: github.event_name == 'push'
@@ -58,3 +55,20 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  deploy-to-ec2:
+    name: EC2에 배포
+    runs-on: ubuntu-latest
+    needs: [call-build-workflow]
+    steps:
+      - name: EC2에 SSH로 접속하여 Docker 이미지를 Pull 및 배포
+        uses: appleboy/ssh-action@v0.1.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull ${{ needs.prepare-variables.outputs.image-name }}:${{ needs.prepare-variables.outputs.image-tag }}
+            docker stop club-service || true
+            docker rm club-service || true
+            docker run -d -p 80:${{ needs.prepare-variables.outputs.server-port }} --name club-service ${{ needs.prepare-variables.outputs.image-name }}:${{ needs.prepare-variables.outputs.image-tag }}
