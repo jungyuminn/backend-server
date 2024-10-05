@@ -1,0 +1,18 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        create_empty_composites:
+          enabled: true
+        show_sql: false
+        format_sql: false
+#  flyway:
+#    enabled: true
+#    baseline-on-migrate: true
+#    out-of-order: true
+  h2:
+    console:
+      enabled: false

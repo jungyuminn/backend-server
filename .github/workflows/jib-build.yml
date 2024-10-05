@@ -1,0 +1,63 @@
+name: 이미지 build & push
+on:
+  workflow_call:
+    inputs:
+      spring-profile:
+        required: true
+        type: string
+      server-port:
+        required: true
+        type: string
+      image-name:
+        required: true
+        type: string
+      image-tag:
+        required: true
+        type: string
+      module-path:
+        required: true
+        type: string
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+    name: 이미지 build
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: docker-hub login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: JDK17 setting
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Gradle setting
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: 이미지 build & push
+        id: build-image
+        env:
+          SPRING_PROFILES_ACTIVE: ${{ inputs.spring-profile }}
+          IMAGE_NAME: ${{ inputs.image-name }}
+          IMAGE_TAG: ${{ inputs.image-tag }}
+          SERVER_PORT: ${{ inputs.server-port }}
+        run: |
+          cd ${{ inputs.module-path }} && \
+          chmod +x gradlew && ./gradlew jib

@@ -1,0 +1,74 @@
+name: 동아리 서비스 development 환경 빌드 and docker hub push
+on:
+  push:
+    branches: ["development"]
+    paths:
+      - "club-service/**"
+      - ".github/workflows/club-service-dev.yaml"
+
+env:
+  SPRING_PROFILE: dev
+  IMAGE_NAME: eeeasycode/user-service-dev
+  MODULE_PATH: club-service
+  SERVER_PORT: 8080
+
+concurrency:
+  group: club-service
+
+jobs:
+  prepare-variables:
+    name: 환경변수 setting
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.setup-env.outputs.image-tag }}
+      module-path: ${{ steps.setup-env.outputs.module-path }}
+      spring-profile: ${{ steps.setup-env.outputs.spring-profile }}
+      server-port: ${{ steps.setup-env.outputs.server-port }}
+      image-name: ${{ steps.setup-env.outputs.image-name }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: 환경변수 output
+        id: setup-env
+        run: |
+          echo "image-tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "module-path=$MODULE_PATH" >> $GITHUB_OUTPUT
+          echo "spring-profile=$SPRING_PROFILE" >> $GITHUB_OUTPUT
+          echo "server-port=$SERVER_PORT" >> $GITHUB_OUTPUT
+          echo "image-name=$IMAGE_NAME" >> $GITHUB_OUTPUT
+
+  call-build-workflow:
+    if: github.event_name == 'push'
+    needs: [prepare-variables]
+    name: 이미지 build & push
+    uses: ./.github/workflows/jib-build.yaml
+    permissions:
+      id-token: write
+      contents: read
+    with:
+      spring-profile: ${{ needs.prepare-variables.outputs.spring-profile }}
+      server-port: ${{ needs.prepare-variables.outputs.server-port }}
+      image-name: ${{ needs.prepare-variables.outputs.image-name }}
+      image-tag: ${{ needs.prepare-variables.outputs.image-tag }}
+      module-path: ${{ needs.prepare-variables.outputs.module-path }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  deploy-to-ec2:
+    name: EC2에 배포
+    runs-on: ubuntu-latest
+    needs: [call-build-workflow]
+    steps:
+      - name: EC2에 SSH로 접속하여 Docker 이미지를 Pull 및 배포
+        uses: appleboy/ssh-action@v0.1.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull ${{ needs.prepare-variables.outputs.image-name }}:${{ needs.prepare-variables.outputs.image-tag }}
+            docker stop club-service || true
+            docker rm club-service || true
+            docker run -d -p 80:${{ needs.prepare-variables.outputs.server-port }} --name club-service ${{ needs.prepare-variables.outputs.image-name }}:${{ needs.prepare-variables.outputs.image-tag }}

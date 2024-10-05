@@ -1,0 +1,14 @@
+# Use the official Amazon Corretto image as a parent image
+FROM amazoncorretto:17-alpine3.17-jdk
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the build artifacts from the host to the container
+COPY ../club-service/build/libs/club-service-0.0.1-SNAPSHOT.jar app.jar
+
+# Expose the port the application runs on
+EXPOSE 8080
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
