@@ -8,7 +8,7 @@ on:
 
 env:
   SPRING_PROFILE: dev
-  IMAGE_NAME: eeeasycode/user-service-dev
+  IMAGE_NAME: dlckdals6183/club-service-dev
   MODULE_PATH: club-service
   SERVER_PORT: 8080
 
