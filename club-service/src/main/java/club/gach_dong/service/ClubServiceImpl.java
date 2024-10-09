@@ -1,8 +1,8 @@
-package club.gach_dong.club.service;
+package club.gach_dong.service;
 
-import club.gach_dong.club.dto.response.ClubResponse;
-import club.gach_dong.club.dto.response.ClubSummaryResponse;
-import club.gach_dong.club.repository.ClubRepository;
+import club.gach_dong.dto.response.ClubResponse;
+import club.gach_dong.dto.response.ClubSummaryResponse;
+import club.gach_dong.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
-package club.gach_dong.club.dto.response;
+package club.gach_dong.dto.response;
 
-import club.gach_dong.club.domain.Club;
-import club.gach_dong.club.domain.ClubCategory;
+import club.gach_dong.domain.Club;
+import club.gach_dong.domain.ClubCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;

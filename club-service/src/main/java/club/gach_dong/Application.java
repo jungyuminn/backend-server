@@ -1,4 +1,4 @@
-package club.gach_dong.club;
+package club.gach_dong;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

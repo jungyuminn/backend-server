@@ -1,10 +1,10 @@
-package club.gach_dong.club.controller;
+package club.gach_dong.controller;
 
-import club.gach_dong.club.api.ClubApiSpecification;
-import club.gach_dong.club.dto.response.ArrayResponse;
-import club.gach_dong.club.dto.response.ClubResponse;
-import club.gach_dong.club.dto.response.ClubSummaryResponse;
-import club.gach_dong.club.service.ClubService;
+import club.gach_dong.api.ClubApiSpecification;
+import club.gach_dong.dto.response.ArrayResponse;
+import club.gach_dong.dto.response.ClubResponse;
+import club.gach_dong.dto.response.ClubSummaryResponse;
+import club.gach_dong.service.ClubService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 

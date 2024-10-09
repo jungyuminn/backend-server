@@ -1,6 +1,6 @@
-package club.gach_dong.club.repository;
+package club.gach_dong.repository;
 
-import club.gach_dong.club.domain.Club;
+import club.gach_dong.domain.Club;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

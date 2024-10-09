@@ -1,4 +1,4 @@
-package club.gach_dong.club.config;
+package club.gach_dong.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

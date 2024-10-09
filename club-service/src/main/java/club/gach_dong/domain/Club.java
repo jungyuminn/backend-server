@@ -1,4 +1,4 @@
-package club.gach_dong.club.domain;
+package club.gach_dong.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

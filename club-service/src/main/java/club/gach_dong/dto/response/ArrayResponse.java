@@ -1,4 +1,4 @@
-package club.gach_dong.club.dto.response;
+package club.gach_dong.dto.response;
 
 import java.util.Collection;
 

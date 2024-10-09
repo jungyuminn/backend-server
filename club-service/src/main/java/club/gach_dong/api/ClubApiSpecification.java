@@ -1,9 +1,9 @@
-package club.gach_dong.club.api;
+package club.gach_dong.api;
 
 
-import club.gach_dong.club.dto.response.ArrayResponse;
-import club.gach_dong.club.dto.response.ClubResponse;
-import club.gach_dong.club.dto.response.ClubSummaryResponse;
+import club.gach_dong.dto.response.ArrayResponse;
+import club.gach_dong.dto.response.ClubResponse;
+import club.gach_dong.dto.response.ClubSummaryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

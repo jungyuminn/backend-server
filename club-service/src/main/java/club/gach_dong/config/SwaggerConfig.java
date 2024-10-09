@@ -1,4 +1,4 @@
-package club.gach_dong.club.config;
+package club.gach_dong.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
