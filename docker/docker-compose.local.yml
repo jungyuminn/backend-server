@@ -15,9 +15,8 @@ services:
       - mysql-data:/var/lib/mysql
 
   club-service:
-    build:
-      context: ..
-      dockerfile: docker/DockerFile.club
+    image: club-service-local
+    container_name: club-service
     environment:
       SPRING_PROFILES_ACTIVE: local
       MYSQL_URL: jdbc:mysql://mysql:3306/gachdong
