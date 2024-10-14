@@ -17,18 +17,28 @@ spring:
             allowedHeaders: '*'
             allowedMethods: '*'
       routes:
+        - id: club-service
+          uri: http://club-service
+          predicates:
+            - Path=/club/**
+          filters:
+            - RewritePath=/club/(?<segment>/?.*), /$\{segment}
+
         - id: club-service-swagger
           uri: http://localhost:8081
           predicates:
-            - Path=/user/v3/api-docs/**
+            - Path=/club/v3/api-docs/**
           filters:
-            - RewritePath=/user/(?<segment>/?.*), /$\{segment}
+            - RewritePath=/club/(?<segment>/?.*), /$\{segment}
 
 springdoc:
   swagger-ui:
+    enabled: true
     urls[0]:
       name: "동아리 서비스"
-      url: https://gateway.gach-dong.duckdns.org/club/v3/api-docs
+      url: http://localhost:8081/v3/api-docs
+
+
 
 #management:
 #  endpoints:
