@@ -9,10 +9,20 @@ services:
       MYSQL_DATABASE: gachdong
       MYSQL_USER: gachdong
       MYSQL_PASSWORD: gachdong123
-    ports:
-      - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+    networks:
+      - my-network
+
+  api-gateway:
+    image: api-gateway-local
+    container_name: api-gateway
+    ports:
+      - "8080:8080" # 외부에 노출될 포트
+    depends_on:
+      - club-service
+    networks:
+      - my-network
 
   club-service:
     image: club-service-local
@@ -22,10 +32,14 @@ services:
       MYSQL_URL: jdbc:mysql://mysql:3306/gachdong
       MYSQL_USERNAME: gachdong
       MYSQL_PASSWORD: gachdong123
-    ports:
-      - "8080:8080"
     depends_on:
       - mysql
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
 
 volumes:
   mysql-data:
