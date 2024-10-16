@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>회원가입</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h3 class="text-center">회원가입</h3>
+    <form id="signupForm">
+        <div class="form-group">
+            <select id="role" class="form-control" required>
+                <option value="" disabled selected>회원 유형 선택</option>
+                <option value="USER">일반회원</option>
+                <option value="ADMIN">운영회원</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="email" id="email" class="form-control" placeholder="이메일" required>
+        </div>
+        <div class="form-group">
+            <input type="password" id="password" class="form-control" placeholder="비밀번호" required>
+        </div>
+        <div class="form-group">
+            <input type="text" id="name" class="form-control" placeholder="이름" required>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">가입하기</button>
+    </form>
+    <div class="text-center mt-3">
+        <a href="/api/auth/login">로그인</a>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#signupForm').on('submit', function(event) {
+            event.preventDefault();
+
+            const role = $('#role').val();
+            const email = $('#email').val();
+            const password = $('#password').val();
+            const name = $('#name').val();
+
+            $.ajax({
+                url: '/api/auth/signup',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ role, email, password, name }),
+                success: function(response) {
+                    alert('회원가입 성공. 이메일을 확인하세요.');
+                    window.location.href = '/';
+                },
+                error: function(xhr) {
+                    alert('회원가입 실패: ' + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
