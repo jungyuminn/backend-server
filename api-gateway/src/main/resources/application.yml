@@ -1,0 +1,68 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost"
+              - "http://gach-dong-dev.duckdns.org"
+              - "https://gateway.gach-dong.duckdns.org"
+            allow-credentials: true
+            allowedHeaders: '*'
+            allowedMethods: '*'
+      routes:
+        - id: club-service
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /${segment}
+
+        - id: club-service-swagger
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/v3/api-docs/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /${segment}
+
+        - id: club-service-swagger-ui
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/swagger-ui/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /${segment}
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    urls[0]:
+      name: "동아리 서비스"
+      url: /club/v3/api-docs
+
+logging:
+  level:
+    org.springframework.cloud.gateway: trace
+    reactor.netty: trace
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health,metrics,prometheus
+#  tracing:
+#    sampling:
+#      probability: 1.0
+#    enabled: false
+#  zipkin:
+#    tracing:
+#      endpoint: http://zipkin/api/v2/spans
+#
+#app:
+#  jwt:
+#    verify-key: ${JWT_VERIFY_KEY}

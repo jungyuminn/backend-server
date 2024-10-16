@@ -13,3 +13,7 @@ out/
 
 ### MacOS ###
 .DS_Store
+
+### Infra ###
+istio*
+k8s
