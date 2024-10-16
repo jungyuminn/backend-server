@@ -42,3 +42,36 @@ dependencyManagement {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+jib {
+	def activeProfile = System.getenv("SPRING_PROFILES_ACTIVE")
+	def imageName = System.getenv("IMAGE_NAME")
+	def imageTag = System.getenv("IMAGE_TAG")
+	def serverPort = System.getenv("SERVER_PORT") ?: "8080"
+
+	from {
+		image = "amazoncorretto:17-alpine3.17-jdk"
+	}
+	to {
+		image = imageName
+		tags = [imageTag, "latest"]
+	}
+
+	container {
+		jvmFlags = [
+				"-Dspring.profiles.active=${activeProfile}",
+				"-Dserver.port=${serverPort}",
+				"-Djava.security.egd=file:/dev/./urandom",
+				"-Dfile.encoding=UTF-8",
+				"-Duser.timezone=Asia/Seoul",
+				"-XX:+UnlockExperimentalVMOptions",
+				"-XX:+UseContainerSupport",
+				"-XX:+UseG1GC",  // 필요 시 UseSerialGC로 변경 가능
+				"-XX:InitialHeapSize=256m",  // 힙 사이즈를 더 낮게 설정
+				"-XX:MaxHeapSize=512m",      // 최대 힙 사이즈도 조정
+				"-XX:+DisableExplicitGC",
+				"-server"
+		]
+		ports = [serverPort]
+	}
+}
