@@ -1,3 +1,8 @@
+app:
+  gateway:
+    # 본인에게 맞는 환경의 gateway entpoint를 입력해주세요
+    endpoint: http://localhost:8080
+
 spring:
   datasource:
     url: jdbc:h2:~/gachdong;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;

@@ -10,7 +10,7 @@ spring:
         cors-configurations:
           '[/**]':
             allowedOrigins:
-              - "http://localhost:3000"
+              - "http://localhost"
               - "http://gach-dong-dev.duckdns.org"
               - "https://gateway.gach-dong.duckdns.org"
             allow-credentials: true
@@ -18,27 +18,37 @@ spring:
             allowedMethods: '*'
       routes:
         - id: club-service
-          uri: http://club-service:8080  # Docker 네트워크 내에서의 서비스 통신
+          uri: http://club-service:8080
           predicates:
             - Path=/club/**
           filters:
-            - RewritePath=/club/(?<segment>.*), /$\{segment}
+            - RewritePath=/club/(?<segment>.*), /${segment}
 
         - id: club-service-swagger
           uri: http://club-service:8080
           predicates:
             - Path=/club/v3/api-docs/**
           filters:
-            - RewritePath=/club/(?<segment>.*), /$\{segment}
+            - RewritePath=/club/(?<segment>.*), /${segment}
+
+        - id: club-service-swagger-ui
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/swagger-ui/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /${segment}
 
 springdoc:
   swagger-ui:
     enabled: true
     urls[0]:
       name: "동아리 서비스"
-      url: http://localhost:8080/club/v3/api-docs
+      url: /club/v3/api-docs
 
-
+logging:
+  level:
+    org.springframework.cloud.gateway: trace
+    reactor.netty: trace
 
 #management:
 #  endpoints:
