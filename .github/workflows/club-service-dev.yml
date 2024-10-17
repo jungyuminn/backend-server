@@ -11,6 +11,7 @@ env:
   IMAGE_NAME: dlckdals6183/club-service-dev
   MODULE_PATH: club-service
   SERVER_PORT: 8080
+  GIT_ENVIRONMENT: dev (club-service)
 
 concurrency:
   group: club-service
@@ -25,6 +26,7 @@ jobs:
       spring-profile: ${{ steps.setup-env.outputs.spring-profile }}
       server-port: ${{ steps.setup-env.outputs.server-port }}
       image-name: ${{ steps.setup-env.outputs.image-name }}
+      git-environment: ${{ steps.setup-env.outputs.git-environment }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -37,6 +39,7 @@ jobs:
           echo "spring-profile=$SPRING_PROFILE" >> $GITHUB_OUTPUT
           echo "server-port=$SERVER_PORT" >> $GITHUB_OUTPUT
           echo "image-name=$IMAGE_NAME" >> $GITHUB_OUTPUT
+          echo "git-environment=$GIT_ENVIRONMENT" >> $GITHUB_OUTPUT
 
   call-build-workflow:
     if: github.event_name == 'push'
