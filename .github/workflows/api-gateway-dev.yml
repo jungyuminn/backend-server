@@ -1,11 +1,7 @@
 name: api-gateway development build & docker hub push
 on:
   push:
-<<<<<<< Updated upstream
-    branches: ["dev"]
-=======
     branches: ["development"]
->>>>>>> Stashed changes
     paths:
       - "api-gateway/**"
       - ".github/workflows/api-gateway-dev.yaml"
