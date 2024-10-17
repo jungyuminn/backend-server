@@ -14,8 +14,11 @@ for service in "${services[@]}"; do
   # 서비스 디렉토리로 이동
   cd "$service" || { echo "Failed to enter directory $service"; exit 1; }
   
-  # Jib 빌드 실행
-  IMAGE_NAME="$IMAGE_NAME" IMAGE_TAG="$IMAGE_TAG" ./gradlew jibDockerBuild --image="$IMAGE_NAME:$IMAGE_TAG"
+  # 환경 변수 SPRING_PROFILES_ACTIVE를 설정 (기본값 "default" 사용)
+  SPRING_PROFILES_ACTIVE=$(echo ${SPRING_PROFILES_ACTIVE:-"local"})
+  
+  # Jib 빌드 실행 (환경 변수와 함께)
+  IMAGE_NAME="$IMAGE_NAME" IMAGE_TAG="$IMAGE_TAG" SPRING_PROFILES_ACTIVE="$SPRING_PROFILES_ACTIVE" ./gradlew jibDockerBuild --image="$IMAGE_NAME:$IMAGE_TAG" -Dspring.profiles.active="$SPRING_PROFILES_ACTIVE"
   
   # 빌드 결과 확인
   if [ $? -eq 0 ]; then
