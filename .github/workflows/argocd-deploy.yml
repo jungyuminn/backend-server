@@ -1,0 +1,56 @@
+name: ArgoCD deploy
+on:
+  workflow_call:
+    inputs:
+      argocd-repo-name:
+        required: true
+        type: string
+      overlay-name:
+        required: true
+        type: string
+      service-name:
+        required: true
+        type: string
+      default-image-name:
+        required: true
+        type: string
+      image-name:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+      image-tag:
+        required: true
+        type: string
+    secrets:
+      PAT_TOKEN:
+        required: true
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+    name: ArgoCD deploy
+
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: GitHub Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ inputs.argocd-repo-name }}
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Kustomize Setup
+        uses: imranismail/setup-kustomize@v2
+
+      - name: change image tag and deploy
+        run: |
+          cd modules/${{ inputs.service-name }}/overlays/${{ inputs.overlay-name }}
+          kustomize edit set image ${{ inputs.default-image-name }}=${{ inputs.image-name }}:${{ inputs.image-tag }}
+          cat kustomization.yml
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "release(${{ inputs.service-name }}): automation deployment ${{ inputs.image-name }}:${{ inputs.image-tag }}"
+          git config pull.rebase true
+          git pull && git push -u origin main

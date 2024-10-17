@@ -11,7 +11,7 @@ env:
   IMAGE_NAME: dlckdals6183/club-service-dev
   MODULE_PATH: club-service
   SERVER_PORT: 8080
-  GIT_ENVIRONMENT: dev (club-service)
+  GIT_ENVIRONMENT: development (club-service)
 
 concurrency:
   group: club-service
@@ -59,19 +59,19 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
-  # deploy-to-ec2:
-  #   name: EC2에 배포
-  #   runs-on: ubuntu-latest
-  #   needs: [call-build-workflow]
-  #   steps:
-  #     - name: EC2에 SSH로 접속하여 Docker image Pull & Run
-  #       uses: appleboy/ssh-action@v0.1.0
-  #       with:
-  #         host: ${{ secrets.EC2_HOST }}
-  #         username: ${{ secrets.EC2_USER }}
-  #         key: ${{ secrets.EC2_SSH_KEY }}
-  #         script: |
-  #           sudo docker pull ${{ needs.prepare-variables.outputs.image-name }}:${{ needs.prepare-variables.outputs.image-tag }}
-  #           sudo docker stop club-service || true
-  #           sudo docker rm club-service || true
-  #           sudo docker run -d -p 80:${{ needs.prepare-variables.outputs.server-port }} --name club-service ${{ needs.prepare-variables.outputs.image-name }}:${{ needs.prepare-variables.outputs.image-tag }}
+  call-deploy-workflow:
+    needs: [prepare-variables, call-build-workflow]
+    name: ArgoCD Deploy
+    uses: ./.github/workflows/argocd-deploy.yml
+    permissions:
+      contents: write
+    with:
+      argocd-repo-name: TEAM-YOAJUNG/argocd-manifest
+      overlay-name: ${{ needs.prepare-variables.outputs.spring-profile }}
+      service-name: ${{ needs.prepare-variables.outputs.module-path }}
+      image-name: ${{ needs.prepare-variables.outputs.image-name }}
+      image-tag: ${{ needs.prepare-variables.outputs.image-tag }}
+      environment: ${{ needs.prepare-variables.outputs.git-environment }}
+      default-image-name: dlckdals6183/club-service
+    secrets:
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
