@@ -44,7 +44,7 @@ jobs:
   call-build-workflow:
     if: github.event_name == 'push'
     needs: [prepare-variables]
-    name: 이미지 build & push
+    name: docker 이미지 build & push
     uses: ./.github/workflows/jib-build.yml
     permissions:
       id-token: write
