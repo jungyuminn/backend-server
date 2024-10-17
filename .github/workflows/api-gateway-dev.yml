@@ -11,7 +11,7 @@ env:
   IMAGE_NAME: dlckdals6183/api-gateway-dev
   MODULE_PATH: api-gateway
   SERVER_PORT: 8080
-  GIT_ENVIRONMENT: dev (api-gateway)
+  GIT_ENVIRONMENT: development (api-gateway)
 
 concurrency:
   group: api-gateway
@@ -58,3 +58,20 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  call-deploy-workflow:
+    needs: [prepare-variables, call-build-workflow]
+    name: ArgoCD Deploy
+    uses: ./.github/workflows/argocd-deploy.yml
+    permissions:
+      contents: write
+    with:
+      argocd-repo-name: TEAM-YOAJUNG/argocd-manifest
+      overlay-name: ${{ needs.prepare-variables.outputs.spring-profile }}
+      service-name: ${{ needs.prepare-variables.outputs.module-path }}
+      image-name: ${{ needs.prepare-variables.outputs.image-name }}
+      image-tag: ${{ needs.prepare-variables.outputs.image-tag }}
+      environment: ${{ needs.prepare-variables.outputs.git-environment }}
+      default-image-name: dlckdals6183/api-gateway
+    secrets:
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
