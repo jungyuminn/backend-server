@@ -4,7 +4,7 @@ on:
     branches: ["development"]
     paths:
       - "api-gateway/**"
-      - ".github/workflows/api-gateway-dev.yaml"
+      - ".github/workflows/api-gateway-dev.yml"
 
 env:
   SPRING_PROFILE: dev
