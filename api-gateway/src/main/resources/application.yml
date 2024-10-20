@@ -43,7 +43,7 @@ springdoc:
     enabled: true
     urls[0]:
       name: "동아리 서비스"
-      url: /gachdong/club/v3/api-docs
+      url: https://gateway.gachdong.club/club/v3/api-docs
 
 logging:
   level:
@@ -59,10 +59,7 @@ logging:
 #    sampling:
 #      probability: 1.0
 #    enabled: false
-#  zipkin:
-#    tracing:
-#      endpoint: http://zipkin/api/v2/spans
-#
+
 #app:
 #  jwt:
 #    verify-key: ${JWT_VERIFY_KEY}
