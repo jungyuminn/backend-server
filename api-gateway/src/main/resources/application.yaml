@@ -20,23 +20,23 @@ spring:
         - id: club-service
           uri: http://club-service:8080
           predicates:
-            - Path=/gachdong/club/**
+            - Path=/club/**
           filters:
-            - RewritePath=/gachdong/club/(?<segment>.*), /club/${segment}
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
 
         - id: club-service-swagger
           uri: http://club-service:8080
           predicates:
-            - Path=/gachdong/club/v3/api-docs/**
+            - Path=/club/v3/api-docs/**
           filters:
-            - RewritePath=/gachdong/club/v3/api-docs/(?<segment>.*), /club/v3/api-docs/${segment}
+            - RewritePath=/club/v3/api-docs/(?<segment>.*), /$\{segment}
 
         - id: club-service-swagger-ui
           uri: http://club-service:8080
           predicates:
-            - Path=/gachdong/club/swagger-ui/**
+            - Path=/club/swagger-ui/**
           filters:
-            - RewritePath=/gachdong/club/swagger-ui/(?<segment>.*), /club/swagger-ui/${segment}
+            - RewritePath=/club/swagger-ui/(?<segment>.*), /$\{segment}
 
 springdoc:
   swagger-ui:
