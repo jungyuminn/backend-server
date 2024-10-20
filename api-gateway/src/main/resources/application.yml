@@ -10,9 +10,9 @@ spring:
         cors-configurations:
           '[/**]':
             allowedOrigins:
-              - "http://localhost"
-              - "http://gach-dong-dev.duckdns.org"
-              - "https://gateway.gach-dong.duckdns.org"
+              - "http://localhost:3000"
+              - "http://gach-dong-dev.club"
+              - "https://gateway.gach-dong.club"
             allow-credentials: true
             allowedHeaders: '*'
             allowedMethods: '*'
@@ -20,30 +20,30 @@ spring:
         - id: club-service
           uri: http://club-service:8080
           predicates:
-            - Path=/club/**
+            - Path=/gachdong/club/**
           filters:
             - RewritePath=/club/(?<segment>.*), /${segment}
 
         - id: club-service-swagger
           uri: http://club-service:8080
           predicates:
-            - Path=/club/v3/api-docs/**
+            - Path=/gachdong/club/v3/api-docs/**
           filters:
-            - RewritePath=/club/(?<segment>.*), /${segment}
+            - RewritePath=/gachdong/club/(?<segment>.*), /${segment}
 
         - id: club-service-swagger-ui
           uri: http://club-service:8080
           predicates:
-            - Path=/club/swagger-ui/**
+            - Path=/gachdong/club/swagger-ui/**
           filters:
-            - RewritePath=/club/(?<segment>.*), /${segment}
+            - RewritePath=/gachdong/club/(?<segment>.*), /${segment}
 
 springdoc:
   swagger-ui:
     enabled: true
     urls[0]:
       name: "동아리 서비스"
-      url: /club/v3/api-docs
+      url: /gachdong/club/v3/api-docs
 
 logging:
   level:
