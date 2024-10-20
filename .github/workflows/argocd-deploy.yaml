@@ -48,7 +48,7 @@ jobs:
         run: |
           cd modules/${{ inputs.service-name }}/overlays/${{ inputs.overlay-name }}
           kustomize edit set image ${{ inputs.default-image-name }}=${{ inputs.image-name }}:${{ inputs.image-tag }}
-          cat kustomization.yml
+          cat kustomization.yaml
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git commit -am "release(${{ inputs.service-name }}): automation deployment ${{ inputs.image-name }}:${{ inputs.image-tag }}"

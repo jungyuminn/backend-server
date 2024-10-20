@@ -1,24 +1,24 @@
-name: api-gateway development build & docker hub push
+name: club service development build & docker hub push
 on:
   push:
     branches: ["development"]
     paths:
-      - "api-gateway/**"
-      - ".github/workflows/api-gateway-dev.yml"
+      - "club-service/**"
+      - ".github/workflows/club-service-dev.yaml"
 
 env:
   SPRING_PROFILE: dev
-  IMAGE_NAME: dlckdals6183/api-gateway-dev
-  MODULE_PATH: api-gateway
+  IMAGE_NAME: dlckdals6183/club-service-dev
+  MODULE_PATH: club-service
   SERVER_PORT: 8080
-  GIT_ENVIRONMENT: development (api-gateway)
+  GIT_ENVIRONMENT: development (club-service)
 
 concurrency:
-  group: api-gateway
+  group: club-service
 
 jobs:
   prepare-variables:
-    name: 환경변수 준비하기
+    name: 환경변수 setting
     runs-on: ubuntu-latest
     outputs:
       image-tag: ${{ steps.setup-env.outputs.image-tag }}
@@ -45,7 +45,7 @@ jobs:
     if: github.event_name == 'push'
     needs: [prepare-variables]
     name: docker 이미지 build & push
-    uses: ./.github/workflows/jib-build.yml
+    uses: ./.github/workflows/jib-build.yaml
     permissions:
       id-token: write
       contents: read
@@ -62,7 +62,7 @@ jobs:
   call-deploy-workflow:
     needs: [prepare-variables, call-build-workflow]
     name: ArgoCD Deploy
-    uses: ./.github/workflows/argocd-deploy.yml
+    uses: ./.github/workflows/argocd-deploy.yaml
     permissions:
       contents: write
     with:
@@ -72,6 +72,6 @@ jobs:
       image-name: ${{ needs.prepare-variables.outputs.image-name }}
       image-tag: ${{ needs.prepare-variables.outputs.image-tag }}
       environment: ${{ needs.prepare-variables.outputs.git-environment }}
-      default-image-name: dlckdals6183/api-gateway
+      default-image-name: dlckdals6183/club-service
     secrets:
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
