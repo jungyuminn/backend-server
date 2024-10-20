@@ -29,14 +29,14 @@ spring:
           predicates:
             - Path=/club/v3/api-docs/**
           filters:
-            - RewritePath=/club/v3/api-docs/(?<segment>.*), /$\{segment}
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
 
         - id: club-service-swagger-ui
           uri: http://club-service:8080
           predicates:
             - Path=/club/swagger-ui/**
           filters:
-            - RewritePath=/club/swagger-ui/(?<segment>.*), /$\{segment}
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
 
 springdoc:
   swagger-ui:
