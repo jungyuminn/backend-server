@@ -43,7 +43,7 @@ springdoc:
     enabled: true
     urls[0]:
       name: "동아리 서비스"
-      url: https://gateway.gachdong.club/club/v3/api-docs
+      url: http://gateway.gachdong.club/club/v3/api-docs
 
 logging:
   level:
