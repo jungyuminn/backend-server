@@ -1,14 +1,24 @@
 spring:
   application:
     name: club-service
+
+#  flyway:
+#    url: ${FLYWAY_URL}
+#    baseline-on-migrate: true
+#    enabled: true
+#    user: ${MYSQL_USERNAME}
+#    password: ${MYSQL_PASSWORD}
+
   datasource:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
-      ddl-auto: update
+    # ddl-auto: validate
+        ddl-auto: create
     open-in-view: false
     properties:
       hibernate:
@@ -16,17 +26,14 @@ spring:
           enabled: true
         show_sql: true
         format_sql: true
-  h2:
-    console:
-      enabled: true
-      settings:
-        web-allow-others: true
+
+app:
+  gateway:
+    endpoint: https://gateway.gachdong.club
 
 logging:
   level:
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql: TRACE
-    org.springframework.security: DEBUG
 
 #management:
 #  endpoints:
@@ -37,6 +44,4 @@ logging:
 #    sampling:
 #      probability: 1.0
 #    enabled: false
-#  zipkin:
-#    tracing:
-#      endpoint: http://zipkin/api/v2/spans
+
