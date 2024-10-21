@@ -64,11 +64,11 @@ springdoc:
     enabled: true
     urls[0]:
       name: "동아리 서비스"
-      url: http://gateway.gachdong.club/club/v3/api-docs
+      url: https://gateway.gachdong.club/club/v3/api-docs
 
     urls[1]:
       name: "지원 서비스"
-      url: http://gateway.gachdong.club/application/v3/api-docs
+      url: https://gateway.gachdong.club/application/v3/api-docs
 
 logging:
   level:
