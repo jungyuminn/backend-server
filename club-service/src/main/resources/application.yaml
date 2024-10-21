@@ -2,23 +2,23 @@ spring:
   application:
     name: club-service
 
-#  flyway:
-#    url: ${FLYWAY_URL}
-#    baseline-on-migrate: true
-#    enabled: true
-#    user: ${MYSQL_USERNAME}
-#    password: ${MYSQL_PASSWORD}
+  #  flyway:
+  #    url: ${FLYWAY_URL}
+  #    baseline-on-migrate: true
+  #    enabled: true
+  #    user: ${MYSQL_USERNAME}
+  #    password: ${MYSQL_PASSWORD}
 
   datasource:
-    url: ${MYSQL_URL}
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
+    url: ${DB_HOST}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-    # ddl-auto: validate
-        ddl-auto: create
+      # ddl-auto: validate
+      ddl-auto: update
     open-in-view: false
     properties:
       hibernate:
@@ -34,7 +34,6 @@ app:
 logging:
   level:
     org.hibernate.SQL: DEBUG
-
 #management:
 #  endpoints:
 #    web:
