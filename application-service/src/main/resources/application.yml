@@ -1,0 +1,26 @@
+app:
+  gateway:
+    # 본인에게 맞는 환경의 gateway entpoint를 입력해주세요
+    endpoint: http://localhost:8080
+
+spring:
+
+  application:
+    name: application-service
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_HOST}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.MySQLDialect
