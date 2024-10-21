@@ -1,10 +1,9 @@
 app:
   gateway:
     # 본인에게 맞는 환경의 gateway entpoint를 입력해주세요
-    endpoint: http://localhost:8080
+    endpoint: https://gateway.gachdong.club
 
 spring:
-
   application:
     name: application-service
 

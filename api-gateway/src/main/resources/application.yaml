@@ -8,14 +8,14 @@ spring:
       globalcors:
         add-to-simple-url-handler-mapping: true
         cors-configurations:
-          '[/**]':
+          "[/**]":
             allowedOrigins:
               - "http://localhost:3000"
               - "http://gach-dong-dev.club"
               - "https://gateway.gach-dong.club"
             allow-credentials: true
-            allowedHeaders: '*'
-            allowedMethods: '*'
+            allowedHeaders: "*"
+            allowedMethods: "*"
       routes:
         - id: club-service
           uri: http://club-service:8080
@@ -24,12 +24,26 @@ spring:
           filters:
             - RewritePath=/club/(?<segment>.*), /$\{segment}
 
+        - id: application-service
+          uri: http://application-service:8080
+          predicates:
+            - Path=/application/**
+          filters:
+            - RewritePath=/application/(?<segment>.*), /$\{segment}
+
         - id: club-service-swagger
           uri: http://club-service:8080
           predicates:
             - Path=/club/v3/api-docs/**
           filters:
             - RewritePath=/club/(?<segment>.*), /$\{segment}
+
+        - id: application-service-swagger
+          uri: http://application-service:8080
+          predicates:
+            - Path=/application/v3/api-docs/**
+          filters:
+            - RewritePath=/application/(?<segment>.*), /$\{segment}
 
         - id: club-service-swagger-ui
           uri: http://club-service:8080
@@ -38,6 +52,13 @@ spring:
           filters:
             - RewritePath=/club/(?<segment>.*), /$\{segment}
 
+        - id: application-service-swagger-ui
+          uri: http://application-service:8080
+          predicates:
+            - Path=/application/swagger-ui/**
+          filters:
+            - RewritePath=/application/(?<segment>.*), /$\{segment}
+
 springdoc:
   swagger-ui:
     enabled: true
@@ -45,11 +66,14 @@ springdoc:
       name: "동아리 서비스"
       url: http://gateway.gachdong.club/club/v3/api-docs
 
+    urls[1]:
+      name: "지원 서비스"
+      url: http://gateway.gachdong.club/application/v3/api-docs
+
 logging:
   level:
     org.springframework.cloud.gateway: trace
     reactor.netty: trace
-
 #management:
 #  endpoints:
 #    web:
