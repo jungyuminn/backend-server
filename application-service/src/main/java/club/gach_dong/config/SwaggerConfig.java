@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 //@Configuration
 //public class SwaggerConfig {
-//
+
 //    @Value("${app.gateway.endpoint}") String gatewayEndpoint;
 //    @Bean
 //    public OpenAPI openAPI() {
@@ -42,8 +42,8 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         Info info = new Info()
-                .title("PARKING LOTTO API")
-                .description("PARKING LOTTO API 명세서")
+                .title("가츠동 API 명세 - 지원 서비스")
+                .description("지원 서비스에 대한 API 명세입니다.")
                 .version("1.0.0");
         String jwtSchemeName = "JWT TOKEN";
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
