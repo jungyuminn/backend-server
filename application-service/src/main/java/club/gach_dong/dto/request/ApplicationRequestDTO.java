@@ -9,11 +9,11 @@ public class ApplicationRequestDTO {
 
     @Getter
     public static class ToCreateApplicationFormDTO{
-        @NotNull(message = "ClubId가 누락되었습니다.")
-        private Long clubId;
+        @NotNull(message = "ApplyId가 누락되었습니다.")
+        private Long applyId;
 
-        @NotNull(message = "지원서 상태가 누락되었습니다.")
-        @Pattern(regexp = "TEMP|NOTUSE", message = "지원서 상태는 TEMP 또는 NOTUSE 이어야 합니다.")
+        @NotNull(message = "지원 양식 상태가 누락되었습니다.")
+        @Pattern(regexp = "TEMPORARY_SAVED|SAVED", message = "지원 양식 상태는 TEMPORARY_SAVED 또는 SAVED 이어야 합니다.")
         private String status;
 
         @NotNull(message = "지원서 이름이 누락되었습니다.")
