@@ -107,4 +107,28 @@ public class ApplicationService {
                 .formBody(applicationForm.getBody())
                 .build();
     }
+
+    @Transactional
+    public void deleteApplicationForm(Long formId, HttpServletRequest httpServletRequest){
+        //Verify Club Admin Auth with Club_id, User_Id
+        //Get userId
+        Long userId = 0L;
+
+
+        Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
+        if(applicationFormOptional.isEmpty()){
+            throw new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND);
+        }
+
+        ApplicationForm applicationForm = applicationFormOptional.get();
+
+        checkAuth(userId, applicationForm.getApplyId());
+
+        if(applicationForm.getApplicationFormStatus() == ApplicationFormStatus.IN_USE){
+            throw new CustomException(ErrorStatus.APPLICATION_FORM_IN_USE);
+        }
+
+        applicationFormRepository.deleteById(formId);
+    }
+
 }
