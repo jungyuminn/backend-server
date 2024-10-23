@@ -131,4 +131,26 @@ public class ApplicationService {
         applicationFormRepository.deleteById(formId);
     }
 
+
+    @Transactional
+    public ApplicationResponseDTO.ToCreateApplicationFormDTO changeApplicationForm(Long formId, ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest){
+
+        //Verify Club Admin Auth with Club_id, User_Id
+        //Get userId
+        Long userId = 0L;
+
+        checkAuth(userId, toCreateApplicationFormDTO.getApplyId());
+
+        Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
+        if(applicationFormOptional.isEmpty()){
+            throw new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND);
+        }
+
+        ApplicationForm applicationForm = applicationFormOptional.get();
+
+        deleteApplicationForm(formId, httpServletRequest);
+
+        return createApplicationForm(toCreateApplicationFormDTO, httpServletRequest);
+    }
+
 }

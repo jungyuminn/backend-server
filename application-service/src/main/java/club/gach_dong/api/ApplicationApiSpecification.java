@@ -44,9 +44,9 @@ public interface ApplicationApiSpecification {
                                                                              @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "일반 추첨 신청에 필요한 요청 데이터") @Valid ApplicationRequestDTO.ToApplyClub toApplyClub,
                                                                              HttpServletRequest httpServletRequest);
 
-    @Operation(summary = "동아리 지원서 양식 생성 요청 API", description = "동아리 지원서 양식을 수정합니다.")
-    @PutMapping("/application/admin/form/create")
-    ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> changeApplicationForm(@Valid @RequestBody ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest);
+    @Operation(summary = "동아리 지원서 양식 수정 요청 API", description = "동아리 지원서 양식을 수정합니다.")
+    @PutMapping("/application/admin/form/{form_id}")
+    ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> changeApplicationForm(@PathVariable("form_id") Long formId, @Valid @RequestBody ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest);
 
     @Operation(summary = "동아리 지원 API", description = "동아리에 지원을 수정합니다.")
     @PutMapping(value = "/application/{apply_id} ", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
