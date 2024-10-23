@@ -23,3 +23,13 @@ spring:
         show_sql: true
         use_sql_comments: true
         dialect: org.hibernate.dialect.MySQLDialect
+
+  cloud:
+    gcp:
+      storage:
+        credentials:
+          location: ${GCP_SERVICE_KEY}
+        project-id: ${GCP_PROJECT_ID}
+        bucket: ${GCP_BUCKET_NAME}
+        path:
+          applicationDocs: ${GCP_APPLICATION}
