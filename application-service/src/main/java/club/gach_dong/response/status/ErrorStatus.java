@@ -18,6 +18,18 @@ public enum ErrorStatus {
 
     APPLICATION_FORM_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICATIONFORM401", "ApplicationForm이 없습니다."),
     APPLICATION_FORM_IN_USE(HttpStatus.CONFLICT, "APPLICATIONFORM402", "이미 사용중인 지원서 양식입니다."),
+
+    APPLICATION_DUPLICATED(HttpStatus.CONFLICT, "APPLICATION401", "신청이 중복되었습니다."),
+
+
+
+    //  파일 업로드 관련
+    FILE_NAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "FILE4001", "업로드한 문서의 이름이 없습니다."),
+    FILE_NAME_TOO_LONG(HttpStatus.BAD_REQUEST, "FILE4002", "업로드한 문서의 이름 너무 깁니다."),
+    FILE_TOO_LARGE(HttpStatus.PAYLOAD_TOO_LARGE, "FILE4003", "업로드한 문서의 전체 크기가 너무 큽니다."),
+    FILE_FORMAT_NOT_SUPPORTED(HttpStatus.BAD_REQUEST, "FILE4001", "업로드한 파일의 형식이 잘못 되었습니다."),
+    FILE_NAME_DUPLICATED(HttpStatus.CONFLICT, "FILE4005", "업로드한 파일 이름이 중복됩니다."),
+    FILE_TOO_MANY(HttpStatus.PAYLOAD_TOO_LARGE, "FILE4006", "업로드한 파일이 너무 많습니다."),
     ;
     //
     private final HttpStatus httpStatus;

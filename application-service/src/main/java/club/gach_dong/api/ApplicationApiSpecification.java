@@ -40,8 +40,8 @@ public interface ApplicationApiSpecification {
     @Operation(summary = "동아리 지원 API", description = "동아리에 지원합니다.")
     @PostMapping(value = "/application/{apply_id} ", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> createApplication(@PathVariable("apply_id") Long applyId,
-                                                                             @RequestPart(value = "certificateDocs", required = true) @Parameter(description = "업로드할 인증서 문서 리스트") List<MultipartFile> certificateDocs,
-                                                                             @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "일반 추첨 신청에 필요한 요청 데이터") @Valid ApplicationRequestDTO.ToApplyClub toApplyClub,
+                                                                             @RequestPart(value = "certificateDocs", required = true) @Parameter(description = "업로드할 문서 리스트") List<MultipartFile> files,
+                                                                             @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "동아리 지원에 필요한 요청 데이터") @Valid ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
                                                                              HttpServletRequest httpServletRequest);
 
     @Operation(summary = "동아리 지원서 양식 수정 요청 API", description = "동아리 지원서 양식을 수정합니다.")
@@ -51,13 +51,13 @@ public interface ApplicationApiSpecification {
     @Operation(summary = "동아리 지원 API", description = "동아리에 지원을 수정합니다.")
     @PutMapping(value = "/application/{apply_id} ", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> changeApplication(@PathVariable("apply_id") Long applyId,
-                                                                             @RequestPart(value = "certificateDocs", required = true) @Parameter(description = "업로드할 인증서 문서 리스트") List<MultipartFile> certificateDocs,
-                                                                             @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "일반 추첨 신청에 필요한 요청 데이터") @Valid ApplicationRequestDTO.ToApplyClub toApplyClub,
+                                                                             @RequestPart(value = "certificateDocs", required = true) @Parameter(description = "업로드할 문서 리스트") List<MultipartFile> certificateDocs,
+                                                                             @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "동아리 지원에 필요한 요청 데이터") @Valid ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
                                                                              HttpServletRequest httpServletRequest);
 
     @Operation(summary = "지원 양식 삭제 API", description = "지원서 양식 ID를 이용해 양식을 삭제합니다.")
     @DeleteMapping("/admin/form/{formId}")
-    ResForm<?> deleteForm(@PathVariable("formId") Long formId, HttpServletRequest httpServletRequest);
+    ResForm<?> deleteApplicationForm(@PathVariable("formId") Long formId, HttpServletRequest httpServletRequest);
 
     @Operation(summary = "사용자 지원 취소 API", description = "지원 ID를 이용해 지원을 취소합니다.")
     @DeleteMapping("/apply/{applyId}")

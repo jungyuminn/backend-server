@@ -29,6 +29,12 @@ import java.util.UUID;
 public class ApplicationService {
 
     private final ApplicationFormRepository applicationFormRepository;
+    private final ApplicationRepository applicationRepository;
+    private final FileService fileService;
+    private final ObjectStorageService objectStorageService;
+    private final ObjectStorageServiceConfig objectStorageServiceConfig;
+    private final ApplicationDocsRepository applicationDocsRepository;
+
     @Transactional
     public ApplicationResponseDTO.ToCreateApplicationFormDTO createApplicationForm(ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest){
 
@@ -151,6 +157,72 @@ public class ApplicationService {
         deleteApplicationForm(formId, httpServletRequest);
 
         return createApplicationForm(toCreateApplicationFormDTO, httpServletRequest);
+    }
+
+    @Transactional
+    public ApplicationResponseDTO.ToCreateApplicationDTO createApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, HttpServletRequest httpServletRequest){
+
+        //Verify it is valid apply
+        //In constructions!!!
+        checkValidApply(applyId);
+
+        //Get userId
+        Long userId = 0L;
+
+        //Check it is duplicated
+        Optional<Application> applicationOptional = applicationRepository.findByUserIdAndApplyId(userId, applyId);
+        if(applicationOptional.isPresent()){
+            Application application = applicationOptional.get();
+            if(!Objects.equals(application.getApplicationStatus(), "TEMP")){
+                throw new CustomException(ErrorStatus.APPLICATION_DUPLICATED);
+            }
+        }
+
+        //업로드 할 파일 검증 (길이, 확장자 등)
+        fileService.validateCertificateFiles(files);
+
+        if (files.size() > 5) {
+            throw new CustomException(ErrorStatus.FILE_TOO_MANY);
+        }
+
+        //uploadCertFiles
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
+            String uuid = UUID.randomUUID().toString();
+            String fileUrl = objectStorageService.uploadObject(objectStorageServiceConfig.getApplicationDocsDir(), uuid, file);
+
+            ApplicationDocs applicationDocs = ApplicationDocs.builder()
+                    .applicationId(toApplyClub.getApplyId())
+                    .fileName(fileName)
+                    .fileUrl(fileUrl)
+                    .build();
+            applicationDocsRepository.save(applicationDocs);
+        }
+
+        Application application = Application.builder()
+                .userId(userId)
+                .applyId(applyId)
+                .applicationFormId(toApplyClub.getApplicationFormId())
+                .applicationBody(toApplyClub.getFormBody())
+                .applicationStatus(toApplyClub.getStatus())
+                .clubName(toApplyClub.getClubName())
+                .build();
+
+        Application applicationId = applicationRepository.save(application);
+
+        return ApplicationResponseDTO.ToCreateApplicationDTO.builder()
+                .applyId(applicationId.getId())
+                .build();
+    }
+
+    public void checkValidApply(Long applyId){
+
+        //send to apply
+
+        if(false){
+            throw new CustomException(ErrorStatus._BAD_REQUEST);
+        }
+
     }
 
 }
