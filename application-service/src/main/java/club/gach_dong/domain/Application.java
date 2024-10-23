@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
+@Builder
 @Entity(name = "application")
 public class Application {
 
@@ -24,7 +25,6 @@ public class Application {
     @Column(name = "application_form_id" ,nullable = false)
     private Long applicationFormId;
 
-
     @Column(name = "application_body" ,nullable = false, length = 30000)
     private String applicationBody;
 
@@ -33,6 +33,5 @@ public class Application {
 
     @Column(name = "club_name" ,nullable = false, length = 80)
     private String clubName;
-
 
 }
