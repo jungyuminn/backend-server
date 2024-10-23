@@ -31,7 +31,7 @@ public interface ApplicationApiSpecification {
 
     @Operation(summary = "사용자 지원 내역 목록 조회 API", description = "지원 내역 목록을 조회합니다.")
     @GetMapping("/application/list")
-    ResForm<ApplicationResponseDTO.ToGetApplicationHistoryListDTO> getFormInfoUser(HttpServletRequest httpServletRequest);
+    ResForm<ApplicationResponseDTO.ToGetApplicationHistoryListDTO> getaApplicationHistory(HttpServletRequest httpServletRequest);
 
     @Operation(summary = "동아리 지원서 양식 생성 요청 API", description = "동아리 지원서 양식을 생성합니다.")
     @PostMapping("/application/admin/form/create")

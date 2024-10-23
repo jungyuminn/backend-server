@@ -32,7 +32,7 @@ public class ApplicationController implements ApplicationApiSpecification {
     }
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToGetApplicationHistoryListDTO> getFormInfoUser(HttpServletRequest httpServletRequest) {
+    public ResForm<ApplicationResponseDTO.ToGetApplicationHistoryListDTO> getaApplicationHistory(HttpServletRequest httpServletRequest) {
         return null;
     }
 
