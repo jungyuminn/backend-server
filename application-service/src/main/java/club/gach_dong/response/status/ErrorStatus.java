@@ -16,6 +16,7 @@ public enum ErrorStatus {
     
     CLUB_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "APPLICATION401", "인증이 필요합니다."),
 
+    APPLICATION_FORM_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICATIONFORM401", "ApplicationForm이 없습니다."),
     ;
     //
     private final HttpStatus httpStatus;

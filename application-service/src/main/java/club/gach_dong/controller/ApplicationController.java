@@ -20,13 +20,15 @@ public class ApplicationController implements ApplicationApiSpecification {
     public final ApplicationService applicationService;
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToGetFormInfoAdminDTO> getFormInfoAdmin(Long drawId, HttpServletRequest httpServletRequest) {
-        return null;
+    public ResForm<ApplicationResponseDTO.ToGetFormInfoAdminDTO> getFormInfoAdmin(Long formId, HttpServletRequest httpServletRequest) {
+        ApplicationResponseDTO.ToGetFormInfoAdminDTO toGetFormInfoAdminDTO = applicationService.getFormInfoAdmin(formId, httpServletRequest);
+        return ResForm.onSuccess(InSuccess.APPLICATION_FORM_GET_ADMIN_INFO, toGetFormInfoAdminDTO);
     }
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToGetFormInfoUserDTO> getFormInfoUser(Long drawId, HttpServletRequest httpServletRequest) {
-        return null;
+    public ResForm<ApplicationResponseDTO.ToGetFormInfoUserDTO> getFormInfoUser(Long formId, HttpServletRequest httpServletRequest) {
+        ApplicationResponseDTO.ToGetFormInfoUserDTO toGetFormInfoUserDTO = applicationService.getFormInfoUser(formId, httpServletRequest);
+        return ResForm.onSuccess(InSuccess.APPLICATION_FORM_GET_USER_INFO, toGetFormInfoUserDTO);
     }
 
     @Override

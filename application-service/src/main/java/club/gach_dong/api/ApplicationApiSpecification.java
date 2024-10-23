@@ -13,8 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Tag(name = "지원 API", description = "동아리 지원 관련 API")
@@ -25,11 +23,11 @@ public interface ApplicationApiSpecification {
 
     @Operation(summary = "관리자용 지원서 양식 조회 API", description = "지원서 양식 ID를 이용해 양식을 조회합니다.")
     @GetMapping("/admin/form/{formId}")
-    ResForm<ApplicationResponseDTO.ToGetFormInfoAdminDTO> getFormInfoAdmin(@PathVariable("formId") Long drawId, HttpServletRequest httpServletRequest);
+    ResForm<ApplicationResponseDTO.ToGetFormInfoAdminDTO> getFormInfoAdmin(@PathVariable("formId") Long formId, HttpServletRequest httpServletRequest);
 
     @Operation(summary = "사용자용 지원서 양식 조회 API", description = "지원서 양식 ID를 이용해 양식을 조회합니다.")
     @GetMapping("/form/{formId}")
-    ResForm<ApplicationResponseDTO.ToGetFormInfoUserDTO> getFormInfoUser(@PathVariable("formId") Long drawId, HttpServletRequest httpServletRequest);
+    ResForm<ApplicationResponseDTO.ToGetFormInfoUserDTO> getFormInfoUser(@PathVariable("formId") Long formId, HttpServletRequest httpServletRequest);
 
     @Operation(summary = "사용자 지원 내역 목록 조회 API", description = "지원 내역 목록을 조회합니다.")
     @GetMapping("/application/list")

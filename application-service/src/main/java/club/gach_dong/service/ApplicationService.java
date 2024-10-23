@@ -62,4 +62,49 @@ public class ApplicationService {
         }
 
     }
+
+    public ApplicationResponseDTO.ToGetFormInfoAdminDTO getFormInfoAdmin(Long formId, HttpServletRequest httpServletRequest){
+
+        //Verify Club Admin Auth with Club_id, User_Id
+        //Get userId
+        Long userId = 0L;
+
+
+        Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
+        if(applicationFormOptional.isEmpty()){
+            throw new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND);
+        }
+
+        ApplicationForm applicationForm = applicationFormOptional.get();
+
+        checkAuth(userId, applicationForm.getApplyId());
+
+        return ApplicationResponseDTO.ToGetFormInfoAdminDTO.builder()
+                .formId(applicationForm.getId())
+                .formName(applicationForm.getFormName())
+                .formBody(applicationForm.getBody())
+                .formStatus(String.valueOf(applicationForm.getApplicationFormStatus()))
+                .formSettings(null)
+                .build();
+    }
+
+    public ApplicationResponseDTO.ToGetFormInfoUserDTO getFormInfoUser(Long formId, HttpServletRequest httpServletRequest){
+
+        //Get userId
+        Long userId = 0L;
+
+
+        Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
+        if(applicationFormOptional.isEmpty()){
+            throw new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND);
+        }
+
+        ApplicationForm applicationForm = applicationFormOptional.get();
+
+        return ApplicationResponseDTO.ToGetFormInfoUserDTO.builder()
+                .formId(applicationForm.getId())
+                .formName(applicationForm.getFormName())
+                .formBody(applicationForm.getBody())
+                .build();
+    }
 }
