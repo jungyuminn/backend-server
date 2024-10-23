@@ -14,6 +14,7 @@ public enum ErrorStatus {
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
     _EMPTY_FIELD(HttpStatus.NO_CONTENT, "COMMON404", "입력 값이 누락되었습니다."),
     
+    CLUB_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "APPLICATION401", "인증이 필요합니다."),
 
     ;
     //

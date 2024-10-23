@@ -4,16 +4,21 @@ import club.gach_dong.api.ApplicationApiSpecification;
 import club.gach_dong.dto.request.ApplicationRequestDTO;
 import club.gach_dong.dto.response.ApplicationResponseDTO;
 import club.gach_dong.response.ResForm;
+import club.gach_dong.response.status.InSuccess;
+import club.gach_dong.service.ApplicationService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class ApplicationController implements ApplicationApiSpecification {
+
+    public final ApplicationService applicationService;
+
     @Override
     public ResForm<ApplicationResponseDTO.ToGetFormInfoAdminDTO> getFormInfoAdmin(Long drawId, HttpServletRequest httpServletRequest) {
         return null;
@@ -30,8 +35,9 @@ public class ApplicationController implements ApplicationApiSpecification {
     }
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> createApplicationForm(ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest) {
-        return null;
+    public ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> createApplicationForm(ApplicationRequestDTO.ToCreateApplicationFormDTO createApplicationFormDTO, HttpServletRequest httpServletRequest) {
+        ApplicationResponseDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO = applicationService.createApplicationForm(createApplicationFormDTO, httpServletRequest);
+        return ResForm.onSuccess(InSuccess.APPLICATION_FORM_CREATED, toCreateApplicationFormDTO);
     }
 
     @Override
