@@ -8,6 +8,7 @@ import club.gach_dong.dto.response.ClubSummaryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,8 @@ public interface ClubApiSpecification {
     )
     @PostMapping("/create")
     ResponseEntity<ClubResponse> createClub(
-            @RequestBody(required = true)
+            @Valid
+            @RequestBody
             CreateClubRequest createClubRequest
     );
 }

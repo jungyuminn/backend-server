@@ -33,7 +33,7 @@ public class ClubController implements ClubApiSpecification {
     }
 
     @Override
-    public ResponseEntity<ClubResponse> createClub(@RequestBody @Validated CreateClubRequest createClubRequest) {
+    public ResponseEntity<ClubResponse> createClub(CreateClubRequest createClubRequest) {
         ClubResponse clubResponse = clubService.createClub(createClubRequest);
         return new ResponseEntity<>(clubResponse, HttpStatus.CREATED);
     }
