@@ -225,4 +225,31 @@ public class ApplicationService {
 
     }
 
+    @Transactional
+    public void deleteApplication(Long applyId, HttpServletRequest httpServletRequest) {
+
+        //Get userId
+        Long userId = 0L;
+
+        Optional<Application> applicationOptional = applicationRepository.findByUserIdAndApplyId(userId, applyId);
+
+        //If application not present
+        if(applicationOptional.isEmpty()){
+            throw new CustomException(ErrorStatus.APPLICATION_NOT_PRESENT);
+        }
+
+        Application application = applicationOptional.get();
+
+        //If application is not owner of user
+        if(!userId.equals(application.getUserId())){
+            throw new CustomException(ErrorStatus.APPLICATION_UNAUTHORIZED);
+        }
+
+        //If application couldn't be deleted.
+        if(Objects.equals(application.getApplicationStatus(), "SAVED")){
+            throw new CustomException(ErrorStatus.APPLICATION_NOT_CHANGEABLE);
+        }
+
+        applicationRepository.delete(application);
+    }
 }

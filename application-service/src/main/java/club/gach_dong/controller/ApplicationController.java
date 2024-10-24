@@ -68,7 +68,8 @@ public class ApplicationController implements ApplicationApiSpecification {
 
     @Override
     public ResForm<?> deleteApplication(Long applyId, HttpServletRequest httpServletRequest) {
-        return null;
+        applicationService.deleteApplication(applyId, httpServletRequest);
+        return ResForm.onSuccess(InSuccess.APPLICATION_DELETED, null);
     }
 
     ;

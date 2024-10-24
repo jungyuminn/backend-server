@@ -20,6 +20,9 @@ public enum ErrorStatus {
     APPLICATION_FORM_IN_USE(HttpStatus.CONFLICT, "APPLICATIONFORM402", "이미 사용중인 지원서 양식입니다."),
 
     APPLICATION_DUPLICATED(HttpStatus.CONFLICT, "APPLICATION401", "신청이 중복되었습니다."),
+    APPLICATION_NOT_PRESENT(HttpStatus.NOT_FOUND, "APPLICATION402", "존재하지 않는 신청입니다."),
+    APPLICATION_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "APPLICATION403", "인증이 필요합니다."),
+    APPLICATION_NOT_CHANGEABLE(HttpStatus.FORBIDDEN, "APPLICATION404", "해당 신청의 상태를 변경할 수 없습니다."),
 
 
 
