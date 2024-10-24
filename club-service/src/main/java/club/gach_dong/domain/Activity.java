@@ -3,11 +3,13 @@ package club.gach_dong.domain;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
+@Getter
 @Table(name = "activity")
 @Schema(description = "동아리 활동 정보를 나타내는 엔티티")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

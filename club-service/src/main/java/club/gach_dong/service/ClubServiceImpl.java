@@ -1,12 +1,15 @@
 package club.gach_dong.service;
 
+import club.gach_dong.domain.Activity;
 import club.gach_dong.domain.Club;
 import club.gach_dong.dto.request.CreateClubRequest;
+import club.gach_dong.dto.response.ClubActivityResponse;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 import club.gach_dong.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 
 import java.util.ArrayList;
@@ -53,5 +56,18 @@ public class ClubServiceImpl implements ClubService {
         );
         Club savedClub = clubRepository.save(club);
         return ClubResponse.from(savedClub);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ClubActivityResponse> getClubActivities(String clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new NotFoundException("Club not found"));
+
+        List<Activity> activities = club.getActivities();
+
+        return activities.stream()
+                .map(ClubActivityResponse::from)  // 각 Activity 엔티티를 DTO로 변환
+                .toList();
     }
 }

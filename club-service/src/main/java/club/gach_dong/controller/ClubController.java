@@ -3,6 +3,7 @@ package club.gach_dong.controller;
 import club.gach_dong.api.ClubApiSpecification;
 import club.gach_dong.dto.request.CreateClubRequest;
 import club.gach_dong.dto.response.ArrayResponse;
+import club.gach_dong.dto.response.ClubActivityResponse;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 import club.gach_dong.service.ClubService;
@@ -36,5 +37,11 @@ public class ClubController implements ClubApiSpecification {
     public ResponseEntity<ClubResponse> createClub(CreateClubRequest createClubRequest) {
         ClubResponse clubResponse = clubService.createClub(createClubRequest);
         return new ResponseEntity<>(clubResponse, HttpStatus.CREATED);
+    }
+
+    @Override
+    public ArrayResponse<ClubActivityResponse> getClubActivities(String clubId) {
+        List<ClubActivityResponse> clubActivityResponse = clubService.getClubActivities(clubId);
+        return ArrayResponse.of(clubActivityResponse);
     }
 }
