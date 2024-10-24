@@ -208,6 +208,10 @@ public class ApplicationService {
                 .clubName(toApplyClub.getClubName())
                 .build();
 
+        if(Objects.equals(application.getApplicationStatus(), "TEMP")){
+            deleteApplication(applyId, httpServletRequest);
+        }
+
         Application applicationId = applicationRepository.save(application);
 
         return ApplicationResponseDTO.ToCreateApplicationDTO.builder()
