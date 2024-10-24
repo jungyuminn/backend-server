@@ -1,10 +1,6 @@
 package club.gach_dong.controller;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -17,11 +13,7 @@ import club.gach_dong.dto.LoginDto;
 import club.gach_dong.dto.RegistrationDto;
 import club.gach_dong.entity.User;
 import club.gach_dong.service.UserService;
-
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import io.jsonwebtoken.security.Keys;
-import java.util.Date;
+import club.gach_dong.util.JwtUtil;
 
 @RestController
 @RequestMapping("/auth")
@@ -30,16 +22,7 @@ public class AuthController implements AuthApiSpecification {
 
     private final UserService userService;
     private final JavaMailSender mailSender;
-
-    @Value("${jwt.secret}")
-    private String jwtSecret;
-
-    private Key jwtKey;
-
-    @PostConstruct
-    public void init() {
-        jwtKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
-    }
+    private final JwtUtil jwtUtil;
 
     @Override
     @PostMapping("/send_verification_code")
@@ -74,7 +57,7 @@ public class AuthController implements AuthApiSpecification {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
             }
 
-            String token = generateToken(user);
+            String token = jwtUtil.generateToken(user);
             return ResponseEntity.ok(new AuthResponse(token));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -84,7 +67,7 @@ public class AuthController implements AuthApiSpecification {
     @PostMapping("/reset_password")
     public ResponseEntity<String> resetPassword(@RequestHeader("Authorization") String token) {
         try {
-            String email = getEmailFromToken(token);
+            String email = jwtUtil.getEmailFromToken(token);
             userService.resetPassword(email);
             return ResponseEntity.ok("임시 비밀번호가 이메일로 발송되었습니다.");
         } catch (Exception e) {
@@ -96,7 +79,7 @@ public class AuthController implements AuthApiSpecification {
     @PostMapping("/change_password")
     public ResponseEntity<String> changePassword(@RequestHeader("Authorization") String token, @Valid @RequestBody ChangePasswordDto changePasswordDto) {
         try {
-            String email = getEmailFromToken(token);
+            String email = jwtUtil.getEmailFromToken(token);
             User user = userService.findByEmail(email);
 
             if (userService.checkPassword(user, changePasswordDto.getCurrentPassword())) {
@@ -108,30 +91,6 @@ public class AuthController implements AuthApiSpecification {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호 변경 실패: " + e.getMessage());
-        }
-    }
-
-    private String generateToken(User user) {
-        return Jwts.builder()
-                .setSubject(user.getEmail())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
-                .signWith(jwtKey, SignatureAlgorithm.HS512)
-                .compact();
-    }
-
-    private String getEmailFromToken(String token) {
-        try {
-            return Jwts.parser()
-                    .setSigningKey(jwtKey)
-                    .parseClaimsJws(token.replace("Bearer ", ""))
-                    .getBody()
-                    .getSubject();
-        } catch (io.jsonwebtoken.ExpiredJwtException e) {
-            throw new RuntimeException("토큰이 만료되었습니다.");
-        } catch (io.jsonwebtoken.SignatureException e) {
-            throw new RuntimeException("유효하지 않은 토큰 서명입니다.");
-        } catch (Exception e) {
-            throw new RuntimeException("유효하지 않은 토큰입니다.");
         }
     }
 }
