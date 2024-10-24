@@ -2,8 +2,10 @@ package club.gach_dong.service;
 
 import club.gach_dong.domain.Activity;
 import club.gach_dong.domain.Club;
+import club.gach_dong.domain.ContactInfo;
 import club.gach_dong.dto.request.CreateClubRequest;
 import club.gach_dong.dto.response.ClubActivityResponse;
+import club.gach_dong.dto.response.ClubContactInfoResponse;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 import club.gach_dong.repository.ClubRepository;
@@ -67,7 +69,19 @@ public class ClubServiceImpl implements ClubService {
         List<Activity> activities = club.getActivities();
 
         return activities.stream()
-                .map(ClubActivityResponse::from)  // 각 Activity 엔티티를 DTO로 변환
+                .map(ClubActivityResponse::from)
+                .toList();
+    }
+
+    @Override
+    public List<ClubContactInfoResponse> getClubContactInfo(String clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new NotFoundException("Club not found"));
+
+        List<ContactInfo> contactInfos = club.getContactInfo();
+
+        return contactInfos.stream()
+                .map(ClubContactInfoResponse::from)
                 .toList();
     }
 }

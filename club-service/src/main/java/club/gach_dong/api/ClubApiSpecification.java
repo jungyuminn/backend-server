@@ -2,10 +2,7 @@ package club.gach_dong.api;
 
 
 import club.gach_dong.dto.request.CreateClubRequest;
-import club.gach_dong.dto.response.ArrayResponse;
-import club.gach_dong.dto.response.ClubActivityResponse;
-import club.gach_dong.dto.response.ClubResponse;
-import club.gach_dong.dto.response.ClubSummaryResponse;
+import club.gach_dong.dto.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,4 +54,13 @@ public interface ClubApiSpecification {
             @PathVariable String clubId
     );
 
+    @Operation(
+            summary = "동아리 연락처 정보 조회",
+            description = "동아리 연락처 정보를 조회합니다."
+    )
+    @GetMapping("/{clubId}/contact-info")
+    ArrayResponse<ClubContactInfoResponse> getClubContactInfo(
+            @Parameter(description = "동아리 ID", example = "ansier-enicsei-1233na-bndknar", required = true)
+            @PathVariable String clubId
+    );
 }

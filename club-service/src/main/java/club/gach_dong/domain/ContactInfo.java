@@ -4,9 +4,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "contact_info")
 @Schema(description = "동아리의 연락처 정보를 나타내는 엔티티")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
