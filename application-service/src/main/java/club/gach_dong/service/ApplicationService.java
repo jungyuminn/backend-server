@@ -252,4 +252,10 @@ public class ApplicationService {
 
         applicationRepository.delete(application);
     }
+
+    @Transactional
+    public ApplicationResponseDTO.ToCreateApplicationDTO changeApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, HttpServletRequest httpServletRequest) {
+        deleteApplication(applyId, httpServletRequest);
+        return createApplication(applyId, files, toApplyClub, httpServletRequest);
+    }
 }

@@ -57,7 +57,8 @@ public class ApplicationController implements ApplicationApiSpecification {
 
     @Override
     public ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> changeApplication(Long applyId, List<MultipartFile> certificateDocs, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, HttpServletRequest httpServletRequest) {
-        return null;
+        ApplicationResponseDTO.ToCreateApplicationDTO toChangeApplicationDTO = applicationService.changeApplication(applyId, certificateDocs, toApplyClub, httpServletRequest);
+        return ResForm.onSuccess(InSuccess.APPLICATION_CHANGED, toChangeApplicationDTO);
     }
 
     @Override
