@@ -1,7 +1,10 @@
 package club.gach_dong.dto;
 
 import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
 
 @Getter
 @Table(name = "users")
@@ -18,6 +21,7 @@ public class RegistrationDto {
     private String password;
 
     @NotBlank(message = "이름은 필수값입니다.")
+    @Size(max = 100, message = "최대 허용 길이를 초과하였습니다.")
     private String name;
 
     @NotBlank(message = "권한은 필수값입니다.")
