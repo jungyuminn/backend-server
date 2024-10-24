@@ -3,7 +3,7 @@ package club.gach_dong.dto;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Data
+@Getter
 @Table(name = "users")
 public class RegistrationDto {
     private String email;
