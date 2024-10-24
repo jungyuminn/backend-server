@@ -185,7 +185,7 @@ public class ApplicationService {
             throw new CustomException(ErrorStatus.FILE_TOO_MANY);
         }
 
-        //uploadCertFiles
+        //uploadFiles
         for (MultipartFile file : files) {
             String fileName = file.getOriginalFilename();
             String uuid = UUID.randomUUID().toString();
