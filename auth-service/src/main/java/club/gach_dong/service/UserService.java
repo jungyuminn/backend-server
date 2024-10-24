@@ -6,8 +6,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import test.login.entity.User;
-import test.login.repository.UserRepository;
+import club.gach_dong.entity.User;
+import club.gach_dong.repository.UserRepository;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
