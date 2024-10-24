@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface ClubRepository extends JpaRepository<Club, String> {
     List<Club> findAll();
 
-    Optional<Club> findByName(String name);
+    Optional<Club> findById(String id);
 }

@@ -1,13 +1,15 @@
 package club.gach_dong.service;
 
+import club.gach_dong.domain.Club;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 import club.gach_dong.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,15 +19,20 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public List<ClubSummaryResponse> getAllClubs() {
-        return clubRepository.findAll().stream()
-                .map(ClubSummaryResponse::from)
-                .collect(Collectors.toList());
+        List<ClubSummaryResponse> clubList = new ArrayList<>();
+
+        for (Club club : clubRepository.findAll()) {
+            ClubSummaryResponse from = ClubSummaryResponse.from(club);
+            clubList.add(from);
+        }
+
+        return clubList;
     }
 
     @Override
-    public ClubResponse getClub(String name) {
-        return clubRepository.findByName(name)
+    public ClubResponse getClub(String id) {
+        return clubRepository.findById(id)
                 .map(ClubResponse::from)
-                .orElseThrow(() -> new RuntimeException("Club not found"));
+                .orElseThrow(() -> new NotFoundException("Club not found"));
     }
 }
