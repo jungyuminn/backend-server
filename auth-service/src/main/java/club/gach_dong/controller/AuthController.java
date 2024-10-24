@@ -1,5 +1,15 @@
 package club.gach_dong.controller;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 import club.gach_dong.api.AuthApiSpecification;
 import club.gach_dong.dto.AuthResponse;
 import club.gach_dong.dto.ChangePasswordDto;
@@ -7,31 +17,19 @@ import club.gach_dong.dto.LoginDto;
 import club.gach_dong.dto.RegistrationDto;
 import club.gach_dong.entity.User;
 import club.gach_dong.service.UserService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController implements AuthApiSpecification {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private JavaMailSender mailSender;
+    private final UserService userService;
+    private final JavaMailSender mailSender;
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -62,7 +60,7 @@ public class AuthController implements AuthApiSpecification {
             userService.completeRegistration(registrationDto.getEmail(), registrationDto.getPassword(), registrationDto.getName(), registrationDto.getRole());
             return ResponseEntity.ok("회원가입이 완료되었습니다.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입 완료 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입 실패: " + e.getMessage());
         }
     }
 
