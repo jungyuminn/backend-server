@@ -69,12 +69,7 @@ public class UserService {
     }
 
     public void completeRegistration(String email, String password, String name, String role) {
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setName(name);
-        user.setRole(role);
-        user.setEnabled(true);
+        User user = User.of(email, passwordEncoder.encode(password), name, role);
         userRepository.save(user);
     }
 

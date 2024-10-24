@@ -40,12 +40,20 @@ public class AuthController implements AuthApiSpecification {
     public ResponseEntity<String> completeRegistration(@Valid @RequestBody RegistrationDto registrationDto) {
         try {
             userService.verifyCode(registrationDto.getEmail(), registrationDto.getCode());
-            userService.completeRegistration(registrationDto.getEmail(), registrationDto.getPassword(), registrationDto.getName(), registrationDto.getRole());
+
+            userService.completeRegistration(
+                    registrationDto.getEmail(),
+                    registrationDto.getPassword(),
+                    registrationDto.getName(),
+                    registrationDto.getRole()
+            );
+
             return ResponseEntity.ok("회원가입이 완료되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입 실패: " + e.getMessage());
         }
     }
+
 
     @Override
     @PostMapping("/login")
@@ -58,7 +66,7 @@ public class AuthController implements AuthApiSpecification {
             }
 
             String token = jwtUtil.generateToken(user);
-            return ResponseEntity.ok(new AuthResponse(token));
+            return ResponseEntity.ok(AuthResponse.of(token));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }

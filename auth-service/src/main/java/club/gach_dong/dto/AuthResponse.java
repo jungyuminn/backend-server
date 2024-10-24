@@ -1,13 +1,16 @@
 package club.gach_dong.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
-@Getter @Setter
+@Getter
 public class AuthResponse {
     private String token;
 
-    public AuthResponse(String token) {
+    private AuthResponse(String token) {
         this.token = token;
+    }
+
+    public static AuthResponse of(String token) {
+        return new AuthResponse(token);
     }
 }

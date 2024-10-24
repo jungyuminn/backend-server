@@ -2,9 +2,11 @@ package club.gach_dong.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "auth")
 public class User {
     @Id
@@ -24,4 +26,16 @@ public class User {
     private String role;
 
     private boolean enabled;
+
+    private User(String email, String password, String name, String role, boolean enabled) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.role = role;
+        this.enabled = enabled;
+    }
+
+    public static User of(String email, String password, String name, String role) {
+        return new User(email, password, name, role, true);
+    }
 }
