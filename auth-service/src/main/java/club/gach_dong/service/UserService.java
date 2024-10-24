@@ -1,13 +1,13 @@
 package club.gach_dong.service;
 
-import club.gach_dong.entity.User;
-import club.gach_dong.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import test.login.entity.User;
+import test.login.repository.UserRepository;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +29,10 @@ public class UserService {
 
     public void sendVerificationCode(String email) {
         try {
+            if (!isValidEmail(email)) {
+                throw new RuntimeException("이메일은 gachon.ac.kr 도메인이어야 합니다.");
+            }
+
             if (userRepository.findByEmail(email).isPresent()) {
                 throw new RuntimeException("이메일이 이미 사용 중입니다.");
             }
@@ -119,5 +123,9 @@ public class UserService {
 
     public String encodePassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+    private boolean isValidEmail(String email) {
+        return email != null && email.matches("^[a-zA-Z0-9._%+-]+@gachon\\.ac\\.kr$");
     }
 }
