@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +21,7 @@ public class Club {
     @Id
     @Column(name = "club_id", length = 36, columnDefinition = "CHAR(36)")
     @Schema(description = "동아리 ID", example = "123e4567-e89b-12d3-a456-426614174000")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(name = "club_name", length = 26, columnDefinition = "CHAR(26)")
@@ -62,14 +65,19 @@ public class Club {
     @Schema(description = "동아리 설립 날짜", example = "2020-03-15T10:15:30")
     private LocalDateTime establishedAt;
 
+    @CreatedDate
+    @Column(name = "created_at")
+    @Schema(description = "생성 날짜", example = "2023-10-24T12:00:00")
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
     @Column(name = "updated_at")
     @Schema(description = "마지막 업데이트 날짜", example = "2023-10-24T12:00:00")
     private LocalDateTime updatedAt;
 
-    private Club(String id, String name, ClubCategory category, String shortDescription, String introduction,
+    private Club(String name, ClubCategory category, String shortDescription, String introduction,
                  String clubImageUrl, boolean recruitingStatus, List<Activity> activities, List<Recruitment> recruitment,
-                 List<ContactInfo> contactInfo, LocalDateTime establishedAt, LocalDateTime updatedAt) {
-        this.id = id;
+                 List<ContactInfo> contactInfo, LocalDateTime establishedAt) {
         this.name = name;
         this.category = category;
         this.shortDescription = shortDescription;
@@ -80,14 +88,13 @@ public class Club {
         this.recruitment = recruitment;
         this.contactInfo = contactInfo;
         this.establishedAt = establishedAt;
-        this.updatedAt = updatedAt;
     }
 
-    public static Club of(String id, String name, ClubCategory category, String shortDescription, String introduction,
+    public static Club of(String name, ClubCategory category, String shortDescription, String introduction,
                           String clubImageUrl, boolean recruitingStatus, List<Activity> activities,
                           List<Recruitment> recruitment, List<ContactInfo> contactInfo,
-                          LocalDateTime establishedAt, LocalDateTime updatedAt) {
-        return new Club(id, name, category, shortDescription, introduction, clubImageUrl, recruitingStatus,
-                activities, recruitment, contactInfo, establishedAt, updatedAt);
+                          LocalDateTime establishedAt) {
+        return new Club(name, category, shortDescription, introduction, clubImageUrl, recruitingStatus,
+                activities, recruitment, contactInfo, establishedAt);
     }
 }

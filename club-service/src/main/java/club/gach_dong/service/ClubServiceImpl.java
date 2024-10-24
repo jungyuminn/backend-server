@@ -1,6 +1,7 @@
 package club.gach_dong.service;
 
 import club.gach_dong.domain.Club;
+import club.gach_dong.dto.request.CreateClubRequest;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 import club.gach_dong.repository.ClubRepository;
@@ -34,5 +35,23 @@ public class ClubServiceImpl implements ClubService {
         return clubRepository.findById(id)
                 .map(ClubResponse::from)
                 .orElseThrow(() -> new NotFoundException("Club not found"));
+    }
+
+    @Override
+    public ClubResponse createClub(CreateClubRequest createClubRequest) {
+        Club club = Club.of(
+                createClubRequest.name(),
+                createClubRequest.category(),
+                createClubRequest.shortDescription(),
+                createClubRequest.introduction(),
+                createClubRequest.clubImageUrl(),
+                false,
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                createClubRequest.establishedAt()
+        );
+        Club savedClub = clubRepository.save(club);
+        return ClubResponse.from(savedClub);
     }
 }
