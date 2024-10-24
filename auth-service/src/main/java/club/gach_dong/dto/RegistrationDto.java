@@ -14,6 +14,7 @@ public class RegistrationDto {
     private String email;
 
     @NotBlank(message = "인증코드는 필수값입니다.")
+    @Size(max = 6, message = "인증코드는 6자 이하여야 합니다.")
     private String code;
 
     @NotBlank(message = "비밀번호는 필수값입니다.")
