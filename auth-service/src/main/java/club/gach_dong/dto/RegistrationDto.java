@@ -7,6 +7,7 @@ import lombok.Data;
 @Table(name = "users")
 public class RegistrationDto {
     @NotBlank(message = "이메일은 필수값입니다.")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@gachon\\.ac\\.kr$", message = "이메일은 gachon.ac.kr 도메인이어야 합니다.")
     private String email;
 
     @NotBlank(message = "인증코드는 필수값입니다.")
