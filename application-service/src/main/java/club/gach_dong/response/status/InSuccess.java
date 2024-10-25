@@ -19,6 +19,8 @@ public enum InSuccess {
     APPLICATION_SUCCESS(HttpStatus.OK, "APPLICATION201", "신청에 성공했습니다."),
     APPLICATION_DELETED(HttpStatus.OK, "APPLICATION202", "신청 취소에 성공했습니다."),
     APPLICATION_CHANGED(HttpStatus.OK, "APPLICATION203", "신청 수정에 성공했습니다."),
+    APPLICATION_HISTORY_GET_SUCCESS(HttpStatus.OK, "APPLICATION204", "지원 내역 조회에 성공했습니다."),
+
 
     ;
 

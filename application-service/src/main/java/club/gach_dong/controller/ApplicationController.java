@@ -33,7 +33,8 @@ public class ApplicationController implements ApplicationApiSpecification {
 
     @Override
     public ResForm<ApplicationResponseDTO.ToGetApplicationHistoryListDTO> getaApplicationHistory(HttpServletRequest httpServletRequest) {
-        return null;
+        ApplicationResponseDTO.ToGetApplicationHistoryListDTO toGetApplicationHistoryListDTO = applicationService.getApplicationHistoryList(httpServletRequest);
+        return ResForm.onSuccess(InSuccess.APPLICATION_FORM_GET_USER_INFO, toGetApplicationHistoryListDTO);
     }
 
     @Override

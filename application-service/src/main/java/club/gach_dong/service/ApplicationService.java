@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -263,5 +264,27 @@ public class ApplicationService {
     public ApplicationResponseDTO.ToCreateApplicationDTO changeApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, HttpServletRequest httpServletRequest) {
         deleteApplication(applyId, httpServletRequest);
         return createApplication(applyId, files, toApplyClub, httpServletRequest);
+    }
+
+    @Transactional(readOnly = true)
+    public ApplicationResponseDTO.ToGetApplicationHistoryListDTO getApplicationHistoryList(HttpServletRequest httpServletRequest){
+
+        //Get userId
+        Long userId = 0L;
+
+        List<Application> applicationList = applicationRepository.findAllByUserId(userId);
+
+        List<ApplicationResponseDTO.ToGetApplicationHistoryDTO> applicationHistoryDTOs = applicationList.stream()
+                .map(application -> ApplicationResponseDTO.ToGetApplicationHistoryDTO.builder()
+                        .applicationId(application.getId())
+                        .clubName(application.getClubName())
+                        .status(application.getApplicationStatus())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ApplicationResponseDTO.ToGetApplicationHistoryListDTO.builder()
+                .toGetApplicationHistoryDTO(applicationHistoryDTOs)
+                .build();
+
     }
 }
