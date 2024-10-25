@@ -1,8 +1,11 @@
 spring:
+  profiles:
+    active: local
+
   datasource:
-    url: jdbc:h2:tcp://localhost/~/gach_dong
-    username: sa
-    password:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.h2.Driver
 
   jpa:
@@ -16,8 +19,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: jungyumin041910@gmail.com
-    password: vucm qptp ewdp ujbu
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
@@ -26,11 +29,11 @@ spring:
     cache: false
 
   redis:
-    host: localhost
-    port: 6379
+    host: ${PROD_REDIS_HOST}
+    port: ${PROD_REDIS_PORT}
 
 jwt:
-  secret: b6a7e5c8d2e3f4a8b9c1e2f3d4c5a6b7c8d9e0f1a2b3c4d5e6f7g8h9i0j1k2l3
+  secret: ${JWT_SECRET}
 
 logging:
   level:
