@@ -27,7 +27,7 @@ spring:
 
   redis:
     host: ${PROD_REDIS_HOST}
-    port: ${PROD_REDIS_PORT}
+    port: 6379
 
 jwt:
   secret: ${JWT_SECRET}
