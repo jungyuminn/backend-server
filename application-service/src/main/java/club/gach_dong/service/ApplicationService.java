@@ -181,25 +181,27 @@ public class ApplicationService {
             }
         }
 
-        //업로드 할 파일 검증 (길이, 확장자 등)
-        fileService.validateCertificateFiles(files);
+        if(files!=null){
+            //업로드 할 파일 검증 (길이, 확장자 등)
+            fileService.validateFiles(files);
 
-        if (files.size() > 5) {
-            throw new CustomException(ErrorStatus.FILE_TOO_MANY);
-        }
+            if (files.size() > 5) {
+                throw new CustomException(ErrorStatus.FILE_TOO_MANY);
+            }
 
-        //uploadFiles
-        for (MultipartFile file : files) {
-            String fileName = file.getOriginalFilename();
-            String uuid = UUID.randomUUID().toString();
-            String fileUrl = objectStorageService.uploadObject(objectStorageServiceConfig.getApplicationDocsDir(), uuid, file);
+            //uploadFiles
+            for (MultipartFile file : files) {
+                String fileName = file.getOriginalFilename();
+                String uuid = UUID.randomUUID().toString();
+                String fileUrl = objectStorageService.uploadObject(objectStorageServiceConfig.getApplicationDocsDir(), uuid, file);
 
-            ApplicationDocs applicationDocs = ApplicationDocs.builder()
-                    .applicationId(toApplyClub.getApplyId())
-                    .fileName(fileName)
-                    .fileUrl(fileUrl)
-                    .build();
-            applicationDocsRepository.save(applicationDocs);
+                ApplicationDocs applicationDocs = ApplicationDocs.builder()
+                        .applicationId(toApplyClub.getApplyId())
+                        .fileName(fileName)
+                        .fileUrl(fileUrl)
+                        .build();
+                applicationDocsRepository.save(applicationDocs);
+            }
         }
 
         Application application = Application.builder()
