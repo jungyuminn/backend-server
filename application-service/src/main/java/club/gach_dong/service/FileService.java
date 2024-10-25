@@ -17,10 +17,10 @@ public class FileService {
     private static final Set<String> ALLOWED_CERTIFICATE_FILE_EXTENSIONS = Set.of(".pdf", ".docx", ".xlsx", ".hwp", ".jpg", ".png"); // 허용된 확장자 목록
     private static final long MAX_CERTIFICATE_FILE_LENGTH = 30L;
 
-    public void validateCertificateFiles(List<MultipartFile> certificateFiles) throws CustomException {
+    public void validateFiles(List<MultipartFile> files) throws CustomException {
         long totalCertificateFileSize = 0L;
-        for (MultipartFile certificateFile : certificateFiles) {
-            String fileName = certificateFile.getOriginalFilename();
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
 
             //파일 이름 검증
             if (fileName == null) {
@@ -29,7 +29,7 @@ public class FileService {
                 throw new CustomException(ErrorStatus.FILE_NAME_TOO_LONG);
             } else {
                 String fileExtension = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
-                totalCertificateFileSize += certificateFile.getSize();
+                totalCertificateFileSize += file.getSize();
 
                 //확장자 검증
                 if (!ALLOWED_CERTIFICATE_FILE_EXTENSIONS.contains(fileExtension)) {
