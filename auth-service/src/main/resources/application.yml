@@ -26,7 +26,7 @@ spring:
     cache: false
 
   redis:
-    host: ${PROD_REDIS_HOST}
+    host: ${REDIS_HOST}
     port: 6379
 
 jwt:
