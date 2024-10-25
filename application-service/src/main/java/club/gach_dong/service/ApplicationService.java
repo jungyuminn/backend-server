@@ -69,6 +69,7 @@ public class ApplicationService {
 
     }
 
+    @Transactional(readOnly = true)
     public ApplicationResponseDTO.ToGetFormInfoAdminDTO getFormInfoAdmin(Long formId, HttpServletRequest httpServletRequest){
 
         //Verify Club Admin Auth with Club_id, User_Id
@@ -94,6 +95,7 @@ public class ApplicationService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public ApplicationResponseDTO.ToGetFormInfoUserDTO getFormInfoUser(Long formId, HttpServletRequest httpServletRequest){
 
         //Get userId
