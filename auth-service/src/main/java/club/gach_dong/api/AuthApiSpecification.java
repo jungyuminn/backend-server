@@ -46,4 +46,9 @@ public interface AuthApiSpecification {
     @PostMapping("/logout")
     ResponseEntity<String> logout(
             @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
+
+    @Operation(summary = "회원탈퇴", description = "사용자의 계정을 삭제합니다.")
+    @PostMapping("/unregister")
+    ResponseEntity<String> deleteAccount(
+            @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
 }
