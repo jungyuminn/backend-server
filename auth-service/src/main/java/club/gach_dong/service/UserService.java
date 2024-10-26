@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import club.gach_dong.entity.User;
 import club.gach_dong.repository.UserRepository;
+import club.gach_dong.util.JwtUtil;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +27,8 @@ public class UserService {
 
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public void sendVerificationCode(String email) {
         try {
@@ -122,5 +125,9 @@ public class UserService {
 
     private boolean isValidEmail(String email) {
         return email != null && email.matches("^[a-zA-Z0-9._%+-]+@gachon\\.ac\\.kr$");
+    }
+
+    public void blacklistToken(String token) {
+        jwtUtil.blacklistToken(token);
     }
 }
