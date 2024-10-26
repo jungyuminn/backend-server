@@ -36,8 +36,8 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public ClubResponse getClub(String id) {
-        return clubRepository.findById(id)
+    public ClubResponse getClub(String clubIId) {
+        return clubRepository.findById(clubIId)
                 .map(ClubResponse::from)
                 .orElseThrow(() -> new NotFoundException("Club not found"));
     }
@@ -50,10 +50,6 @@ public class ClubServiceImpl implements ClubService {
                 createClubRequest.shortDescription(),
                 createClubRequest.introduction(),
                 createClubRequest.clubImageUrl(),
-                false,
-                new ArrayList<>(),
-                new ArrayList<>(),
-                new ArrayList<>(),
                 createClubRequest.establishedAt()
         );
         Club savedClub = clubRepository.save(club);

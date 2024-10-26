@@ -1,10 +1,7 @@
 package club.gach_dong.dto.response;
 
-import club.gach_dong.domain.Activity;
 import club.gach_dong.domain.ContactInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import java.time.LocalDate;
 
 public record ClubContactInfoResponse(
         @Schema(description = "연락 수단 (예: gmail, phone)", example = "gmail")

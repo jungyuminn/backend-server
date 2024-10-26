@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -92,11 +93,15 @@ public class Club {
         this.establishedAt = establishedAt;
     }
 
-    public static Club of(String name, ClubCategory category, String shortDescription, String introduction,
-                          String clubImageUrl, boolean recruitingStatus, List<Activity> activities,
-                          List<Recruitment> recruitment, List<ContactInfo> contactInfo,
-                          LocalDateTime establishedAt) {
-        return new Club(name, category, shortDescription, introduction, clubImageUrl, recruitingStatus,
-                activities, recruitment, contactInfo, establishedAt);
+    public static Club of(
+            String name,
+            ClubCategory category,
+            String shortDescription,
+            String introduction,
+            String clubImageUrl,
+            LocalDateTime establishedAt
+    ) {
+        return new Club(name, category, shortDescription, introduction, clubImageUrl, false,
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), establishedAt);
     }
 }
