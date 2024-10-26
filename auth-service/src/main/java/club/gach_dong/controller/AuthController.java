@@ -73,6 +73,10 @@ public class AuthController implements AuthApiSpecification {
     @Override
     @PostMapping("/reset_password")
     public ResponseEntity<String> resetPassword(@RequestHeader("Authorization") String token) {
+        if (!jwtUtil.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+        }
+
         try {
             String email = jwtUtil.getEmailFromToken(token);
             userService.resetPassword(email);
@@ -85,6 +89,10 @@ public class AuthController implements AuthApiSpecification {
     @Override
     @PostMapping("/change_password")
     public ResponseEntity<String> changePassword(@RequestHeader("Authorization") String token, @Valid @RequestBody ChangePasswordDto changePasswordDto) {
+        if (!jwtUtil.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+        }
+
         try {
             String email = jwtUtil.getEmailFromToken(token);
             User user = userService.findByEmail(email);
