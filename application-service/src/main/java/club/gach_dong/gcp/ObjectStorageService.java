@@ -4,10 +4,7 @@ import club.gach_dong.exception.CustomException;
 import club.gach_dong.response.status.ErrorStatus;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.WriteChannel;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
+import com.google.cloud.storage.*;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +43,7 @@ public class ObjectStorageService {
 
         String contentType = file.getContentType();
         if (contentType == null) {
-            throw new CustomException(ErrorStatus._BAD_REQUEST);
+            throw new CustomException(ErrorStatus.FILE_FORMAT_NOT_FOUND);
         }
 
         BlobId blobId = BlobId.of(objectStorageServiceConfig.getBucketName(), directory + "/" + objectKey);
@@ -56,6 +53,7 @@ public class ObjectStorageService {
         try (WriteChannel writer = storage.writer(blobInfo)) {
             byte[] imageData = file.getBytes();
             writer.write(ByteBuffer.wrap(imageData));
+            logger.info("Object created");
         } catch (Exception ex) {
             logger.error("Failed to upload object: {}", ex.getMessage(), ex);
             throw new CustomException(ErrorStatus._BAD_REQUEST);
@@ -65,4 +63,34 @@ public class ObjectStorageService {
         String url = "https://storage.googleapis.com/" + objectStorageServiceConfig.getBucketName() + "/" + directory + "/" + objectKey;
         return url;
     }
+
+    public void deleteObject(String directory, String objectKey) {
+
+        String bucketName = objectStorageServiceConfig.getBucketName();
+
+        BlobId blobId = BlobId.of(bucketName, directory + "/" + objectKey);
+        Blob blob = storage.get(blobId);
+
+        if (blob == null) {
+            logger.warn("The object {} wasn't found in {}", objectKey, bucketName);
+            //throw new CustomException(ErrorStatus.FILE_NOT_FOUND);
+            return;
+        }
+
+        Storage.BlobSourceOption precondition = Storage.BlobSourceOption.generationMatch(blob.getGeneration());
+
+        try {
+            boolean deleted = storage.delete(blobId, precondition);
+            if (deleted) {
+                logger.info("Object {} was deleted from {}", objectKey, bucketName);
+            } else {
+                logger.error("Failed to delete object {} from {}", objectKey, bucketName);
+                //throw new CustomException(ErrorStatus.FILE_DELETE_FAILED);
+            }
+        } catch (StorageException ex) {
+            logger.error("Failed to delete object: {}", ex.getMessage(), ex);
+            //throw new CustomException(ErrorStatus.FILE_DELETE_FAILED_CRITICAL);
+        }
+    }
+
 }
