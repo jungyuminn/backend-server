@@ -107,6 +107,13 @@ public class UserService {
         return password.toString();
     }
 
+    public void deleteUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        userRepository.delete(user);
+    }
+
     private void sendResetPasswordEmail(String email, String newPassword) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
