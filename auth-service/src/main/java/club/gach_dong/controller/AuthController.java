@@ -120,4 +120,21 @@ public class AuthController implements AuthApiSpecification {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그아웃 실패: " + e.getMessage());
         }
     }
+
+    @Override
+    @PostMapping("/unregister")
+    public ResponseEntity<String> deleteAccount(@RequestHeader("Authorization") String token) {
+        if (!jwtUtil.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+        }
+
+        try {
+            String email = jwtUtil.getEmailFromToken(token);
+            userService.deleteUser(email);
+            userService.blacklistToken(token);
+            return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원 탈퇴 실패: " + e.getMessage());
+        }
+    }
 }
