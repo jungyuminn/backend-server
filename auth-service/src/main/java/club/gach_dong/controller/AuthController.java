@@ -54,7 +54,6 @@ public class AuthController implements AuthApiSpecification {
         }
     }
 
-
     @Override
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginDto loginDto) {
@@ -99,6 +98,18 @@ public class AuthController implements AuthApiSpecification {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호 변경 실패: " + e.getMessage());
+        }
+    }
+
+    @Override
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        try {
+            String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+            userService.blacklistToken(jwtToken);
+            return ResponseEntity.ok("로그아웃 되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그아웃 실패: " + e.getMessage());
         }
     }
 }
