@@ -41,4 +41,9 @@ public interface AuthApiSpecification {
     ResponseEntity<String> changePassword(
             @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token,
             @Parameter(description = "비밀번호 변경 정보") @Valid @RequestBody ChangePasswordDto changePasswordDto);
+
+    @Operation(summary = "로그아웃", description = "사용자를 로그아웃합니다.")
+    @PostMapping("/logout")
+    ResponseEntity<String> logout(
+            @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
 }
