@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -258,6 +260,14 @@ public class ApplicationService {
         if(Objects.equals(application.getApplicationStatus(), "SAVED")){
             throw new CustomException(ErrorStatus.APPLICATION_NOT_CHANGEABLE);
         }
+
+        List<ApplicationDocs> applicationDocsList = applicationDocsRepository.findAllByApplicationId(applyId);
+
+        for(ApplicationDocs applicationDocs : applicationDocsList){
+            objectStorageService.deleteObject(applicationDocs.getFileUrl());
+        }
+
+        applicationDocsRepository.deleteAllByApplicationId(application.getId());
 
         applicationRepository.delete(application);
     }

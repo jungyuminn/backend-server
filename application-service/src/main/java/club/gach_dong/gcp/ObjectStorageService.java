@@ -64,9 +64,25 @@ public class ObjectStorageService {
         return url;
     }
 
-    public void deleteObject(String directory, String objectKey) {
+    /**
+     * @param url: 삭제할 객체 정보, 무조건 삭제할 객체가 '버킷의 root dir/subdir' 내에 있어야 함
+     * @return
+     */
+    
+    public void deleteObject(String url) {
 
         String bucketName = objectStorageServiceConfig.getBucketName();
+
+        String[] extractSegments = extractSegments(url);
+
+        String directory = extractSegments[0];
+        String objectKey = extractSegments[1];
+
+        if(directory==null || objectKey==null){
+            logger.warn("Url format is Wrong. objectKey: {}, bucketName: {} have to be not null.", objectKey, bucketName);
+            //throw new CustomException(ErrorStatus.FILE_DELETE_FAILED_CRITICAL);
+            return;
+        }
 
         BlobId blobId = BlobId.of(bucketName, directory + "/" + objectKey);
         Blob blob = storage.get(blobId);
@@ -91,6 +107,14 @@ public class ObjectStorageService {
             logger.error("Failed to delete object: {}", ex.getMessage(), ex);
             //throw new CustomException(ErrorStatus.FILE_DELETE_FAILED_CRITICAL);
         }
+    }
+
+    public static String[] extractSegments(String url) {
+        String[] parts = url.split("/");
+        if (parts.length >= 5) {
+            return new String[]{parts[4], parts[5]};
+        }
+        return null;
     }
 
 }
