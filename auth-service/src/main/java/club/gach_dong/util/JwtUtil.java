@@ -1,5 +1,6 @@
 package club.gach_dong.util;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -57,7 +58,19 @@ public class JwtUtil {
     }
 
     public void blacklistToken(String token) {
-        redisTemplate.opsForValue().set(token, "blacklisted", 30, TimeUnit.MINUTES);
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtKey)
+                .parseClaimsJws(token.replace("Bearer ", ""))
+                .getBody();
+
+        Date expirationDate = claims.getExpiration();
+        Date currentDate = new Date();
+
+        long remainingValidity = expirationDate.getTime() - currentDate.getTime();
+
+        if (remainingValidity > 0) {
+            redisTemplate.opsForValue().set(token, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
+        }
     }
 
     public boolean isTokenBlacklisted(String token) {
