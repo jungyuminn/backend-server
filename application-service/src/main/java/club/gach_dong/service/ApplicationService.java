@@ -263,11 +263,13 @@ public class ApplicationService {
 
         List<ApplicationDocs> applicationDocsList = applicationDocsRepository.findAllByApplicationId(applyId);
 
-        for(ApplicationDocs applicationDocs : applicationDocsList){
-            objectStorageService.deleteObject(applicationDocs.getFileUrl());
-        }
+        if(!applicationDocsList.isEmpty()){
+            for(ApplicationDocs applicationDocs : applicationDocsList){
+                objectStorageService.deleteObject(applicationDocs.getFileUrl());
+            }
 
-        applicationDocsRepository.deleteAllByApplicationId(application.getId());
+            applicationDocsRepository.deleteAllByApplicationId(application.getId());
+        }
 
         applicationRepository.delete(application);
     }
