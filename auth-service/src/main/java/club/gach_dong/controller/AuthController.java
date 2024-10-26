@@ -36,7 +36,7 @@ public class AuthController implements AuthApiSpecification {
     }
 
     @Override
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<String> completeRegistration(@Valid @RequestBody RegistrationDto registrationDto) {
         try {
             userService.verifyCode(registrationDto.getEmail(), registrationDto.getCode());

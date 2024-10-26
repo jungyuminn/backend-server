@@ -22,7 +22,7 @@ public interface AuthApiSpecification {
             @Parameter(description = "사용자의 이메일 주소") @RequestParam String email);
 
     @Operation(summary = "회원가입", description = "회원가입을 완료합니다.")
-    @PostMapping("/signup")
+    @PostMapping("/register")
     ResponseEntity<String> completeRegistration(
             @Parameter(description = "회원가입 정보") @Valid @RequestBody RegistrationDto registrationDto);
 
