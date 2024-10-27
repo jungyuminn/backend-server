@@ -2,23 +2,16 @@ package club.gach_dong.gcp;
 
 import club.gach_dong.exception.CustomException;
 import club.gach_dong.response.status.ErrorStatus;
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.WriteChannel;
 import com.google.cloud.storage.*;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
