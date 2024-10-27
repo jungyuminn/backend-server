@@ -159,7 +159,7 @@ public class ApplicationService {
 
         ApplicationForm applicationForm = applicationFormOptional.get();
 
-        deleteApplicationForm(formId, httpServletRequest);
+        applicationFormRepository.deleteById(formId);
 
         return createApplicationForm(toCreateApplicationFormDTO, httpServletRequest);
     }
@@ -198,7 +198,7 @@ public class ApplicationService {
                 String fileUrl = objectStorageService.uploadObject(objectStorageServiceConfig.getApplicationDocsDir(), uuid, file);
 
                 ApplicationDocs applicationDocs = ApplicationDocs.builder()
-                        .applicationId(toApplyClub.getApplyId())
+                        .applicationId(applyId)
                         .fileName(fileName)
                         .fileUrl(fileUrl)
                         .build();
