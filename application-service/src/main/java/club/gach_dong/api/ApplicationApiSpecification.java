@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +16,6 @@ import java.util.List;
 
 @Tag(name = "지원 API", description = "동아리 지원 관련 API")
 @RestController
-@Validated
 @RequestMapping("v1/application")
 public interface ApplicationApiSpecification {
 

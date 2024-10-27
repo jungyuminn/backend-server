@@ -5,7 +5,6 @@ import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@EqualsAndHashCode
 @Getter
 @Builder
 @Entity(name = "applicationDocs")
