@@ -266,9 +266,8 @@ public class ApplicationService {
         if (!applicationDocsList.isEmpty()) {
             for (ApplicationDocs applicationDocs : applicationDocsList) {
                 objectStorageService.deleteObject(applicationDocs.getFileUrl());
+                applicationDocsRepository.deleteByApplicationId(applicationDocs.getApplicationId());
             }
-
-            applicationDocsRepository.deleteAllByApplicationId(application.getId());
         }
 
         applicationRepository.delete(application);
