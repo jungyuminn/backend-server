@@ -16,22 +16,22 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id" ,nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "apply_id" ,nullable = false)
+    @Column(name = "apply_id", nullable = false)
     private Long applyId;
 
-    @Column(name = "application_form_id" ,nullable = false)
+    @Column(name = "application_form_id", nullable = false)
     private Long applicationFormId;
 
-    @Column(name = "application_body" ,nullable = false, length = 30000)
+    @Column(name = "application_body", nullable = false, length = 30000)
     private String applicationBody;
 
-    @Column(name = "application_status" ,nullable = false, length = 30)
+    @Column(name = "application_status", nullable = false, length = 30)
     private String applicationStatus;
 
-    @Column(name = "club_name" ,nullable = false, length = 80)
+    @Column(name = "club_name", nullable = false, length = 80)
     private String clubName;
 
 }

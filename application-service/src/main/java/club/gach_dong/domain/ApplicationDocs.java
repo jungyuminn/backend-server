@@ -15,12 +15,12 @@ public class ApplicationDocs {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "application_id" ,nullable = false)
+    @Column(name = "application_id", nullable = false)
     private Long applicationId;
 
-    @Column(name = "file_url" ,nullable = false, length = 255)
+    @Column(name = "file_url", nullable = false, length = 255)
     private String fileUrl;
 
-    @Column(name = "file_name" ,nullable = false, length = 30)
+    @Column(name = "file_name", nullable = false, length = 30)
     private String fileName;
 }

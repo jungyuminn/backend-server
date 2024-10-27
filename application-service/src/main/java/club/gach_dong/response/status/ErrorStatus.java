@@ -13,7 +13,7 @@ public enum ErrorStatus {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON401", "인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
     _EMPTY_FIELD(HttpStatus.NO_CONTENT, "COMMON404", "입력 값이 누락되었습니다."),
-    
+
     CLUB_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "CLUBADMIN401", "인증이 필요합니다."),
 
     APPLICATION_FORM_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICATIONFORM401", "ApplicationForm이 없습니다."),
@@ -23,7 +23,6 @@ public enum ErrorStatus {
     APPLICATION_NOT_PRESENT(HttpStatus.NOT_FOUND, "APPLICATION402", "존재하지 않는 신청입니다."),
     APPLICATION_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "APPLICATION403", "인증이 필요합니다."),
     APPLICATION_NOT_CHANGEABLE(HttpStatus.FORBIDDEN, "APPLICATION404", "해당 신청의 상태를 변경할 수 없습니다."),
-
 
 
     //  파일 업로드 관련

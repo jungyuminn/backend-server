@@ -68,7 +68,7 @@ public class ObjectStorageService {
      * @param url: 삭제할 객체 정보, 무조건 삭제할 객체가 '버킷의 root dir/subdir' 내에 있어야 함
      * @return
      */
-    
+
     public void deleteObject(String url) {
 
         String bucketName = objectStorageServiceConfig.getBucketName();
@@ -78,7 +78,7 @@ public class ObjectStorageService {
         String directory = extractSegments[0];
         String objectKey = extractSegments[1];
 
-        if(directory==null || objectKey==null){
+        if (directory == null || objectKey == null) {
             logger.warn("Url format is Wrong. objectKey: {}, bucketName: {} have to be not null.", objectKey, bucketName);
             //throw new CustomException(ErrorStatus.FILE_DELETE_FAILED_CRITICAL);
             return;

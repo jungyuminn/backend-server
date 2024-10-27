@@ -39,7 +39,7 @@ public class ApplicationService {
     private final ApplicationDocsRepository applicationDocsRepository;
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationFormDTO createApplicationForm(ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest){
+    public ApplicationResponseDTO.ToCreateApplicationFormDTO createApplicationForm(ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest) {
 
         //Verify Club Admin Auth with Club_id, User_Id
         //Get userId
@@ -61,19 +61,19 @@ public class ApplicationService {
                 .build();
     }
 
-    public void checkAuth(Long userId, Long applyId){
+    public void checkAuth(Long userId, Long applyId) {
         //Check Auth
         //Communicate with club server to check userId has auth with applyId
         //Club server have to get clubId with applyId and check userId auth with clubId
 
-        if(false){
+        if (false) {
             throw new CustomException(ErrorStatus.CLUB_UNAUTHORIZED);
         }
 
     }
 
     @Transactional(readOnly = true)
-    public ApplicationResponseDTO.ToGetFormInfoAdminDTO getFormInfoAdmin(Long formId, HttpServletRequest httpServletRequest){
+    public ApplicationResponseDTO.ToGetFormInfoAdminDTO getFormInfoAdmin(Long formId, HttpServletRequest httpServletRequest) {
 
         //Verify Club Admin Auth with Club_id, User_Id
         //Get userId
@@ -81,7 +81,7 @@ public class ApplicationService {
 
 
         Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
-        if(applicationFormOptional.isEmpty()){
+        if (applicationFormOptional.isEmpty()) {
             throw new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND);
         }
 
@@ -99,14 +99,14 @@ public class ApplicationService {
     }
 
     @Transactional(readOnly = true)
-    public ApplicationResponseDTO.ToGetFormInfoUserDTO getFormInfoUser(Long formId, HttpServletRequest httpServletRequest){
+    public ApplicationResponseDTO.ToGetFormInfoUserDTO getFormInfoUser(Long formId, HttpServletRequest httpServletRequest) {
 
         //Get userId
         Long userId = 0L;
 
 
         Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
-        if(applicationFormOptional.isEmpty()){
+        if (applicationFormOptional.isEmpty()) {
             throw new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND);
         }
 
@@ -120,14 +120,14 @@ public class ApplicationService {
     }
 
     @Transactional
-    public void deleteApplicationForm(Long formId, HttpServletRequest httpServletRequest){
+    public void deleteApplicationForm(Long formId, HttpServletRequest httpServletRequest) {
         //Verify Club Admin Auth with Club_id, User_Id
         //Get userId
         Long userId = 0L;
 
 
         Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
-        if(applicationFormOptional.isEmpty()){
+        if (applicationFormOptional.isEmpty()) {
             throw new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND);
         }
 
@@ -135,7 +135,7 @@ public class ApplicationService {
 
         checkAuth(userId, applicationForm.getApplyId());
 
-        if(applicationForm.getApplicationFormStatus() == ApplicationFormStatus.IN_USE){
+        if (applicationForm.getApplicationFormStatus() == ApplicationFormStatus.IN_USE) {
             throw new CustomException(ErrorStatus.APPLICATION_FORM_IN_USE);
         }
 
@@ -144,7 +144,7 @@ public class ApplicationService {
 
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationFormDTO changeApplicationForm(Long formId, ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest){
+    public ApplicationResponseDTO.ToCreateApplicationFormDTO changeApplicationForm(Long formId, ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest) {
 
         //Verify Club Admin Auth with Club_id, User_Id
         //Get userId
@@ -153,7 +153,7 @@ public class ApplicationService {
         checkAuth(userId, toCreateApplicationFormDTO.getApplyId());
 
         Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
-        if(applicationFormOptional.isEmpty()){
+        if (applicationFormOptional.isEmpty()) {
             throw new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND);
         }
 
@@ -165,7 +165,7 @@ public class ApplicationService {
     }
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationDTO createApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, HttpServletRequest httpServletRequest){
+    public ApplicationResponseDTO.ToCreateApplicationDTO createApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, HttpServletRequest httpServletRequest) {
 
         //Verify it is valid apply
         //In constructions!!!
@@ -176,14 +176,14 @@ public class ApplicationService {
 
         //Check it is duplicated
         Optional<Application> applicationOptional = applicationRepository.findByUserIdAndApplyId(userId, applyId);
-        if(applicationOptional.isPresent()){
+        if (applicationOptional.isPresent()) {
             Application application = applicationOptional.get();
-            if(!Objects.equals(application.getApplicationStatus(), "TEMP")){
+            if (!Objects.equals(application.getApplicationStatus(), "TEMP")) {
                 throw new CustomException(ErrorStatus.APPLICATION_DUPLICATED);
             }
         }
 
-        if(files!=null){
+        if (files != null) {
             //업로드 할 파일 검증 (길이, 확장자 등)
             fileService.validateFiles(files);
 
@@ -215,7 +215,7 @@ public class ApplicationService {
                 .clubName(toApplyClub.getClubName())
                 .build();
 
-        if(Objects.equals(application.getApplicationStatus(), "TEMP")){
+        if (Objects.equals(application.getApplicationStatus(), "TEMP")) {
             deleteApplication(applyId, httpServletRequest);
         }
 
@@ -226,11 +226,11 @@ public class ApplicationService {
                 .build();
     }
 
-    public void checkValidApply(Long applyId){
+    public void checkValidApply(Long applyId) {
 
         //send to apply
 
-        if(false){
+        if (false) {
             throw new CustomException(ErrorStatus._BAD_REQUEST);
         }
 
@@ -245,26 +245,26 @@ public class ApplicationService {
         Optional<Application> applicationOptional = applicationRepository.findByUserIdAndApplyId(userId, applyId);
 
         //If application not present
-        if(applicationOptional.isEmpty()){
+        if (applicationOptional.isEmpty()) {
             throw new CustomException(ErrorStatus.APPLICATION_NOT_PRESENT);
         }
 
         Application application = applicationOptional.get();
 
         //If application is not owner of user
-        if(!userId.equals(application.getUserId())){
+        if (!userId.equals(application.getUserId())) {
             throw new CustomException(ErrorStatus.APPLICATION_UNAUTHORIZED);
         }
 
         //If application couldn't be deleted.
-        if(Objects.equals(application.getApplicationStatus(), "SAVED")){
+        if (Objects.equals(application.getApplicationStatus(), "SAVED")) {
             throw new CustomException(ErrorStatus.APPLICATION_NOT_CHANGEABLE);
         }
 
         List<ApplicationDocs> applicationDocsList = applicationDocsRepository.findAllByApplicationId(applyId);
 
-        if(!applicationDocsList.isEmpty()){
-            for(ApplicationDocs applicationDocs : applicationDocsList){
+        if (!applicationDocsList.isEmpty()) {
+            for (ApplicationDocs applicationDocs : applicationDocsList) {
                 objectStorageService.deleteObject(applicationDocs.getFileUrl());
             }
 
@@ -281,7 +281,7 @@ public class ApplicationService {
     }
 
     @Transactional(readOnly = true)
-    public ApplicationResponseDTO.ToGetApplicationHistoryListDTO getApplicationHistoryList(HttpServletRequest httpServletRequest){
+    public ApplicationResponseDTO.ToGetApplicationHistoryListDTO getApplicationHistoryList(HttpServletRequest httpServletRequest) {
 
         //Get userId
         Long userId = 0L;

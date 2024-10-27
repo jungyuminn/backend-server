@@ -51,7 +51,7 @@ public class ApplicationController implements ApplicationApiSpecification {
 
     @Override
     public ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> changeApplicationForm(Long formId, ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest) {
-        ApplicationResponseDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO1 =  applicationService.changeApplicationForm(formId, toCreateApplicationFormDTO, httpServletRequest);
+        ApplicationResponseDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO1 = applicationService.changeApplicationForm(formId, toCreateApplicationFormDTO, httpServletRequest);
         return ResForm.onSuccess(InSuccess.APPLICATION_FORM_CHANGED, toCreateApplicationFormDTO1);
     }
 
