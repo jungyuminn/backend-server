@@ -20,7 +20,6 @@ import java.util.List;
 @Tag(name = "지원 API", description = "동아리 지원 관련 API")
 @RestController
 @Validated
-@RequestMapping("v1/application")
 public interface ApplicationApiSpecification {
 
     @Operation(summary = "관리자용 지원서 양식 조회 API", description = "지원서 양식 ID를 이용해 양식을 조회합니다.")
