@@ -25,9 +25,11 @@ spring:
   thymeleaf:
     cache: false
 
-  redis:
-    host: ${REDIS_HOST}
-    port: 6379
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 18999
+      password: ${REDIS_PASSWORD}
 
 jwt:
   secret: ${JWT_SECRET}
