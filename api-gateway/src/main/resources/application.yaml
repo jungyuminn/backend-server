@@ -17,39 +17,6 @@ spring:
             allowedHeaders: "*"
             allowedMethods: "*"
       routes:
-        # Auth Service API routes
-        - id: auth-service
-          uri: http://auth-service:8080
-          predicates:
-            - Path=/auth/**
-          filters:
-            - RewritePath=/auth/(?<segment>.*), /$\{segment}
-            - JWTAuthenticationFilter
-          args:
-            ignoredPatterns: /auth/v3/api-docs/**, /auth/swagger-ui/**
-
-        # Club Service API routes
-        - id: club-service
-          uri: http://club-service:8080
-          predicates:
-            - Path=/club/**
-          filters:
-            - RewritePath=/club/(?<segment>.*), /$\{segment}
-            - JWTAuthenticationFilter
-          args:
-            ignoredPatterns: /club/v3/api-docs/**, /club/swagger-ui/**
-
-        # Application Service API routes
-        - id: application-service
-          uri: http://application-service:8080
-          predicates:
-            - Path=/application/**
-          filters:
-            - RewritePath=/application/(?<segment>.*), /$\{segment}
-            - JWTAuthenticationFilter
-          args:
-            ignoredPatterns: /application/v3/api-docs/**, /application/swagger-ui/**
-
         # Swagger API Docs (No JWT Authentication)
         - id: auth-service-swagger
           uri: http://auth-service:8080
@@ -72,27 +39,32 @@ spring:
           filters:
             - RewritePath=/application/v3/api-docs/(?<segment>.*), /v3/api-docs/$\{segment}
 
-        # Swagger UI (No JWT Authentication)
-        - id: auth-service-swagger-ui
+        # Auth Service API routes
+        - id: auth-service
           uri: http://auth-service:8080
           predicates:
-            - Path=/auth/swagger-ui/**
+            - Path=/auth/**
           filters:
-            - RewritePath=/auth/swagger-ui/(?<segment>.*), /swagger-ui/$\{segment}
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
 
-        - id: club-service-swagger-ui
+        # Club Service API routes
+        - id: club-service
           uri: http://club-service:8080
           predicates:
-            - Path=/club/swagger-ui/**
+            - Path=/club/**
           filters:
-            - RewritePath=/club/swagger-ui/(?<segment>.*), /swagger-ui/$\{segment}
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
 
-        - id: application-service-swagger-ui
+        # Application Service API routes
+        - id: application-service
           uri: http://application-service:8080
           predicates:
-            - Path=/application/swagger-ui/**
+            - Path=/application/**
           filters:
-            - RewritePath=/application/swagger-ui/(?<segment>.*), /swagger-ui/$\{segment}
+            - RewritePath=/application/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
 
 springdoc:
   swagger-ui:
