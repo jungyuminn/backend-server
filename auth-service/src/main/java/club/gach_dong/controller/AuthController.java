@@ -16,7 +16,6 @@ import club.gach_dong.service.UserService;
 import club.gach_dong.util.JwtUtil;
 
 @RestController
-@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController implements AuthApiSpecification {
 
@@ -25,7 +24,6 @@ public class AuthController implements AuthApiSpecification {
     private final JwtUtil jwtUtil;
 
     @Override
-    @PostMapping("/send_verification_code")
     public ResponseEntity<String> sendVerificationCode(@RequestParam String email) {
         try {
             userService.sendVerificationCode(email);
@@ -36,7 +34,6 @@ public class AuthController implements AuthApiSpecification {
     }
 
     @Override
-    @PostMapping("/register")
     public ResponseEntity<String> completeRegistration(@Valid @RequestBody RegistrationDto registrationDto) {
         try {
             userService.verifyCode(registrationDto.getEmail(), registrationDto.getCode());
@@ -55,7 +52,6 @@ public class AuthController implements AuthApiSpecification {
     }
 
     @Override
-    @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginDto loginDto) {
         User user = userService.findByEmail(loginDto.getEmail());
 
@@ -71,7 +67,6 @@ public class AuthController implements AuthApiSpecification {
     }
 
     @Override
-    @PostMapping("/reset_password")
     public ResponseEntity<String> resetPassword(@RequestHeader("Authorization") String token) {
         if (!jwtUtil.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
@@ -87,7 +82,6 @@ public class AuthController implements AuthApiSpecification {
     }
 
     @Override
-    @PostMapping("/change_password")
     public ResponseEntity<String> changePassword(@RequestHeader("Authorization") String token, @Valid @RequestBody ChangePasswordDto changePasswordDto) {
         if (!jwtUtil.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
@@ -110,7 +104,6 @@ public class AuthController implements AuthApiSpecification {
     }
 
     @Override
-    @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
         try {
             String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
@@ -122,7 +115,6 @@ public class AuthController implements AuthApiSpecification {
     }
 
     @Override
-    @PostMapping("/unregister")
     public ResponseEntity<String> deleteAccount(@RequestHeader("Authorization") String token) {
         if (!jwtUtil.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
