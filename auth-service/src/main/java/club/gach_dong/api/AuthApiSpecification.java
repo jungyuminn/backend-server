@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public interface AuthApiSpecification {
 
-    @Operation(summary = "이메일 인증 코드 발송", description = "이메일로 6자리의 인증 코드를 발송합니다.")
+    @Operation(summary = "이메일 인증 코드 발송", description = "이메일로 유효시간 3분의 6자리의 인증 코드를 발송합니다.")
     @PostMapping("/send_verification_code")
     ResponseEntity<String> sendVerificationCode(
             @Parameter(description = "사용자의 이메일 주소") @RequestParam String email);
