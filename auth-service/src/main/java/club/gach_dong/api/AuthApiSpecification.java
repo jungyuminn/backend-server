@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "인증/인가 API", description = "사용자 인증 및 인가 관련 API")
 @RestController
-@RequestMapping('/api/v1/**')
+@RequestMapping("/api/v1/**")
 public interface AuthApiSpecification {
 
     @Operation(summary = "이메일 인증 코드 발송", description = "이메일로 6자리의 인증 코드를 발송합니다.")

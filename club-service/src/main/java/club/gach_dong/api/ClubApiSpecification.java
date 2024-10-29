@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "동아리 API", description = "동아리 관련 API")
 @RestController
-@RequestMapping('/api/v1/**')
+@RequestMapping("/api/v1/**")
 @Validated
 public interface ClubApiSpecification {
 
