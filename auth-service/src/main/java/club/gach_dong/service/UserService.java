@@ -37,10 +37,6 @@ public class UserService {
                 throw new RuntimeException("이메일은 gachon.ac.kr 도메인이어야 합니다.");
             }
 
-            if (userRepository.findByEmail(email).isPresent()) {
-                throw new RuntimeException("이메일이 이미 사용 중입니다.");
-            }
-
             String code = generateVerificationCode();
             redisTemplate.opsForValue().set(email, code, 30, TimeUnit.MINUTES);
             sendVerificationEmail(email, code);
@@ -73,6 +69,10 @@ public class UserService {
     }
 
     public void completeRegistration(String email, String password, String name, Role role) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new RuntimeException("이메일이 이미 사용 중입니다.");
+        }
+
         User user = User.of(email, passwordEncoder.encode(password), name, role);
         userRepository.save(user);
     }
