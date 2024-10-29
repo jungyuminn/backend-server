@@ -11,35 +11,12 @@ spring:
           "[/**]":
             allowedOrigins:
               - "http://localhost:3000"
-              - "http://gach-dong-dev.club"
               - "https://gateway.gachdong.club"
+              - "http://gateway-dev.gachdong.club"
             allow-credentials: true
             allowedHeaders: "*"
             allowedMethods: "*"
       routes:
-        # Swagger API Docs (No JWT Authentication)
-        - id: auth-service-swagger
-          uri: http://auth-service:8080
-          predicates:
-            - Path=/auth/v3/api-docs/**
-          filters:
-            - RewritePath=/auth/v3/api-docs/(?<segment>.*), /v3/api-docs/$\{segment}
-
-        - id: club-service-swagger
-          uri: http://club-service:8080
-          predicates:
-            - Path=/club/v3/api-docs/**
-          filters:
-            - RewritePath=/club/v3/api-docs/(?<segment>.*), /v3/api-docs/$\{segment}
-
-        - id: application-service-swagger
-          uri: http://application-service:8080
-          predicates:
-            - Path=/application/v3/api-docs/**
-          filters:
-            - RewritePath=/application/v3/api-docs/(?<segment>.*), /v3/api-docs/$\{segment}
-
-        # Auth Service API routes
         - id: auth-service
           uri: http://auth-service:8080
           predicates:
@@ -47,7 +24,6 @@ spring:
           filters:
             - RewritePath=/auth/(?<segment>.*), /$\{segment}
 
-        # Club Service API routes
         - id: club-service
           uri: http://club-service:8080
           predicates:
@@ -56,7 +32,6 @@ spring:
             - RewritePath=/club/(?<segment>.*), /$\{segment}
             - JWTAuthenticationFilter
 
-        # Application Service API routes
         - id: application-service
           uri: http://application-service:8080
           predicates:
@@ -64,6 +39,48 @@ spring:
           filters:
             - RewritePath=/application/(?<segment>.*), /$\{segment}
             - JWTAuthenticationFilter
+
+        - id: auth-service-swagger
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/auth/v3/api-docs/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+
+        - id: club-service-swagger
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/v3/api-docs/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
+
+        - id: application-service-swagger
+          uri: http://application-service:8080
+          predicates:
+            - Path=/application/v3/api-docs/**
+          filters:
+            - RewritePath=/application/(?<segment>.*), /$\{segment}
+
+        - id: auth-service-swagger-ui
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/auth/swagger-ui/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+
+        - id: club-service-swagger-ui
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/swagger-ui/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
+
+        - id: application-service-swagger-ui
+          uri: http://application-service:8080
+          predicates:
+            - Path=/application/swagger-ui/**
+          filters:
+            - RewritePath=/application/(?<segment>.*), /$\{segment}
 
 springdoc:
   swagger-ui:
@@ -84,6 +101,15 @@ logging:
   level:
     org.springframework.cloud.gateway: trace
     reactor.netty: trace
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health,metrics,prometheus
+#  tracing:
+#    sampling:
+#      probability: 1.0
+#    enabled: false
 
 app:
   jwt:
