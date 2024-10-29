@@ -6,10 +6,9 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 @Getter
 @Configuration
@@ -23,15 +22,16 @@ public class ObjectStorageServiceConfig {
     @Value("${spring.cloud.gcp.storage.path.applicationDocs}")
     private String applicationDocsDir;
 
-    @Value("${GOOGLE_APPLICATION_CREDENTIALS_JSON}")
+    @Value("${spring.cloud.gcp.storage.credentials.location}")
     private String credentialsJson;
 
     @Bean
     public Storage storage() throws IOException {
-        GoogleCredentials credentials;
-        try (ByteArrayInputStream stream = new ByteArrayInputStream(credentialsJson.getBytes(StandardCharsets.UTF_8))) {
-            credentials = GoogleCredentials.fromStream(stream);
-        }
+
+        ClassPathResource resource = new ClassPathResource(credentialsJson);
+        GoogleCredentials credentials = GoogleCredentials.fromStream(resource.getInputStream());
+
+
         return StorageOptions.newBuilder()
                 .setCredentials(credentials)
                 .setProjectId(projectId)
