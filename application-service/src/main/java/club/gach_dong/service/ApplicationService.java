@@ -37,11 +37,9 @@ public class ApplicationService {
     private final ApplicationDocsRepository applicationDocsRepository;
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationFormDTO createApplicationForm(ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest) {
+    public ApplicationResponseDTO.ToCreateApplicationFormDTO createApplicationForm(ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, Long userId) {
 
         //Verify Club Admin Auth with Club_id, User_Id
-        //Get userId
-        Long userId = 0L;
 
         checkAuth(userId, toCreateApplicationFormDTO.getApplyId());
 
@@ -71,11 +69,10 @@ public class ApplicationService {
     }
 
     @Transactional(readOnly = true)
-    public ApplicationResponseDTO.ToGetFormInfoAdminDTO getFormInfoAdmin(Long formId, HttpServletRequest httpServletRequest) {
+    public ApplicationResponseDTO.ToGetFormInfoAdminDTO getFormInfoAdmin(Long formId, Long userId) {
 
         //Verify Club Admin Auth with Club_id, User_Id
-        //Get userId
-        Long userId = 0L;
+        //In Construction!!
 
 
         Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
@@ -97,11 +94,7 @@ public class ApplicationService {
     }
 
     @Transactional(readOnly = true)
-    public ApplicationResponseDTO.ToGetFormInfoUserDTO getFormInfoUser(Long formId, HttpServletRequest httpServletRequest) {
-
-        //Get userId
-        Long userId = 0L;
-
+    public ApplicationResponseDTO.ToGetFormInfoUserDTO getFormInfoUser(Long formId, Long userId) {
 
         Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
         if (applicationFormOptional.isEmpty()) {
@@ -118,10 +111,8 @@ public class ApplicationService {
     }
 
     @Transactional
-    public void deleteApplicationForm(Long formId, HttpServletRequest httpServletRequest) {
+    public void deleteApplicationForm(Long formId, Long userId) {
         //Verify Club Admin Auth with Club_id, User_Id
-        //Get userId
-        Long userId = 0L;
 
 
         Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
@@ -142,11 +133,9 @@ public class ApplicationService {
 
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationFormDTO changeApplicationForm(Long formId, ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest) {
+    public ApplicationResponseDTO.ToCreateApplicationFormDTO changeApplicationForm(Long formId, ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, Long userId) {
 
         //Verify Club Admin Auth with Club_id, User_Id
-        //Get userId
-        Long userId = 0L;
 
         checkAuth(userId, toCreateApplicationFormDTO.getApplyId());
 
@@ -159,18 +148,15 @@ public class ApplicationService {
 
         applicationFormRepository.deleteById(formId);
 
-        return createApplicationForm(toCreateApplicationFormDTO, httpServletRequest);
+        return createApplicationForm(toCreateApplicationFormDTO, userId);
     }
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationDTO createApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, HttpServletRequest httpServletRequest) {
+    public ApplicationResponseDTO.ToCreateApplicationDTO createApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, Long userId) {
 
         //Verify it is valid apply
         //In constructions!!!
         checkValidApply(applyId);
-
-        //Get userId
-        Long userId = 0L;
 
         //Check it is duplicated
         Optional<Application> applicationOptional = applicationRepository.findByUserIdAndApplyId(userId, applyId);
@@ -214,7 +200,7 @@ public class ApplicationService {
                 .build();
 
         if (Objects.equals(application.getApplicationStatus(), "TEMP")) {
-            deleteApplication(applyId, httpServletRequest);
+            deleteApplication(applyId, userId);
         }
 
         Application applicationId = applicationRepository.save(application);
@@ -235,10 +221,7 @@ public class ApplicationService {
     }
 
     @Transactional
-    public void deleteApplication(Long applyId, HttpServletRequest httpServletRequest) {
-
-        //Get userId
-        Long userId = 0L;
+    public void deleteApplication(Long applyId, Long userId) {
 
         Optional<Application> applicationOptional = applicationRepository.findByUserIdAndApplyId(userId, applyId);
 
@@ -272,16 +255,13 @@ public class ApplicationService {
     }
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationDTO changeApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, HttpServletRequest httpServletRequest) {
-        deleteApplication(applyId, httpServletRequest);
-        return createApplication(applyId, files, toApplyClub, httpServletRequest);
+    public ApplicationResponseDTO.ToCreateApplicationDTO changeApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, Long userId) {
+        deleteApplication(applyId, userId);
+        return createApplication(applyId, files, toApplyClub, userId);
     }
 
     @Transactional(readOnly = true)
-    public ApplicationResponseDTO.ToGetApplicationHistoryListDTO getApplicationHistoryList(HttpServletRequest httpServletRequest) {
-
-        //Get userId
-        Long userId = 0L;
+    public ApplicationResponseDTO.ToGetApplicationHistoryListDTO getApplicationHistoryList(Long userId) {
 
         List<Application> applicationList = applicationRepository.findAllByUserId(userId);
 
