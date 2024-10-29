@@ -55,15 +55,18 @@ public class AuthController implements AuthApiSpecification {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginDto loginDto) {
         User user = userService.findByEmail(loginDto.getEmail());
 
-        if (user != null && userService.checkPassword(user, loginDto.getPassword())) {
-            if (!user.isEnabled()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-            }
-
-            String token = jwtUtil.generateToken(user);
-            return ResponseEntity.ok(AuthResponse.of(token));
+        if (user == null || !userService.checkPassword(user, loginDto.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(AuthResponse.withMessage("이메일 또는 비밀번호가 올바르지 않습니다."));
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (!user.isEnabled()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(AuthResponse.withMessage("계정이 활성화되지 않았습니다."));
+        }
+
+        String token = jwtUtil.generateToken(user);
+        return ResponseEntity.ok(AuthResponse.of(token));
     }
 
     @Override
