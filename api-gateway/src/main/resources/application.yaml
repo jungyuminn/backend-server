@@ -20,14 +20,14 @@ spring:
         - id: auth-service
           uri: http://auth-service:8080
           predicates:
-            - Path=/auth/**
+            - Path=/auth/api/v1/**
           filters:
             - RewritePath=/auth/(?<segment>.*), /$\{segment}
 
         - id: club-service
           uri: http://club-service:8080
           predicates:
-            - Path=/club/**
+            - Path=/club/api/v1/**
           filters:
             - RewritePath=/club/(?<segment>.*), /$\{segment}
             - JWTAuthenticationFilter
@@ -35,7 +35,7 @@ spring:
         - id: application-service
           uri: http://application-service:8080
           predicates:
-            - Path=/application/**
+            - Path=/application/api/v1/**
           filters:
             - RewritePath=/application/(?<segment>.*), /$\{segment}
             - JWTAuthenticationFilter
