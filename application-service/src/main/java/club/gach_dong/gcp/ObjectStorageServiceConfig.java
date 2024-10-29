@@ -20,6 +20,9 @@ public class ObjectStorageServiceConfig {
     @Value("${spring.cloud.gcp.storage.project-id}")
     private String projectId;
 
+    @Value("${spring.cloud.gcp.storage.path.applicationDocs}")
+    private String applicationDocsDir;
+
     @Value("${GOOGLE_APPLICATION_CREDENTIALS_JSON}")
     private String credentialsJson;
 
