@@ -21,7 +21,15 @@ public interface AuthApiSpecification {
     ResponseEntity<String> sendVerificationCode(
             @Parameter(description = "사용자의 이메일 주소") @RequestParam String email);
 
-    @Operation(summary = "회원가입", description = "회원가입을 완료합니다.")
+    @Operation(
+            summary = "회원가입",
+            description = "회원가입을 완료합니다. \n" +
+                    "- email: 사용자 이메일 (gachon.ac.kr 도메인 고정) \n" +
+                    "- code: 6자리의 이메일 인증 코드 \n" +
+                    "- password: 사용자 비밀번호 (8~16자, 영문, 숫자, 특수문자 포함) \n" +
+                    "- name: 사용자 이름 \n" +
+                    "- role: 사용자 역할 (USER, ADMIN) "
+    )
     @PostMapping("/register")
     ResponseEntity<String> completeRegistration(
             @Parameter(description = "회원가입 정보") @Valid @RequestBody RegistrationDto registrationDto);
