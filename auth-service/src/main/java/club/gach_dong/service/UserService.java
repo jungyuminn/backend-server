@@ -6,6 +6,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import club.gach_dong.entity.Role;
 import club.gach_dong.entity.User;
 import club.gach_dong.repository.UserRepository;
 import club.gach_dong.util.JwtUtil;
@@ -71,7 +72,7 @@ public class UserService {
         }
     }
 
-    public void completeRegistration(String email, String password, String name, String role) {
+    public void completeRegistration(String email, String password, String name, Role role) {
         User user = User.of(email, passwordEncoder.encode(password), name, role);
         userRepository.save(user);
     }

@@ -22,12 +22,13 @@ public class User {
     @Column(length = 100, nullable = false)
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 100, nullable = false)
-    private String role;
+    private Role role;
 
     private boolean enabled;
 
-    private User(String email, String password, String name, String role, boolean enabled) {
+    private User(String email, String password, String name, Role role, boolean enabled) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -35,7 +36,7 @@ public class User {
         this.enabled = enabled;
     }
 
-    public static User of(String email, String password, String name, String role) {
+    public static User of(String email, String password, String name, Role role) {
         return new User(email, password, name, role, true);
     }
 }

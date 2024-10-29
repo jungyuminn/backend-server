@@ -2,16 +2,18 @@ package club.gach_dong.dto;
 
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import club.gach_dong.entity.Role;
 
 @Getter
 @Table(name = "users")
 public class RegistrationDto {
     @NotBlank(message = "이메일은 필수값입니다.")
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@gachon\\.ac\\.kr$", message = "이메일은 gachon.ac.kr 도메인이어야 합니다.")
-    @Size(max = 100, message = "최대 허용 길이를 초과하였습니다.")
+    @Size(max = 255, message = "최대 허용 길이를 초과하였습니다.")
     private String email;
 
     @NotBlank(message = "인증코드는 필수값입니다.")
@@ -26,6 +28,6 @@ public class RegistrationDto {
     @Size(max = 100, message = "최대 허용 길이를 초과하였습니다.")
     private String name;
 
-    @NotBlank(message = "권한은 필수값입니다.")
-    private String role;
+    @NotNull(message = "권한은 필수값입니다.")
+    private Role role;
 }
