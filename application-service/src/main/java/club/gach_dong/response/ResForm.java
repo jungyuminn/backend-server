@@ -8,12 +8,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
 import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
 @JsonPropertyOrder({"time", "code", "message", "result"})
-public class ResForm <T> {
+public class ResForm<T> {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private final LocalDateTime time;
