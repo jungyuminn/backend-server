@@ -25,6 +25,8 @@ spring:
           filters:
             - RewritePath=/auth/(?<segment>.*), /$\{segment}
             - JWTAuthenticationFilter
+          args:
+            ignoredPatterns: /auth/v3/api-docs/**, /auth/swagger-ui/**
 
         # Club Service API routes
         - id: club-service
@@ -34,6 +36,8 @@ spring:
           filters:
             - RewritePath=/club/(?<segment>.*), /$\{segment}
             - JWTAuthenticationFilter
+          args:
+            ignoredPatterns: /club/v3/api-docs/**, /club/swagger-ui/**
 
         # Application Service API routes
         - id: application-service
@@ -43,6 +47,8 @@ spring:
           filters:
             - RewritePath=/application/(?<segment>.*), /$\{segment}
             - JWTAuthenticationFilter
+          args:
+            ignoredPatterns: /application/v3/api-docs/**, /application/swagger-ui/**
 
         # Swagger API Docs (No JWT Authentication)
         - id: auth-service-swagger
