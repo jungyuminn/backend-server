@@ -29,6 +29,12 @@ dependencies {
 	//Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0'
 
+	// JWT
+	def jjwtVersion = "0.11.5"
+	implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
+	runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
+	runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
