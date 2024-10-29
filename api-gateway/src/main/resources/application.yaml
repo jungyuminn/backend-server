@@ -107,3 +107,7 @@ logging:
   level:
     org.springframework.cloud.gateway: trace
     reactor.netty: trace
+
+app:
+  jwt:
+    verify-key: ${JWT_VERIFY_KEY}
