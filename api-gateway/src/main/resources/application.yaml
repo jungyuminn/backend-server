@@ -23,21 +23,21 @@ spring:
           predicates:
             - Path=/auth/v3/api-docs/**
           filters:
-            - RewritePath=/auth/v3/api-docs/(?<segment>.*), /$\{segment}
+            - RewritePath=/auth/v3/api-docs/(?<segment>.*), /v3/api-docs/$\{segment}
 
         - id: club-service-swagger
           uri: http://club-service:8080
           predicates:
             - Path=/club/v3/api-docs/**
           filters:
-            - RewritePath=/club/v3/api-docs/(?<segment>.*), /$\{segment}
+            - RewritePath=/club/v3/api-docs/(?<segment>.*), /v3/api-docs/$\{segment}
 
         - id: application-service-swagger
           uri: http://application-service:8080
           predicates:
             - Path=/application/v3/api-docs/**
           filters:
-            - RewritePath=/application/v3/api-docs/(?<segment>.*), /$\{segment}
+            - RewritePath=/application/v3/api-docs/(?<segment>.*), /v3/api-docs/$\{segment}
 
         # Auth Service API routes
         - id: auth-service
@@ -46,7 +46,6 @@ spring:
             - Path=/auth/**
           filters:
             - RewritePath=/auth/(?<segment>.*), /$\{segment}
-            - JWTAuthenticationFilter
 
         # Club Service API routes
         - id: club-service
