@@ -85,18 +85,15 @@ public class UserService {
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
 
-    public void resetPassword(String email) {
+    public void resetPassword(String email, String newPassword) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("이메일이 등록되어 있지 않습니다."));
 
-        String newPassword = generateRandomPassword();
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-
-        sendResetPasswordEmail(email, newPassword);
     }
 
-    private String generateRandomPassword() {
+    public String generateRandomPassword() {
         int length = 8;
         StringBuilder password = new StringBuilder();
         Random random = new Random();
@@ -115,7 +112,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    private void sendResetPasswordEmail(String email, String newPassword) {
+    public void sendResetPasswordEmail(String email, String newPassword) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject("비밀번호 재발급");

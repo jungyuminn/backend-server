@@ -70,14 +70,12 @@ public class AuthController implements AuthApiSpecification {
     }
 
     @Override
-    public ResponseEntity<String> resetPassword(@RequestHeader("Authorization") String token) {
-        if (!jwtUtil.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
-        }
-
+    public ResponseEntity<String> resetPassword(@RequestParam String email, @RequestParam String code) {
         try {
-            String email = jwtUtil.getEmailFromToken(token);
-            userService.resetPassword(email);
+            userService.verifyCode(email, code);
+            String newPassword = userService.generateRandomPassword();
+            userService.resetPassword(email, newPassword);
+            userService.sendResetPasswordEmail(email, newPassword);
             return ResponseEntity.ok("임시 비밀번호가 이메일로 발송되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호 재발급 실패: " + e.getMessage());

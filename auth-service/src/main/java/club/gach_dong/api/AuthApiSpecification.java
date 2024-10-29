@@ -39,10 +39,11 @@ public interface AuthApiSpecification {
     ResponseEntity<AuthResponse> login(
             @Parameter(description = "로그인 정보") @Valid @RequestBody LoginDto loginDto);
 
-    @Operation(summary = "비밀번호 재발급", description = "이메일로 임시 비밀번호를 발급받습니다.")
+    @Operation(summary = "비밀번호 재발급", description = "이메일 인증 코드를 입력하여 임시 비밀번호를 재발급합니다.")
     @PostMapping("/reset_password")
     ResponseEntity<String> resetPassword(
-            @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
+            @Parameter(description = "사용자의 이메일 주소") @RequestParam String email,
+            @Parameter(description = "인증 코드") @RequestParam String code);
 
     @Operation(summary = "비밀번호 변경", description = "기존 비밀번호를 변경합니다.")
     @PostMapping("/change_password")
