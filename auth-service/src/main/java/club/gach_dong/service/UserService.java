@@ -38,7 +38,7 @@ public class UserService {
             }
 
             String code = generateVerificationCode();
-            redisTemplate.opsForValue().set(email, code, 30, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(email, code, 3, TimeUnit.MINUTES);
             sendVerificationEmail(email, code);
         } catch (Exception e) {
             e.printStackTrace();
