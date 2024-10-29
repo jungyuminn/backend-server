@@ -17,7 +17,7 @@ import java.util.List;
 
 @Tag(name = "지원 API", description = "동아리 지원 관련 API")
 @RestController
-@RequestMapping("/api/v1/**")
+@RequestMapping("/api/v1")
 @Validated
 public interface ApplicationApiSpecification {
 
