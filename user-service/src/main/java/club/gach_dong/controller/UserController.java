@@ -2,6 +2,7 @@ package club.gach_dong.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +22,7 @@ public class UserController implements UserApiSpecification {
     private final UserRepository userRepository;
 
     @Override
-    @PostMapping("/upload_profile_image")
+    @PostMapping(value = "/upload_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileDto> uploadProfileImage(
             @RequestParam("image") MultipartFile image,
             HttpServletRequest httpServletRequest) {
@@ -50,7 +51,7 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @PostMapping("/update_profile_image")
+    @PostMapping(value = "/update_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileDto> updateProfileImage(
             @RequestParam("image") MultipartFile image,
             HttpServletRequest httpServletRequest) {
