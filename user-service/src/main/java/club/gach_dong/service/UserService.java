@@ -28,6 +28,10 @@ public class UserService {
             throw new IllegalArgumentException("유효하지 않은 이미지 형식입니다. 이미지 파일을 업로드해 주세요.");
         }
 
+        if (!contentType.equals("image/png") && !contentType.equals("image/jpeg")) {
+            throw new IllegalArgumentException("허용되지 않는 이미지 형식입니다. PNG, JPG, JPEG 파일만 업로드 가능합니다.");
+        }
+
         if (image.getSize() > MAX_IMAGE_SIZE) {
             throw new IllegalArgumentException("이미지 크기가 너무 큽니다. 최대 5MB까지 지원합니다.");
         }
