@@ -11,7 +11,8 @@ import club.gach_dong.entity.User;
 import club.gach_dong.repository.UserRepository;
 import club.gach_dong.service.UserService;
 import club.gach_dong.exception.ErrorStatus;
-import club.gach_dong.exception.SuccessStatus;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,10 +21,12 @@ public class UserController implements UserApiSpecification {
     private final UserRepository userRepository;
 
     @Override
-    @PostMapping("/{userId}/upload_profile_image")
+    @PostMapping("/upload_profile_image")
     public ResponseEntity<UserProfileDto> uploadProfileImage(
             @RequestParam("image") MultipartFile image,
-            @PathVariable("userId") String userId) {
+            HttpServletRequest httpServletRequest) {
+
+        String userId = httpServletRequest.getHeader("X-MEMBER-ID");
 
         if (userId == null || userId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -47,10 +50,12 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @PostMapping("/{userId}/update_profile_image")
+    @PostMapping("/update_profile_image")
     public ResponseEntity<UserProfileDto> updateProfileImage(
             @RequestParam("image") MultipartFile image,
-            @PathVariable("userId") String userId) {
+            HttpServletRequest httpServletRequest) {
+
+        String userId = httpServletRequest.getHeader("X-MEMBER-ID");
 
         if (userId == null || userId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -67,8 +72,10 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @DeleteMapping("/{userId}/delete_profile_image")
-    public ResponseEntity<String> deleteProfileImage(@PathVariable("userId") String userId) {
+    @DeleteMapping("/delete_profile_image")
+    public ResponseEntity<String> deleteProfileImage(HttpServletRequest httpServletRequest) {
+
+        String userId = httpServletRequest.getHeader("X-MEMBER-ID");
 
         if (userId == null || userId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorStatus.USER_NOT_FOUND.getMessage());
@@ -76,7 +83,7 @@ public class UserController implements UserApiSpecification {
 
         try {
             userService.deleteProfileImage(userId);
-            return ResponseEntity.ok(SuccessStatus.IMAGE_DELETED.getMessage());
+            return ResponseEntity.ok("이미지 삭제 성공");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 삭제 실패");
         }
