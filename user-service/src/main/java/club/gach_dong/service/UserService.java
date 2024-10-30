@@ -1,5 +1,6 @@
 package club.gach_dong.service;
 
+import com.amazonaws.services.s3.AmazonS3;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,17 +11,15 @@ import club.gach_dong.exception.ErrorStatus;
 import club.gach_dong.repository.UserRepository;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.io.InputStream;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final String imageStoragePath = "C:\\images"; // 이미지 저장 경로(수정 필요)
-    private final long MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 최대 이미지 크기: 5MB
+    private final AmazonS3 amazonS3Client;
+    private final String bucketName = "gachdong";
+    private final long MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
     private void validateImage(MultipartFile image) {
         String contentType = image.getContentType();
@@ -39,17 +38,17 @@ public class UserService {
 
     private String saveImageFile(String userId, MultipartFile image) throws IOException {
         String fileName = userId + "_" + image.getOriginalFilename();
-        Path filePath = Paths.get(imageStoragePath, fileName);
+        InputStream inputStream = image.getInputStream();
 
-        Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        amazonS3Client.putObject(bucketName, fileName, inputStream, null);
 
-        return "http://yourdomain.com/images/" + fileName;
+        return "https://" + bucketName + ".s3." + amazonS3Client.getRegionName() + ".amazonaws.com/" + fileName;
     }
 
     private void deleteOldImage(User user) throws IOException {
         if (user.getProfileImageUrl() != null) {
-            Path oldFilePath = Paths.get(imageStoragePath, user.getProfileImageUrl().substring(user.getProfileImageUrl().lastIndexOf('/') + 1));
-            Files.deleteIfExists(oldFilePath);
+            String oldFileName = user.getProfileImageUrl().substring(user.getProfileImageUrl().lastIndexOf('/') + 1);
+            amazonS3Client.deleteObject(bucketName, oldFileName);
         }
     }
 
