@@ -39,3 +39,7 @@ spring:
         bucket: ${GCP_BUCKET_NAME}
         path:
           applicationDocs: ${GCP_APPLICATION}
+
+msa:
+  url:
+    club: ${CLUB_URL}

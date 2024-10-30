@@ -35,13 +35,13 @@ public class ApplicationService {
     private final ObjectStorageService objectStorageService;
     private final ObjectStorageServiceConfig objectStorageServiceConfig;
     private final ApplicationDocsRepository applicationDocsRepository;
+    private final AuthorizationService authorizationService;
 
     @Transactional
     public ApplicationResponseDTO.ToCreateApplicationFormDTO createApplicationForm(ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, Long userId) {
 
-        //Verify Club Admin Auth with Club_id, User_Id
-
-        checkAuth(userId, toCreateApplicationFormDTO.getApplyId());
+        //Verify Club Admin Auth with Apply_Id, User_Id
+        authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getApplyId());
 
         ApplicationForm applicationForm = ApplicationForm.builder()
                 .applicationFormStatus(ApplicationFormStatus.valueOf(toCreateApplicationFormDTO.getStatus()))
@@ -57,23 +57,8 @@ public class ApplicationService {
                 .build();
     }
 
-    public void checkAuth(Long userId, Long applyId) {
-        //Check Auth
-        //Communicate with club server to check userId has auth with applyId
-        //Club server have to get clubId with applyId and check userId auth with clubId
-
-        if (false) {
-            throw new CustomException(ErrorStatus.CLUB_UNAUTHORIZED);
-        }
-
-    }
-
     @Transactional(readOnly = true)
     public ApplicationResponseDTO.ToGetFormInfoAdminDTO getFormInfoAdmin(Long formId, Long userId) {
-
-        //Verify Club Admin Auth with Club_id, User_Id
-        //In Construction!!
-
 
         Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
         if (applicationFormOptional.isEmpty()) {
@@ -82,7 +67,8 @@ public class ApplicationService {
 
         ApplicationForm applicationForm = applicationFormOptional.get();
 
-        checkAuth(userId, applicationForm.getApplyId());
+        //Verify Club Admin Auth with Apply_Id, User_Id
+        authorizationService.getAuthByUserIdAndApplyId(userId, applicationForm.getApplyId());
 
         return ApplicationResponseDTO.ToGetFormInfoAdminDTO.builder()
                 .formId(applicationForm.getId())
@@ -112,8 +98,6 @@ public class ApplicationService {
 
     @Transactional
     public void deleteApplicationForm(Long formId, Long userId) {
-        //Verify Club Admin Auth with Club_id, User_Id
-
 
         Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
         if (applicationFormOptional.isEmpty()) {
@@ -122,7 +106,8 @@ public class ApplicationService {
 
         ApplicationForm applicationForm = applicationFormOptional.get();
 
-        checkAuth(userId, applicationForm.getApplyId());
+        //Verify Club Admin Auth with Apply_Id, User_Id
+        authorizationService.getAuthByUserIdAndApplyId(userId, applicationForm.getApplyId());
 
         if (applicationForm.getApplicationFormStatus() == ApplicationFormStatus.IN_USE) {
             throw new CustomException(ErrorStatus.APPLICATION_FORM_IN_USE);
@@ -135,9 +120,8 @@ public class ApplicationService {
     @Transactional
     public ApplicationResponseDTO.ToCreateApplicationFormDTO changeApplicationForm(Long formId, ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, Long userId) {
 
-        //Verify Club Admin Auth with Club_id, User_Id
-
-        checkAuth(userId, toCreateApplicationFormDTO.getApplyId());
+        //Verify Club Admin Auth with Apply_Id, User_Id
+        authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getApplyId());
 
         Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
         if (applicationFormOptional.isEmpty()) {
