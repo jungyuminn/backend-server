@@ -19,3 +19,15 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${access-key}
+      secret-key: ${secret-key}
+    s3:
+      bucket: gachdong
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
