@@ -24,13 +24,22 @@ spring:
           filters:
             - RewritePath=/auth/(?<segment>.*), /$\{segment}
 
-        - id: club-service
+        # Club Service Routes (Public Endpoints)
+        - id: club-service-public
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/public/api/v1/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
+
+        # Club Service Routes (Authenticated Endpoints)
+        - id: club-service-authenticated
           uri: http://club-service:8080
           predicates:
             - Path=/club/api/v1/**
           filters:
             - RewritePath=/club/(?<segment>.*), /$\{segment}
-             - JWTAuthenticationFilter
+            - JWTAuthenticationFilter
 
         - id: application-service
           uri: http://application-service:8080
@@ -38,7 +47,7 @@ spring:
             - Path=/application/api/v1/**
           filters:
             - RewritePath=/application/(?<segment>.*), /$\{segment}
-             - JWTAuthenticationFilter
+            - JWTAuthenticationFilter
 
         - id: auth-service-swagger
           uri: http://auth-service:8080
@@ -101,15 +110,6 @@ logging:
   level:
     org.springframework.cloud.gateway: INFO
     reactor.netty: info
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: health,metrics,prometheus
-#  tracing:
-#    sampling:
-#      probability: 1.0
-#    enabled: false
 
 app:
   jwt:
