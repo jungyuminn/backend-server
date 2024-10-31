@@ -17,12 +17,22 @@ spring:
             allowedHeaders: "*"
             allowedMethods: "*"
       routes:
-        - id: auth-service
+        # Auth Service Routes (Public Endpoints)
+        - id: auth-service-public
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/auth/public/api/v1/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+
+        # Auth Service Routes (Authenticated Endpoints)
+        - id: auth-service-authenticated
           uri: http://auth-service:8080
           predicates:
             - Path=/auth/api/v1/**
           filters:
             - RewritePath=/auth/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
 
         # Club Service Routes (Public Endpoints)
         - id: club-service-public
@@ -67,27 +77,6 @@ spring:
           uri: http://application-service:8080
           predicates:
             - Path=/application/v3/api-docs/**
-          filters:
-            - RewritePath=/application/(?<segment>.*), /$\{segment}
-
-        - id: auth-service-swagger-ui
-          uri: http://auth-service:8080
-          predicates:
-            - Path=/auth/swagger-ui/**
-          filters:
-            - RewritePath=/auth/(?<segment>.*), /$\{segment}
-
-        - id: club-service-swagger-ui
-          uri: http://club-service:8080
-          predicates:
-            - Path=/club/swagger-ui/**
-          filters:
-            - RewritePath=/club/(?<segment>.*), /$\{segment}
-
-        - id: application-service-swagger-ui
-          uri: http://application-service:8080
-          predicates:
-            - Path=/application/swagger-ui/**
           filters:
             - RewritePath=/application/(?<segment>.*), /$\{segment}
 
