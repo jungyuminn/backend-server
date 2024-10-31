@@ -33,8 +33,8 @@ public interface ClubPublicApiSpecification {
     )
     @GetMapping("/{clubId}")
     ClubResponse getClub(
-            @Parameter(description = "동아리 ID", example = "ansier-enicsei-1233na-bndknar", required = true)
-            @PathVariable String clubId
+            @Parameter(description = "동아리 ID", example = "1", required = true)
+            @PathVariable Long clubId
     );
 
     @Operation(
@@ -44,7 +44,7 @@ public interface ClubPublicApiSpecification {
     @GetMapping("/{clubId}/activities")
     ArrayResponse<ClubActivityResponse> getClubActivities(
             @Parameter(description = "동아리 ID", example = "ansier-enicsei-1233na-bndknar", required = true)
-            @PathVariable String clubId
+            @PathVariable Long clubId
     );
 
     @Operation(
@@ -53,7 +53,7 @@ public interface ClubPublicApiSpecification {
     )
     @GetMapping("/{clubId}/contact-info")
     ArrayResponse<ClubContactInfoResponse> getClubContactInfo(
-            @Parameter(description = "동아리 ID", example = "ansier-enicsei-1233na-bndknar", required = true)
-            @PathVariable String clubId
+            @Parameter(description = "동아리 ID", example = "1", required = true)
+            @PathVariable Long clubId
     );
 }
