@@ -3,6 +3,9 @@ package club.gach_dong.config;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.MediaType;
+import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +20,8 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .components(new Components())
                 .info(apiInfo())
-                .addServersItem(serverItem());
+                .addServersItem(serverItem())
+                .components(defaultJsonResponse());
     }
 
     private Info apiInfo() {
@@ -32,5 +36,14 @@ public class SwaggerConfig {
                 .url(gatewayEndpoint + "/auth/")
                 .description("인증/인가" 
                         + " 서비스 URL");
+    }
+
+    private Components defaultJsonResponse() {
+        ApiResponse jsonResponse = new ApiResponse()
+                .description("Default JSON response")
+                .content(new Content()
+                        .addMediaType("application/json", new MediaType()));
+
+        return new Components().addResponses("defaultJsonResponse", jsonResponse);
     }
 }
