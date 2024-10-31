@@ -3,10 +3,10 @@ package club.gach_dong.controller;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import club.gach_dong.api.AuthApiSpecification;
+import club.gach_dong.api.PublicAuthApiSpecification; // Public API 인터페이스 추가
 import club.gach_dong.dto.AuthResponse;
 import club.gach_dong.dto.ChangePasswordDto;
 import club.gach_dong.dto.LoginDto;
@@ -17,10 +17,9 @@ import club.gach_dong.util.JwtUtil;
 
 @RestController
 @RequiredArgsConstructor
-public class AuthController implements AuthApiSpecification {
+public class AuthController implements AuthApiSpecification, PublicAuthApiSpecification {
 
     private final UserService userService;
-    private final JavaMailSender mailSender;
     private final JwtUtil jwtUtil;
 
     @Override
@@ -37,14 +36,12 @@ public class AuthController implements AuthApiSpecification {
     public ResponseEntity<String> completeRegistration(@Valid @RequestBody RegistrationDto registrationDto) {
         try {
             userService.verifyCode(registrationDto.getEmail(), registrationDto.getCode());
-
             userService.completeRegistration(
                     registrationDto.getEmail(),
                     registrationDto.getPassword(),
                     registrationDto.getName(),
                     registrationDto.getRole()
             );
-
             return ResponseEntity.ok("회원가입이 완료되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입 실패: " + e.getMessage());
