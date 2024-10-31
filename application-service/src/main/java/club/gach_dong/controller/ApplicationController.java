@@ -84,5 +84,12 @@ public class ApplicationController implements ApplicationApiSpecification {
         return ResForm.onSuccess(InSuccess.APPLICATION_DELETED, null);
     }
 
+    @Override
+    public ResForm<?> changeApplicationStatus(Long applyId, ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus, HttpServletRequest httpServletRequest) {
+        Long userId = authorizationService.getUserId(httpServletRequest);
+        applicationService.changeApplicationStatus(applyId, toChangeApplicationStatus);
+        return ResForm.onSuccess(InSuccess.APPLICATION_STATUS_CHANGED, null);
+    }
+
     ;
 }

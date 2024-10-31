@@ -41,4 +41,14 @@ public class ApplicationRequestDTO {
         @Size(max = 80, message = "동이리 이름이 너무 큽니다.")
         private String clubName;
     }
+
+    @Getter
+    public static class ToChangeApplicationStatus{
+        @NotNull(message = "변경할 Application Id가 누락되었습니다.")
+        private Long applicationId;
+
+        @NotNull(message = "변경할 application 상태를 입력해 주세요.")
+        @Size(max = 80, message = "상태가 너무 깁니다.")
+        private String status;
+    }
 }

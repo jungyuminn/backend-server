@@ -262,4 +262,21 @@ public class ApplicationService {
                 .build();
 
     }
+
+    @Transactional
+    public void changeApplicationStatus(Long userId, ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus){
+
+        Optional<Application> applicationOptional = applicationRepository.findById(toChangeApplicationStatus.getApplicationId());
+
+        if(applicationOptional.isEmpty()){
+            throw new CustomException(ErrorStatus.APPLICATION_NOT_PRESENT);
+        }
+
+        Application application = applicationOptional.get();
+
+        //Verify Club Admin Auth with Apply_Id, User_Id
+        authorizationService.getAuthByUserIdAndApplyId(userId, application.getApplyId());
+
+        applicationRepository.updateApplicationStatus(toChangeApplicationStatus.getStatus(), application);
+    }
 }

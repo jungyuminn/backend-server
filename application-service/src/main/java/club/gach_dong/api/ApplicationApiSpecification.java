@@ -66,5 +66,11 @@ public interface ApplicationApiSpecification {
     @DeleteMapping("/apply/{applyId}")
     ResForm<?> deleteApplication(@PathVariable("applyId") Long applyId, HttpServletRequest httpServletRequest);
 
+    @Operation(summary = "사용자 지원 상태 변경 API", description = "지원 ID를 이용해 지원 상태를 변경합니다.")
+    @PostMapping("/status/{applyId}")
+    ResForm<?> changeApplicationStatus(@PathVariable("applyId") Long applyId, ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus,  HttpServletRequest httpServletRequest);
+
+
+
 }
 
