@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Public 인증/인가 API", description = "Public한 인증/인가가 필요한 API")
 @RestController
-@RequestMapping("/api/v1/public")
+@RequestMapping("/public/api/v1")
 public interface PublicAuthApiSpecification {
 
     @Operation(summary = "이메일 인증 코드 발송", description = "이메일로 유효시간 3분의 6자리의 인증 코드를 발송합니다.")
