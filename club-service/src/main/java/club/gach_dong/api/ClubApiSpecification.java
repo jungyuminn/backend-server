@@ -5,6 +5,7 @@ import club.gach_dong.dto.request.CreateClubRequest;
 import club.gach_dong.dto.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -16,52 +17,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 @Validated
 public interface ClubApiSpecification {
-
-    @Operation(
-            summary = "동아리 목록 조회",
-            description = "모든 동아리 정보를 조회합니다."
-    )
-    @GetMapping("/")
-    ArrayResponse<ClubSummaryResponse> getClubs();
-
-    @Operation(
-            summary = "동아리 조회",
-            description = "동아리 이름을 이용하여 동아리 정보를 조회합니다."
-    )
-    @GetMapping("/{clubId}")
-    ClubResponse getClub(
-            @Parameter(description = "동아리 ID", example = "ansier-enicsei-1233na-bndknar", required = true)
-            @PathVariable String clubId
-    );
-
     @Operation(
             summary = "동아리 생성",
-            description = "동아리 정보를 입력받아 동아리를 생성합니다."
+            description = "동아리 정보를 입력받아 동아리를 생성합니다.",
+            security = @SecurityRequirement(name = "Authorization")
     )
     @PostMapping("/create")
     ResponseEntity<ClubResponse> createClub(
             @Valid
             @RequestBody
             CreateClubRequest createClubRequest
-    );
-
-    @Operation(
-            summary = "동아리 활동 내역 조회",
-            description = "동아리 활동 내역을 조회합니다."
-    )
-    @GetMapping("/{clubId}/activities")
-    ArrayResponse<ClubActivityResponse> getClubActivities(
-            @Parameter(description = "동아리 ID", example = "ansier-enicsei-1233na-bndknar", required = true)
-            @PathVariable String clubId
-    );
-
-    @Operation(
-            summary = "동아리 연락처 정보 조회",
-            description = "동아리 연락처 정보를 조회합니다."
-    )
-    @GetMapping("/{clubId}/contact-info")
-    ArrayResponse<ClubContactInfoResponse> getClubContactInfo(
-            @Parameter(description = "동아리 ID", example = "ansier-enicsei-1233na-bndknar", required = true)
-            @PathVariable String clubId
     );
 }
