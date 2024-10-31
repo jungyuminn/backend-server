@@ -20,6 +20,8 @@ public class AuthorizationService {
 
     private final static String MEMBER_ID_HEADER_KEY = "X-MEMBER-ID";
 
+    public final RestClient restClient;
+
     public Long getUserId(HttpServletRequest httpServletRequest){
         String header = httpServletRequest.getHeader(MEMBER_ID_HEADER_KEY);
 
@@ -32,8 +34,6 @@ public class AuthorizationService {
     }
 
     public void getAuthByUserIdAndApplyId(Long userId, Long applyId){
-
-        RestClient restClient = RestClient.create();
 
         String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
                 .queryParam("userId", userId)
