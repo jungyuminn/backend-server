@@ -1,7 +1,6 @@
 package club.gach_dong.api;
 
 import club.gach_dong.dto.AuthResponse;
-import club.gach_dong.dto.LoginDto;
 import club.gach_dong.dto.RegistrationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,9 +9,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Public 인증/인가 API", description = "Public한 인증/인가가 필요한 API")
+@Tag(name = "Public 인증/인가 API", description = "Public한 사용자 인증 및 인가 관련 API")
 @RestController
-@RequestMapping("/api/v1/public")
+@RequestMapping("/public/api/v1")
 public interface PublicAuthApiSpecification {
 
     @Operation(summary = "이메일 인증 코드 발송", description = "이메일로 유효시간 3분의 6자리의 인증 코드를 발송합니다.")
@@ -20,7 +19,12 @@ public interface PublicAuthApiSpecification {
     ResponseEntity<String> sendVerificationCode(
             @Parameter(description = "사용자의 이메일 주소") @RequestParam String email);
 
-    @Operation(summary = "회원가입", description = "회원가입을 완료합니다.")
+    @Operation(summary = "회원가입", description = "회원가입을 완료합니다. \n" +
+            "- email: 사용자 이메일 (gachon.ac.kr 도메인) \n" +
+            "- code: 6자리의 이메일 인증 코드 \n" +
+            "- password: 8~16자 영문, 숫자, 특수문자를 포함한 비밀번호 \n" +
+            "- name: 사용자 이름 \n" +
+            "- role: ADMIN, USER")
     @PostMapping("/register")
     ResponseEntity<String> completeRegistration(
             @Parameter(description = "회원가입 정보") @Valid @RequestBody RegistrationDto registrationDto);
