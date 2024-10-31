@@ -8,9 +8,9 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public record ClubResponse(
-        @Schema(description = "동아리 ID", example = "ansier-enicsei-1233na-bndknar")
+        @Schema(description = "동아리 ID", example = "1")
         @NotNull
-        String clubId,
+        Long clubId,
 
         @Schema(description = "동아리 이름", example = "가츠동")
         @NotNull

@@ -5,6 +5,9 @@ import club.gach_dong.domain.ClubCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record ClubSummaryResponse(
+        @Schema(description = "동아리 id", example = "1")
+        Long clubId,
+
         @Schema(description = "동아리 이름", example = "가츠동")
         String clubName,
 
@@ -22,6 +25,7 @@ public record ClubSummaryResponse(
 ) {
     public static ClubSummaryResponse from(Club club) {
         return new ClubSummaryResponse(
+                club.getId(),
                 club.getName(),
                 club.getCategory(),
                 club.getShortDescription(),
