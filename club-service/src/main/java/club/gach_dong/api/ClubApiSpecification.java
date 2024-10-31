@@ -4,7 +4,6 @@ package club.gach_dong.api;
 import club.gach_dong.dto.request.CreateClubRequest;
 import club.gach_dong.dto.response.*;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -27,5 +26,6 @@ public interface ClubApiSpecification {
             @Valid
             @RequestBody
             CreateClubRequest createClubRequest
+
     );
 }
