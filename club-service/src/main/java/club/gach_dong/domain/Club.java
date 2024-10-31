@@ -22,10 +22,10 @@ import java.util.List;
 public class Club {
 
     @Id
-    @Column(name = "club_id", length = 36, columnDefinition = "CHAR(36)")
-    @Schema(description = "동아리 ID", example = "123e4567-e89b-12d3-a456-426614174000")
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @Column(name = "club_id", columnDefinition = "INT")
+    @Schema(description = "동아리 ID", example = "1")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Column(name = "club_name", length = 26, columnDefinition = "CHAR(26)")
     @Schema(description = "동아리 이름", example = "GDG Gachon")
