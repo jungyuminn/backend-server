@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import club.gach_dong.dto.UserProfileDto;
 
 @Tag(name = "인증/인가 API", description = "사용자 인증 및 인가 관련 API")
 @RestController
@@ -28,5 +29,10 @@ public interface AuthApiSpecification {
     @Operation(summary = "회원탈퇴", description = "사용자의 계정을 삭제합니다.")
     @PostMapping("/unregister")
     ResponseEntity<String> deleteAccount(
+            @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
+
+    @Operation(summary = "회원 정보 조회", description = "사용자의 프로필 정보를 조회합니다.")
+    @GetMapping("/profile")
+    ResponseEntity<UserProfileDto> getProfile(
             @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
 }

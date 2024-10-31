@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import club.gach_dong.api.AuthApiSpecification;
 import club.gach_dong.dto.ChangePasswordDto;
+import club.gach_dong.dto.UserProfileDto;
 import club.gach_dong.entity.User;
 import club.gach_dong.service.UserService;
 import club.gach_dong.util.JwtUtil;
@@ -66,4 +67,30 @@ public class AuthController implements AuthApiSpecification {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원 탈퇴 실패: " + e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<UserProfileDto> getProfile(@RequestHeader("Authorization") String token) {
+        if (!jwtUtil.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        try {
+            String email = jwtUtil.getEmailFromToken(token);
+            User user = userService.findByEmail(email);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            UserProfileDto userProfileDto = new UserProfileDto(
+                    user.getEmail(),
+                    user.getName(),
+                    user.getRole().name()
+            );
+
+            return ResponseEntity.ok(userProfileDto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
 }

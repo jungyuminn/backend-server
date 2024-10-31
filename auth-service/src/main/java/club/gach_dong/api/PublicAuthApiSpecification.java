@@ -1,6 +1,7 @@
 package club.gach_dong.api;
 
 import club.gach_dong.dto.AuthResponse;
+import test.login.dto.LoginDto;
 import club.gach_dong.dto.RegistrationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,7 +22,6 @@ public interface PublicAuthApiSpecification {
 
     @Operation(summary = "회원가입", description = "회원가입을 완료합니다. \n" +
             "- email: 사용자 이메일 (gachon.ac.kr 도메인) \n" +
-            "- code: 6자리의 이메일 인증 코드 \n" +
             "- password: 8~16자 영문, 숫자, 특수문자를 포함한 비밀번호 \n" +
             "- name: 사용자 이름 \n" +
             "- role: ADMIN, USER")
@@ -37,6 +37,12 @@ public interface PublicAuthApiSpecification {
     @Operation(summary = "비밀번호 재발급", description = "이메일 인증 코드를 입력하여 임시 비밀번호를 재발급합니다.")
     @PostMapping("/reset_password")
     ResponseEntity<String> resetPassword(
+            @Parameter(description = "사용자의 이메일 주소") @RequestParam String email,
+            @Parameter(description = "인증 코드") @RequestParam String code);
+
+    @Operation(summary = "인증 코드 검증", description = "사용자가 입력한 인증 코드를 검증합니다.")
+    @PostMapping("/verify_code")
+    ResponseEntity<String> verifyCode(
             @Parameter(description = "사용자의 이메일 주소") @RequestParam String email,
             @Parameter(description = "인증 코드") @RequestParam String code);
 }

@@ -33,7 +33,6 @@ public class PublicAuthController implements PublicAuthApiSpecification {
     @Override
     public ResponseEntity<String> completeRegistration(@Valid @RequestBody RegistrationDto registrationDto) {
         try {
-            userService.verifyCode(registrationDto.getEmail(), registrationDto.getCode());
             userService.completeRegistration(
                     registrationDto.getEmail(),
                     registrationDto.getPassword(),
@@ -74,6 +73,16 @@ public class PublicAuthController implements PublicAuthApiSpecification {
             return ResponseEntity.ok("임시 비밀번호가 이메일로 발송되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호 재발급 실패: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String code) {
+        try {
+            userService.verifyCode(email, code);
+            return ResponseEntity.ok("인증 코드 확인이 완료되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("인증 코드 검증 실패: " + e.getMessage());
         }
     }
 }
