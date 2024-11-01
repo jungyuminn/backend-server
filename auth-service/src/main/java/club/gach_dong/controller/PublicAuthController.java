@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import club.gach_dong.api.PublicAuthApiSpecification;
-import club.gach_dong.dto.AuthResponse;
-import club.gach_dong.dto.RegistrationDto;
-import club.gach_dong.dto.LoginDto;
+import club.gach_dong.dto.request.LoginRequest;
+import club.gach_dong.dto.request.RegistrationRequest;
+import club.gach_dong.dto.response.AuthResponse;
 import club.gach_dong.entity.User;
 import club.gach_dong.service.UserService;
 import club.gach_dong.util.JwtUtil;
@@ -31,14 +31,9 @@ public class PublicAuthController implements PublicAuthApiSpecification {
     }
 
     @Override
-    public ResponseEntity<String> completeRegistration(@Valid @RequestBody RegistrationDto registrationDto) {
+    public ResponseEntity<String> completeRegistration(@Valid @RequestBody RegistrationRequest registrationRequest) {
         try {
-            userService.completeRegistration(
-                    registrationDto.getEmail(),
-                    registrationDto.getPassword(),
-                    registrationDto.getName(),
-                    registrationDto.getRole()
-            );
+            userService.completeRegistration(registrationRequest);
             return ResponseEntity.ok("회원가입이 완료되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입 실패: " + e.getMessage());
@@ -46,10 +41,10 @@ public class PublicAuthController implements PublicAuthApiSpecification {
     }
 
     @Override
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginDto loginDto) {
-        User user = userService.findByEmail(loginDto.getEmail());
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        User user = userService.findByEmail(loginRequest.email());
 
-        if (user == null || !userService.checkPassword(user, loginDto.getPassword())) {
+        if (user == null || !userService.checkPassword(user, loginRequest.password())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(AuthResponse.withMessage("이메일 또는 비밀번호가 올바르지 않습니다."));
         }

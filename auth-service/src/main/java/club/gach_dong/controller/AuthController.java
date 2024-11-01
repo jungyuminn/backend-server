@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import club.gach_dong.api.AuthApiSpecification;
-import club.gach_dong.dto.ChangePasswordDto;
-import club.gach_dong.dto.UserProfileDto;
+import club.gach_dong.dto.request.ChangePasswordRequest;
+import club.gach_dong.dto.response.UserProfileResponse;
 import club.gach_dong.entity.User;
 import club.gach_dong.service.UserService;
 import club.gach_dong.util.JwtUtil;
@@ -20,7 +20,7 @@ public class AuthController implements AuthApiSpecification {
     private final JwtUtil jwtUtil;
 
     @Override
-    public ResponseEntity<String> changePassword(@RequestHeader("Authorization") String token, @Valid @RequestBody ChangePasswordDto changePasswordDto) {
+    public ResponseEntity<String> changePassword(@RequestHeader("Authorization") String token, @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         if (!jwtUtil.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
         }
@@ -29,8 +29,8 @@ public class AuthController implements AuthApiSpecification {
             String email = jwtUtil.getEmailFromToken(token);
             User user = userService.findByEmail(email);
 
-            if (userService.checkPassword(user, changePasswordDto.getCurrentPassword())) {
-                user.setPassword(userService.encodePassword(changePasswordDto.getNewPassword()));
+            if (userService.checkPassword(user, changePasswordRequest.currentPassword())) {
+                user.setPassword(userService.encodePassword(changePasswordRequest.newPassword()));
                 userService.updateUser(user);
                 return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
             } else {
@@ -69,7 +69,7 @@ public class AuthController implements AuthApiSpecification {
     }
 
     @Override
-    public ResponseEntity<UserProfileDto> getProfile(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<UserProfileResponse> getProfile(@RequestHeader("Authorization") String token) {
         if (!jwtUtil.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
@@ -81,16 +81,10 @@ public class AuthController implements AuthApiSpecification {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
 
-            UserProfileDto userProfileDto = new UserProfileDto(
-                    user.getEmail(),
-                    user.getName(),
-                    user.getRole().name()
-            );
-
-            return ResponseEntity.ok(userProfileDto);
+            UserProfileResponse userProfileResponse = UserProfileResponse.from(user);
+            return ResponseEntity.ok(userProfileResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-
 }

@@ -10,6 +10,8 @@ import club.gach_dong.entity.Role;
 import club.gach_dong.entity.User;
 import club.gach_dong.repository.UserRepository;
 import club.gach_dong.util.JwtUtil;
+import club.gach_dong.dto.request.RegistrationRequest;
+import club.gach_dong.dto.request.ChangePasswordRequest;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +30,7 @@ public class UserService {
 
     @Autowired
     private JavaMailSender mailSender;
+
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -68,12 +71,17 @@ public class UserService {
         }
     }
 
-    public void completeRegistration(String email, String password, String name, Role role) {
-        if (userRepository.findByEmail(email).isPresent()) {
+    public void completeRegistration(RegistrationRequest registrationRequest) {
+        if (userRepository.findByEmail(registrationRequest.email()).isPresent()) {
             throw new RuntimeException("이메일이 이미 사용 중입니다.");
         }
 
-        User user = User.of(email, passwordEncoder.encode(password), name, role);
+        User user = User.of(
+                registrationRequest.email(),
+                passwordEncoder.encode(registrationRequest.password()),
+                registrationRequest.name(),
+                registrationRequest.role()
+        );
         userRepository.save(user);
     }
 
