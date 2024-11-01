@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface ClubService {
     List<ClubSummaryResponse> getAllClubs();
-    ClubResponse getClub(String clubId);
+    ClubResponse getClub(Long clubId);
     ClubResponse createClub(CreateClubRequest createClubRequest);
-    List<ClubActivityResponse> getClubActivities(String clubId);
-    List<ClubContactInfoResponse> getClubContactInfo(String clubId);
+    List<ClubActivityResponse> getClubActivities(Long clubId);
+    List<ClubContactInfoResponse> getClubContactInfo(Long clubId);
 }

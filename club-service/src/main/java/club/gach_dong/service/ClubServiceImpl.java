@@ -36,7 +36,7 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public ClubResponse getClub(String clubIId) {
+    public ClubResponse getClub(Long clubIId) {
         return clubRepository.findById(clubIId)
                 .map(ClubResponse::from)
                 .orElseThrow(() -> new NotFoundException("Club not found"));
@@ -58,7 +58,7 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ClubActivityResponse> getClubActivities(String clubId) {
+    public List<ClubActivityResponse> getClubActivities(Long clubId) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new NotFoundException("Club not found"));
 
@@ -70,7 +70,7 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public List<ClubContactInfoResponse> getClubContactInfo(String clubId) {
+    public List<ClubContactInfoResponse> getClubContactInfo(Long clubId) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new NotFoundException("Club not found"));
 

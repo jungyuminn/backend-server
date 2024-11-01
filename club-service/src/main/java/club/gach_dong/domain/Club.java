@@ -22,7 +22,7 @@ import java.util.List;
 public class Club {
 
     @Id
-    @Column(name = "club_id", columnDefinition = "INT")
+    @Column(name = "id", columnDefinition = "INT")
     @Schema(description = "동아리 ID", example = "1")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
