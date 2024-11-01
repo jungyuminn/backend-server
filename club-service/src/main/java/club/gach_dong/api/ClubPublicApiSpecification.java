@@ -43,7 +43,7 @@ public interface ClubPublicApiSpecification {
     )
     @GetMapping("/{clubId}/activities")
     ArrayResponse<ClubActivityResponse> getClubActivities(
-            @Parameter(description = "동아리 ID", example = "ansier-enicsei-1233na-bndknar", required = true)
+            @Parameter(description = "동아리 ID", example = "1", required = true)
             @PathVariable Long clubId
     );
 
