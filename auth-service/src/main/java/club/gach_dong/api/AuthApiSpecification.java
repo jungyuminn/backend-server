@@ -4,6 +4,7 @@ import club.gach_dong.dto.AuthResponse;
 import club.gach_dong.dto.ChangePasswordDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -14,18 +15,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public interface AuthApiSpecification {
 
-    @Operation(summary = "비밀번호 변경", description = "기존 비밀번호를 변경합니다.")
+    @Operation(
+            summary = "비밀번호 변경", description = "기존 비밀번호를 변경합니다.", security = @SecurityRequirement(name = "Authorization")
+    )
     @PostMapping("/change_password")
     ResponseEntity<String> changePassword(
             @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token,
             @Parameter(description = "비밀번호 변경 정보") @Valid @RequestBody ChangePasswordDto changePasswordDto);
 
-    @Operation(summary = "로그아웃", description = "사용자를 로그아웃합니다.")
+    @Operation(summary = "로그아웃", description = "사용자를 로그아웃합니다.", security = @SecurityRequirement(name = "Authorization"))
     @PostMapping("/logout")
     ResponseEntity<String> logout(
             @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
 
-    @Operation(summary = "회원탈퇴", description = "사용자의 계정을 삭제합니다.")
+    @Operation(summary = "회원탈퇴", description = "사용자의 계정을 삭제합니다.", security = @SecurityRequirement(name = "Authorization"))
     @PostMapping("/unregister")
     ResponseEntity<String> deleteAccount(
             @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
