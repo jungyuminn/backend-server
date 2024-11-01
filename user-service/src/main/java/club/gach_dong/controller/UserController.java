@@ -22,7 +22,6 @@ public class UserController implements UserApiSpecification {
     private final UserRepository userRepository;
 
     @Override
-    @PostMapping(value = "/upload_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileDto> uploadProfileImage(
             @RequestParam("image") MultipartFile image,
             HttpServletRequest httpServletRequest) {
@@ -51,7 +50,6 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @PostMapping(value = "/update_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileDto> updateProfileImage(
             @RequestParam("image") MultipartFile image,
             HttpServletRequest httpServletRequest) {
@@ -73,7 +71,6 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @DeleteMapping("/delete_profile_image")
     public ResponseEntity<String> deleteProfileImage(HttpServletRequest httpServletRequest) {
 
         String userId = httpServletRequest.getHeader("X-MEMBER-ID");
@@ -87,6 +84,29 @@ public class UserController implements UserApiSpecification {
             return ResponseEntity.ok("이미지 삭제 성공");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 삭제 실패");
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> getProfileImage(HttpServletRequest httpServletRequest) {
+        String userId = httpServletRequest.getHeader("X-MEMBER-ID");
+
+        if (userId == null || userId.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        try {
+            User user = userRepository.findByEmail(userId)
+                    .orElseThrow(() -> new RuntimeException(ErrorStatus.USER_NOT_FOUND.getMessage()));
+
+            String profileImageUrl = user.getProfileImageUrl();
+            if (profileImageUrl == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("프로필 이미지가 존재하지 않습니다.");
+            }
+
+            return ResponseEntity.ok(profileImageUrl);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 조회 실패: " + e.getMessage());
         }
     }
 }

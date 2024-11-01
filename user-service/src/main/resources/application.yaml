@@ -26,8 +26,8 @@ cloud:
       access-key: ${access-key}
       secret-key: ${secret-key}
     s3:
-      bucket: gachdong
+      bucket: ${bucket}
     region:
-      static: ap-northeast-2
+      static: ${region}
     stack:
       auto: false
