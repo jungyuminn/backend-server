@@ -13,9 +13,9 @@ import java.util.Optional;
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 
-    Optional<Application> findByUserIdAndApplyId(Long userId, Long applyId);
+    Optional<Application> findByUserIdAndApplyId(String userId, Long applyId);
 
-    List<Application> findAllByUserId(Long userId);
+    List<Application> findAllByUserId(String userId);
 
     @Modifying
     @Query("UPDATE application a SET a.applicationStatus = :status WHERE a = :application")

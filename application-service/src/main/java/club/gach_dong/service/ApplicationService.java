@@ -38,7 +38,7 @@ public class ApplicationService {
     private final AuthorizationService authorizationService;
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationFormDTO createApplicationForm(ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, Long userId) {
+    public ApplicationResponseDTO.ToCreateApplicationFormDTO createApplicationForm(ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, String userId) {
 
         //Verify Club Admin Auth with Apply_Id, User_Id
         authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getApplyId());
@@ -58,7 +58,7 @@ public class ApplicationService {
     }
 
     @Transactional(readOnly = true)
-    public ApplicationResponseDTO.ToGetFormInfoAdminDTO getFormInfoAdmin(Long formId, Long userId) {
+    public ApplicationResponseDTO.ToGetFormInfoAdminDTO getFormInfoAdmin(Long formId, String userId) {
 
         Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
         if (applicationFormOptional.isEmpty()) {
@@ -80,7 +80,7 @@ public class ApplicationService {
     }
 
     @Transactional(readOnly = true)
-    public ApplicationResponseDTO.ToGetFormInfoUserDTO getFormInfoUser(Long formId, Long userId) {
+    public ApplicationResponseDTO.ToGetFormInfoUserDTO getFormInfoUser(Long formId, String userId) {
 
         Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
         if (applicationFormOptional.isEmpty()) {
@@ -97,7 +97,7 @@ public class ApplicationService {
     }
 
     @Transactional
-    public void deleteApplicationForm(Long formId, Long userId) {
+    public void deleteApplicationForm(Long formId, String userId) {
 
         Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
         if (applicationFormOptional.isEmpty()) {
@@ -118,7 +118,7 @@ public class ApplicationService {
 
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationFormDTO changeApplicationForm(Long formId, ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, Long userId) {
+    public ApplicationResponseDTO.ToCreateApplicationFormDTO changeApplicationForm(Long formId, ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, String userId) {
 
         //Verify Club Admin Auth with Apply_Id, User_Id
         authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getApplyId());
@@ -136,7 +136,7 @@ public class ApplicationService {
     }
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationDTO createApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, Long userId) {
+    public ApplicationResponseDTO.ToCreateApplicationDTO createApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, String userId) {
 
         //Verify it is valid apply
         //In constructions!!!
@@ -205,7 +205,7 @@ public class ApplicationService {
     }
 
     @Transactional
-    public void deleteApplication(Long applyId, Long userId) {
+    public void deleteApplication(Long applyId, String userId) {
 
         Optional<Application> applicationOptional = applicationRepository.findByUserIdAndApplyId(userId, applyId);
 
@@ -239,13 +239,13 @@ public class ApplicationService {
     }
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationDTO changeApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, Long userId) {
+    public ApplicationResponseDTO.ToCreateApplicationDTO changeApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, String userId) {
         deleteApplication(applyId, userId);
         return createApplication(applyId, files, toApplyClub, userId);
     }
 
     @Transactional(readOnly = true)
-    public ApplicationResponseDTO.ToGetApplicationHistoryListDTO getApplicationHistoryList(Long userId) {
+    public ApplicationResponseDTO.ToGetApplicationHistoryListDTO getApplicationHistoryList(String userId) {
 
         List<Application> applicationList = applicationRepository.findAllByUserId(userId);
 
@@ -264,7 +264,7 @@ public class ApplicationService {
     }
 
     @Transactional
-    public void changeApplicationStatus(Long userId, ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus){
+    public void changeApplicationStatus(String userId, ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus){
 
         Optional<Application> applicationOptional = applicationRepository.findById(toChangeApplicationStatus.getApplicationId());
 

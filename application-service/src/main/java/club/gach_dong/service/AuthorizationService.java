@@ -22,18 +22,18 @@ public class AuthorizationService {
 
     public final RestClient restClient;
 
-    public Long getUserId(HttpServletRequest httpServletRequest){
+    public String getUserId(HttpServletRequest httpServletRequest){
         String header = httpServletRequest.getHeader(MEMBER_ID_HEADER_KEY);
 
         if(header!=null){
-            return Long.parseLong(header);
+            return header;
         }
 
         throw new CustomException(ErrorStatus.USER_NOT_FOUND);
 //        return null;
     }
 
-    public void getAuthByUserIdAndApplyId(Long userId, Long applyId){
+    public void getAuthByUserIdAndApplyId(String userId, Long applyId){
 
         String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
                 .queryParam("userId", userId)
