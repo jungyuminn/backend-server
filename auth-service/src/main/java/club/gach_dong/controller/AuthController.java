@@ -6,7 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import club.gach_dong.api.AuthApiSpecification;
-import club.gach_dong.dto.ChangePasswordDto;
+import club.gach_dong.dto.request.ChangePasswordRequest;
+import club.gach_dong.dto.response.UserProfileResponse;
 import club.gach_dong.entity.User;
 import club.gach_dong.service.UserService;
 import club.gach_dong.util.JwtUtil;
@@ -19,7 +20,7 @@ public class AuthController implements AuthApiSpecification {
     private final JwtUtil jwtUtil;
 
     @Override
-    public ResponseEntity<String> changePassword(@RequestHeader("Authorization") String token, @Valid @RequestBody ChangePasswordDto changePasswordDto) {
+    public ResponseEntity<String> changePassword(@RequestHeader("Authorization") String token, @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         if (!jwtUtil.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
         }
@@ -28,8 +29,8 @@ public class AuthController implements AuthApiSpecification {
             String email = jwtUtil.getEmailFromToken(token);
             User user = userService.findByEmail(email);
 
-            if (userService.checkPassword(user, changePasswordDto.getCurrentPassword())) {
-                user.setPassword(userService.encodePassword(changePasswordDto.getNewPassword()));
+            if (userService.checkPassword(user, changePasswordRequest.currentPassword())) {
+                user.setPassword(userService.encodePassword(changePasswordRequest.newPassword()));
                 userService.updateUser(user);
                 return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
             } else {
@@ -64,6 +65,26 @@ public class AuthController implements AuthApiSpecification {
             return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원 탈퇴 실패: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<UserProfileResponse> getProfile(@RequestHeader("Authorization") String token) {
+        if (!jwtUtil.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        try {
+            String email = jwtUtil.getEmailFromToken(token);
+            User user = userService.findByEmail(email);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            UserProfileResponse userProfileResponse = UserProfileResponse.from(user);
+            return ResponseEntity.ok(userProfileResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 }
