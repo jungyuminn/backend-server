@@ -26,15 +26,15 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("가츠동 API 명세 - 사용자 프로필 이미지 서비스")
-                .description("사용자 프로필 이미지 서비스에 대한 API 명세입니다.")
+                .title("가츠동 API 명세 - 프로필 이미지 서비스")
+                .description("프로필 이미지 서비스에 대한 API 명세입니다.")
                 .version("v1");
     }
 
     private Server serverItem() {
         return new Server()
                 .url(gatewayEndpoint + "/profile/")
-                .description("사용자 프로필 이미지"
+                .description("프로필 이미지"
                         + " 서비스 URL");
     }
 
