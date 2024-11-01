@@ -1,4 +1,4 @@
-package club.gach_dong.api;
+package test.login.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -6,9 +6,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import club.gach_dong.dto.request.LoginRequest;
-import club.gach_dong.dto.request.RegistrationRequest;
-import club.gach_dong.dto.response.AuthResponse;
+import test.login.dto.request.LoginRequest;
+import test.login.dto.request.RegistrationRequest;
+import test.login.dto.response.AuthResponse;
 
 @Tag(name = "Public 인증/인가 API", description = "Public한 사용자 인증 및 인가 관련 API")
 @RestController
@@ -27,7 +27,7 @@ public interface PublicAuthApiSpecification {
             "- role: ADMIN, USER")
     @PostMapping("/register")
     ResponseEntity<String> completeRegistration(
-            @Parameter(description = "회원가입 정보") @Valid @RequestBody RegistrationRequest registrationDto);
+            @Parameter(description = "회원가입 정보") @Valid @RequestBody RegistrationRequest registrationRequest);
 
     @Operation(summary = "사용자 로그인", description = "사용자가 로그인합니다.")
     @PostMapping("/login")
