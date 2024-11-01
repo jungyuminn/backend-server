@@ -1,6 +1,7 @@
 package club.gach_dong.api;
 
 import club.gach_dong.dto.AuthResponse;
+import club.gach_dong.dto.LoginDto;
 import club.gach_dong.dto.RegistrationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
