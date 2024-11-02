@@ -19,7 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final AmazonS3 amazonS3Client;
     private final String bucketName = "gachdong";
-    private final long MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+    private final long MAX_IMAGE_SIZE = 10 * 1024 * 1024;
 
     private void validateImage(MultipartFile image) {
         String contentType = image.getContentType();
