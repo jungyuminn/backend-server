@@ -1,14 +1,14 @@
-package club.gach_dong.service;
+package club_gach_dong.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import club.gach_dong.dto.UserProfileDto;
-import club.gach_dong.entity.User;
-import club.gach_dong.exception.ErrorStatus;
-import club.gach_dong.repository.UserRepository;
+import club_gach_dong.dto.response.UserProfileResponse;
+import club_gach_dong.entity.User;
+import club_gach_dong.exception.ErrorStatus;
+import club_gach_dong.repository.UserRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,25 +53,25 @@ public class UserService {
     }
 
     @Transactional
-    public UserProfileDto saveProfileImage(String email, MultipartFile image) {
+    public UserProfileResponse saveProfileImage(String email, MultipartFile image) {
         validateImage(image);
 
         try {
             String imageUrl = saveImageFile(email, image);
 
             User user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new RuntimeException(ErrorStatus.USER_NOT_FOUND.getMessage()));
+                    .orElseGet(() -> User.of(email, null));
             user.setProfileImageUrl(imageUrl);
             userRepository.save(user);
 
-            return new UserProfileDto(user.getId(), user.getEmail(), imageUrl);
+            return UserProfileResponse.from(user);
         } catch (IOException e) {
             throw new RuntimeException("이미지 업로드 실패: " + e.getMessage(), e);
         }
     }
 
     @Transactional
-    public UserProfileDto updateProfileImage(String email, MultipartFile image) {
+    public UserProfileResponse updateProfileImage(String email, MultipartFile image) {
         validateImage(image);
 
         try {
@@ -84,7 +84,7 @@ public class UserService {
             user.setProfileImageUrl(imageUrl);
             userRepository.save(user);
 
-            return new UserProfileDto(user.getId(), user.getEmail(), imageUrl);
+            return UserProfileResponse.from(user);
         } catch (IOException e) {
             throw new RuntimeException("이미지 수정 실패", e);
         }

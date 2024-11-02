@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import club.gach_dong.api.UserApiSpecification;
-import club.gach_dong.dto.UserProfileDto;
+import club.gach_dong.dto.request.UserProfileRequest;
+import club.gach_dong.dto.response.UserProfileResponse;
 import club.gach_dong.entity.User;
 import club.gach_dong.repository.UserRepository;
 import club.gach_dong.service.UserService;
@@ -22,8 +22,9 @@ public class UserController implements UserApiSpecification {
     private final UserRepository userRepository;
 
     @Override
-    public ResponseEntity<UserProfileDto> uploadProfileImage(
-            @RequestParam("image") MultipartFile image,
+    @PostMapping(value = "/upload_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UserProfileResponse> uploadProfileImage(
+            @ModelAttribute UserProfileRequest userProfileRequest,
             HttpServletRequest httpServletRequest) {
 
         String userId = httpServletRequest.getHeader("X-MEMBER-ID");
@@ -35,13 +36,12 @@ public class UserController implements UserApiSpecification {
         try {
             User user = userRepository.findByEmail(userId)
                     .orElseGet(() -> {
-                        User newUser = new User();
-                        newUser.setEmail(userId);
+                        User newUser = User.of(userId, null);
                         return userRepository.save(newUser);
                     });
 
-            UserProfileDto userProfileDto = userService.saveProfileImage(userId, image);
-            return ResponseEntity.ok(userProfileDto);
+            UserProfileResponse userProfileResponse = userService.saveProfileImage(userId, userProfileRequest.image());
+            return ResponseEntity.ok(userProfileResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e) {
@@ -50,8 +50,9 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    public ResponseEntity<UserProfileDto> updateProfileImage(
-            @RequestParam("image") MultipartFile image,
+    @PostMapping(value = "/update_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UserProfileResponse> updateProfileImage(
+            @ModelAttribute UserProfileRequest userProfileRequest,
             HttpServletRequest httpServletRequest) {
 
         String userId = httpServletRequest.getHeader("X-MEMBER-ID");
@@ -61,8 +62,8 @@ public class UserController implements UserApiSpecification {
         }
 
         try {
-            UserProfileDto userProfileDto = userService.updateProfileImage(userId, image);
-            return ResponseEntity.ok(userProfileDto);
+            UserProfileResponse userProfileResponse = userService.updateProfileImage(userId, userProfileRequest.image());
+            return ResponseEntity.ok(userProfileResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e) {
@@ -71,8 +72,8 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
+    @DeleteMapping("/delete_profile_image")
     public ResponseEntity<String> deleteProfileImage(HttpServletRequest httpServletRequest) {
-
         String userId = httpServletRequest.getHeader("X-MEMBER-ID");
 
         if (userId == null || userId.isEmpty()) {
@@ -88,6 +89,7 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
+    @GetMapping("/profile_image")
     public ResponseEntity<String> getProfileImage(HttpServletRequest httpServletRequest) {
         String userId = httpServletRequest.getHeader("X-MEMBER-ID");
 
