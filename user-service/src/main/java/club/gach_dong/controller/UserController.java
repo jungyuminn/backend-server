@@ -22,7 +22,6 @@ public class UserController implements UserApiSpecification {
     private final UserRepository userRepository;
 
     @Override
-    @PostMapping(value = "/upload_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponse> uploadProfileImage(
             @ModelAttribute UserProfileRequest userProfileRequest,
             HttpServletRequest httpServletRequest) {
@@ -50,7 +49,6 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @PostMapping(value = "/update_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponse> updateProfileImage(
             @ModelAttribute UserProfileRequest userProfileRequest,
             HttpServletRequest httpServletRequest) {
@@ -72,7 +70,6 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @DeleteMapping("/delete_profile_image")
     public ResponseEntity<String> deleteProfileImage(HttpServletRequest httpServletRequest) {
         String userId = httpServletRequest.getHeader("X-MEMBER-ID");
 
@@ -89,7 +86,6 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @GetMapping("/profile_image")
     public ResponseEntity<String> getProfileImage(HttpServletRequest httpServletRequest) {
         String userId = httpServletRequest.getHeader("X-MEMBER-ID");
 
