@@ -34,13 +34,20 @@ app:
 logging:
   level:
     org.hibernate.SQL: DEBUG
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: health,metrics,prometheus
-#  tracing:
-#    sampling:
-#      probability: 1.0
-#    enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    enabled: true
+otel:
+  exporter:
+    zipkin:
+      endpoint: http://zipkin:9411/api/v2/spans
 
