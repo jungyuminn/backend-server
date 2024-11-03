@@ -22,18 +22,14 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+  cloud:
+    gcp:
+      storage:
+        credentials:
+          location: ${GCP_SERVICE_KEY}
+        bucket: ${GCP_BUCKET_NAME}
+        project-id: ${GCP_PROJECT_ID}
+
 logging:
   level:
     org.hibernate.SQL: debug
-
-cloud:
-  aws:
-    credentials:
-      access-key: ${access-key}
-      secret-key: ${secret-key}
-    s3:
-      bucket: ${bucket}
-    region:
-      static: ${region}
-    stack:
-      auto: false

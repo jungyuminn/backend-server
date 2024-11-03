@@ -1,6 +1,8 @@
 package club.gach_dong.service;
 
-import com.amazonaws.services.s3.AmazonS3;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,15 +17,16 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final AmazonS3 amazonS3Client;
-    private final String bucketName = "gachdong";
-    private final long MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+    private final Storage gcpStorage;
+    private final String bucketName;
 
+    private final long MAX_IMAGE_SIZE = 10 * 1024 * 1024;
     private static final Set<String> ALLOWED_EXTENSIONS = new HashSet<>(Arrays.asList("png", "jpg", "jpeg"));
 
     private void validateImage(MultipartFile image) {
@@ -57,18 +60,22 @@ public class UserService {
     }
 
     private String saveImageFile(String email, MultipartFile image) throws IOException {
-        String fileName = email + "_" + image.getOriginalFilename();
+        String uuid = UUID.randomUUID().toString();
+        String fileName = email + "_" + uuid + "_" + image.getOriginalFilename();
         InputStream inputStream = image.getInputStream();
 
-        amazonS3Client.putObject(bucketName, fileName, inputStream, null);
+        BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucketName, fileName))
+                .setContentType(image.getContentType())
+                .build();
+        gcpStorage.create(blobInfo, inputStream);
 
-        return "https://" + bucketName + ".s3." + amazonS3Client.getRegionName() + ".amazonaws.com/" + fileName;
+        return "https://storage.googleapis.com/" + bucketName + "/" + fileName;
     }
 
     private void deleteOldImage(User user) throws IOException {
         if (user.getProfileImageUrl() != null) {
             String oldFileName = user.getProfileImageUrl().substring(user.getProfileImageUrl().lastIndexOf('/') + 1);
-            amazonS3Client.deleteObject(bucketName, oldFileName);
+            gcpStorage.delete(BlobId.of(bucketName, oldFileName));
         }
     }
 
