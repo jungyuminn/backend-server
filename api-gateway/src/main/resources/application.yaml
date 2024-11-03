@@ -103,17 +103,3 @@ logging:
 app:
   jwt:
     verify-key: ${JWT_VERIFY_KEY}
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health, metrics, prometheus
-  tracing:
-    sampling:
-      probability: 1.0
-    enabled: true
-  zipkin:
-    tracing:
-      endpoint: http://zipkin.default.svc.cluster.local:9411/api/v2/spans
-

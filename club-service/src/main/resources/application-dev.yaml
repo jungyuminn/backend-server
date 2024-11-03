@@ -1,3 +1,17 @@
 app:
   gateway:
     endpoint: http://gateway-dev.gachdong.club
+
+logging:
+  level:
+    jdbc:
+      sqlonly: off
+      sqltiming: info
+      resultsettable: off
+      audit: off
+      resultset: off
+      connection: off
+
+spring:
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
