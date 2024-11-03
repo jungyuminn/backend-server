@@ -9,7 +9,13 @@ spring:
       cors-configurations:
         '[/**]':
           allowedOrigins:
+            - http://localhost:3000
+            - http://localhost:3001
             - https://gachdong.club
+            - https://www.gachdong.club
+            - https://gateway.gachdong.club
+            - https://gateway-dev.gachdong.club
+            - https://admin.gachdong.club
           allow-credentials: true
           allowedHeaders: '*'
           allowedMethods: '*'
