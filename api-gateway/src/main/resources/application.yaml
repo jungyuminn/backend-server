@@ -11,6 +11,9 @@ spring:
           "[/**]":
             allowedOrigins:
               - "http://localhost:3000"
+              - "http://localhost:3001"
+              - "https://gachdong.club"
+              - "https://admin.gachdong.club"
               - "https://gateway.gachdong.club"
               - "http://gateway-dev.gachdong.club"
             allow-credentials: true
