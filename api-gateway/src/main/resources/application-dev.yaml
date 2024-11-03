@@ -14,9 +14,47 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: auth-service-public
+        - id: auth-service
           uri: http://auth-service:8080
           predicates:
             - Path=/auth/**
           filters:
             - RewritePath=/auth/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
+
+        - id: club-service
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
+
+        - id: application-service
+          uri: http://application-service:8080
+          predicates:
+            - Path=/application/**
+          filters:
+            - RewritePath=/application/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
+
+        - id: auth-service-swagger
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/auth/v3/api-docs/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+
+        - id: club-service-swagger
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/v3/api-docs/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
+
+        - id: application-service-swagger
+          uri: http://application-service:8080
+          predicates:
+            - Path=/application/v3/api-docs/**
+          filters:
+            - RewritePath=/application/(?<segment>.*), /$\{segment}
