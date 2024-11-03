@@ -39,4 +39,8 @@ public class ClubPublicController implements ClubPublicApiSpecification {
         List<ClubContactInfoResponse> clubContactInfoResponse = clubService.getClubContactInfo(clubId);
         return ArrayResponse.of(clubContactInfoResponse);
     }
+
+    public List<String> getClubTest() {
+        return clubService.getClubTest();
+    }
 }

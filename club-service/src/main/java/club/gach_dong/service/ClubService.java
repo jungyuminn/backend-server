@@ -14,4 +14,5 @@ public interface ClubService {
     ClubResponse createClub(CreateClubRequest createClubRequest);
     List<ClubActivityResponse> getClubActivities(Long clubId);
     List<ClubContactInfoResponse> getClubContactInfo(Long clubId);
+    List<String> getClubTest();
 }

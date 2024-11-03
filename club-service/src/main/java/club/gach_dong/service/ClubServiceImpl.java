@@ -43,6 +43,11 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
+    public List<String> getClubTest() {
+        return new ArrayList<>();
+    }
+
+    @Override
     public ClubResponse createClub(CreateClubRequest createClubRequest) {
         Club club = Club.of(
                 createClubRequest.name(),
