@@ -1,5 +1,6 @@
 package club.gach_dong.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,9 +21,8 @@ public class UserController implements UserApiSpecification {
     private final UserService userService;
 
     @Override
-    @PostMapping(value = "/upload_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponse> uploadProfileImage(
-            @ModelAttribute UserProfileRequest userProfileRequest,
+            @Valid @ModelAttribute UserProfileRequest userProfileRequest,
             HttpServletRequest httpServletRequest) {
 
         String userId = httpServletRequest.getHeader("X-MEMBER-ID");
@@ -44,9 +44,8 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @PostMapping(value = "/update_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponse> updateProfileImage(
-            @ModelAttribute UserProfileRequest userProfileRequest,
+            @Valid @ModelAttribute UserProfileRequest userProfileRequest,
             HttpServletRequest httpServletRequest) {
 
         String userId = httpServletRequest.getHeader("X-MEMBER-ID");
@@ -66,7 +65,6 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @DeleteMapping("/delete_profile_image")
     public ResponseEntity<String> deleteProfileImage(HttpServletRequest httpServletRequest) {
         String userId = httpServletRequest.getHeader("X-MEMBER-ID");
 
@@ -83,7 +81,6 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @GetMapping("/profile_image")
     public ResponseEntity<String> getProfileImage(HttpServletRequest httpServletRequest) {
         String userId = httpServletRequest.getHeader("X-MEMBER-ID");
 
