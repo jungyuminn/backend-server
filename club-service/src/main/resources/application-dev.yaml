@@ -1,6 +1,6 @@
 app:
   gateway:
-    endpoint: http://gateway-dev.gachdong.club
+    endpoint: https://gateway-dev.gachdong.club
 
 logging:
   level:
