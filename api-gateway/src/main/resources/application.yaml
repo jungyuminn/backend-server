@@ -7,15 +7,10 @@ spring:
     globalcors:
       cors-configurations:
         '[/**]':
-          allowedOrigins: 'http://localhost:3000, https://gachdong.club, https://gateway-dev.gachdong.club, https://gateway.gachdong.club, https://www.gachdong.club'
+          allowedOrigins: '*'
           allow-credentials: true
           allowedHeaders: '*'
-          allowedMethods:
-            - PUT
-            - GET
-            - POST
-            - DELETE
-            - OPTIONS
+          allowedMethods: '8'
 
       routes:
         # Auth Service Routes (Public Endpoints)
