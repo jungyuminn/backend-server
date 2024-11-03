@@ -8,10 +8,12 @@ spring:
       add-to-simple-url-handler-mapping: true
       cors-configurations:
         '[/**]':
-          allowedOrigins: 'http://localhost:3000,https://gachdong.club,https://admin.gachdong.club,https://gateway.gachdong.club,https://gateway-dev.gachdong.club,https://www.gachdong.club'
+          allowedOrigins:
+            - https://gachdong.club
           allow-credentials: true
           allowedHeaders: '*'
           allowedMethods: '*'
+
       routes:
         # Auth Service Routes (Public Endpoints)
         - id: auth-service-public
