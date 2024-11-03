@@ -1,24 +1,17 @@
 spring:
   application:
     name: api-gateway
-  cloud:
-    gateway:
-      default-filters:
-        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
-      globalcors:
-        add-to-simple-url-handler-mapping: true
-        cors-configurations:
-          "[/**]":
-            allowedOrigins:
-              - "http://localhost:3000"
-              - "http://localhost:3001"
-              - "https://gachdong.club"
-              - "https://admin.gachdong.club"
-              - "https://gateway.gachdong.club"
-              - "http://gateway-dev.gachdong.club"
-            allow-credentials: true
-            allowedHeaders: "*"
-            allowedMethods: "*"
+  gateway:
+    default-filters:
+      - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+    globalcors:
+      add-to-simple-url-handler-mapping: true
+      cors-configurations:
+        '[/**]':
+          allowedOrigins: 'http://localhost:3000,https://gachdong.club,https://admin.gachdong.club,https://gateway.gachdong.club,https://gateway-dev.gachdong.club'
+          allow-credentials: true
+          allowedHeaders: '*'
+          allowedMethods: '*'
       routes:
         # Auth Service Routes (Public Endpoints)
         - id: auth-service-public
