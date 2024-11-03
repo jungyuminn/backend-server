@@ -1,14 +1,14 @@
-package club_gach_dong.service;
+package club.gach_dong.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import club_gach_dong.dto.response.UserProfileResponse;
-import club_gach_dong.entity.User;
-import club_gach_dong.exception.ErrorStatus;
-import club_gach_dong.repository.UserRepository;
+import club.gach_dong.dto.response.UserProfileResponse;
+import club.gach_dong.entity.User;
+import club.gach_dong.exception.ErrorStatus;
+import club.gach_dong.repository.UserRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +32,7 @@ public class UserService {
         }
 
         if (image.getSize() > MAX_IMAGE_SIZE) {
-            throw new IllegalArgumentException("이미지 크기가 너무 큽니다. 최대 5MB까지 지원합니다.");
+            throw new IllegalArgumentException("이미지 크기가 너무 큽니다. 최대 10MB까지 지원합니다.");
         }
     }
 
@@ -102,5 +102,16 @@ public class UserService {
         } catch (IOException e) {
             throw new RuntimeException("이미지 삭제 실패", e);
         }
+    }
+
+    public String getProfileImage(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException(ErrorStatus.USER_NOT_FOUND.getMessage()));
+        return user.getProfileImageUrl();
+    }
+
+    public User getOrCreateUser(String email) {
+        return userRepository.findByEmail(email)
+                .orElseGet(() -> User.of(email, null));
     }
 }

@@ -9,7 +9,6 @@ import club.gach_dong.api.UserApiSpecification;
 import club.gach_dong.dto.request.UserProfileRequest;
 import club.gach_dong.dto.response.UserProfileResponse;
 import club.gach_dong.entity.User;
-import club.gach_dong.repository.UserRepository;
 import club.gach_dong.service.UserService;
 import club.gach_dong.exception.ErrorStatus;
 
@@ -19,9 +18,9 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class UserController implements UserApiSpecification {
     private final UserService userService;
-    private final UserRepository userRepository;
 
     @Override
+    @PostMapping(value = "/upload_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponse> uploadProfileImage(
             @ModelAttribute UserProfileRequest userProfileRequest,
             HttpServletRequest httpServletRequest) {
@@ -33,11 +32,7 @@ public class UserController implements UserApiSpecification {
         }
 
         try {
-            User user = userRepository.findByEmail(userId)
-                    .orElseGet(() -> {
-                        User newUser = User.of(userId, null);
-                        return userRepository.save(newUser);
-                    });
+            User user = userService.getOrCreateUser(userId);
 
             UserProfileResponse userProfileResponse = userService.saveProfileImage(userId, userProfileRequest.image());
             return ResponseEntity.ok(userProfileResponse);
@@ -49,6 +44,7 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
+    @PostMapping(value = "/update_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponse> updateProfileImage(
             @ModelAttribute UserProfileRequest userProfileRequest,
             HttpServletRequest httpServletRequest) {
@@ -70,6 +66,7 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
+    @DeleteMapping("/delete_profile_image")
     public ResponseEntity<String> deleteProfileImage(HttpServletRequest httpServletRequest) {
         String userId = httpServletRequest.getHeader("X-MEMBER-ID");
 
@@ -86,6 +83,7 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
+    @GetMapping("/profile_image")
     public ResponseEntity<String> getProfileImage(HttpServletRequest httpServletRequest) {
         String userId = httpServletRequest.getHeader("X-MEMBER-ID");
 
@@ -94,10 +92,7 @@ public class UserController implements UserApiSpecification {
         }
 
         try {
-            User user = userRepository.findByEmail(userId)
-                    .orElseThrow(() -> new RuntimeException(ErrorStatus.USER_NOT_FOUND.getMessage()));
-
-            String profileImageUrl = user.getProfileImageUrl();
+            String profileImageUrl = userService.getProfileImage(userId);
             if (profileImageUrl == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("프로필 이미지가 존재하지 않습니다.");
             }
