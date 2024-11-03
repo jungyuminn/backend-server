@@ -3,9 +3,7 @@ package club.gach_dong.config;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.media.Content;
-import io.swagger.v3.oas.models.media.MediaType;
-import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,10 +16,9 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .components(new Components())
+                .components(component())
                 .info(apiInfo())
-                .addServersItem(serverItem())
-                .components(defaultJsonResponse());
+                .addServersItem(serverItem());
     }
 
     private Info apiInfo() {
@@ -38,12 +35,12 @@ public class SwaggerConfig {
                         + " 서비스 URL");
     }
 
-    private Components defaultJsonResponse() {
-        ApiResponse jsonResponse = new ApiResponse()
-                .description("Default JSON response")
-                .content(new Content()
-                        .addMediaType("application/json", new MediaType()));
-
-        return new Components().addResponses("defaultJsonResponse", jsonResponse);
+    private Components component() {
+        return new Components()
+                .addSecuritySchemes("Authorization",
+                        new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("Bearer")
+                                .bearerFormat("JWT"));
     }
 }
