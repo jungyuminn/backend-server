@@ -30,11 +30,11 @@ public interface ApplicationApiSpecification {
     ResForm<ApplicationResponseDTO.ToGetFormInfoUserDTO> getFormInfoUser(@PathVariable("formId") Long formId, HttpServletRequest httpServletRequest);
 
     @Operation(summary = "사용자 지원 내역 목록 조회 API", description = "지원 내역 목록을 조회합니다.")
-    @GetMapping("/application/list")
+    @GetMapping("/list")
     ResForm<ApplicationResponseDTO.ToGetApplicationHistoryListDTO> getaApplicationHistory(HttpServletRequest httpServletRequest);
 
     @Operation(summary = "동아리 지원서 양식 생성 요청 API", description = "동아리 지원서 양식을 생성합니다.")
-    @PostMapping("/application/admin/form/create")
+    @PostMapping("/admin/form/create")
     ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> createApplicationForm(@Valid @RequestBody ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest);
 
     @Operation(summary = "동아리 지원 API", description = "동아리에 지원합니다.")
@@ -47,11 +47,11 @@ public interface ApplicationApiSpecification {
     );
 
     @Operation(summary = "동아리 지원서 양식 수정 요청 API", description = "동아리 지원서 양식을 수정합니다.")
-    @PutMapping("/application/admin/form/{form_id}")
+    @PutMapping("/admin/form/{form_id}")
     ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> changeApplicationForm(@PathVariable("form_id") Long formId, @Valid @RequestBody ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest);
 
     @Operation(summary = "동아리 지원 수정 API", description = "동아리에 지원을 수정합니다.")
-    @PutMapping(value = "/application/{apply_id} ", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/{apply_id} ", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> changeApplication(
             @PathVariable("apply_id") Long applyId,
             @RequestPart(value = "certificateDocs", required = true) @Parameter(description = "업로드할 문서 리스트") List<MultipartFile> certificateDocs,

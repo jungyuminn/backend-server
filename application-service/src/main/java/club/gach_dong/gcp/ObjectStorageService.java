@@ -21,8 +21,7 @@ public class ObjectStorageService {
     private final Storage storage;
 
     private static final Logger logger = LogManager.getLogger(ObjectStorageService.class);
-
-
+    
     /**
      * @param directory: ObjectStorageConfig 및 application.yml에 정의되어있는 object storage 내 디렉토리
      * @param objectKey: 업로드할 파일의 이름
