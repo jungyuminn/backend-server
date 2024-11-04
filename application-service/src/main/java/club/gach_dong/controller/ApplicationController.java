@@ -104,8 +104,7 @@ public class ApplicationController implements ApplicationApiSpecification {
     }
 
     @Override
-    public ResForm<?> changeApplicationStatus(Long applyId,
-                                              ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus,
+    public ResForm<?> changeApplicationStatus(ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus,
                                               HttpServletRequest httpServletRequest) {
         String userId = authorizationService.getUserId(httpServletRequest);
         applicationService.changeApplicationStatus(userId, toChangeApplicationStatus);

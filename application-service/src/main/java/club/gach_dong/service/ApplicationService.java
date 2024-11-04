@@ -13,17 +13,15 @@ import club.gach_dong.repository.ApplicationDocsRepository;
 import club.gach_dong.repository.ApplicationFormRepository;
 import club.gach_dong.repository.ApplicationRepository;
 import club.gach_dong.response.status.ErrorStatus;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +36,8 @@ public class ApplicationService {
     private final AuthorizationService authorizationService;
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationFormDTO createApplicationForm(ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, String userId) {
+    public ApplicationResponseDTO.ToCreateApplicationFormDTO createApplicationForm(
+            ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, String userId) {
 
         //Verify Club Admin Auth with Apply_Id, User_Id
         authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getApplyId());
@@ -118,7 +117,9 @@ public class ApplicationService {
 
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationFormDTO changeApplicationForm(Long formId, ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, String userId) {
+    public ApplicationResponseDTO.ToCreateApplicationFormDTO changeApplicationForm(Long formId,
+                                                                                   ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO,
+                                                                                   String userId) {
 
         //Verify Club Admin Auth with Apply_Id, User_Id
         authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getApplyId());
@@ -136,7 +137,9 @@ public class ApplicationService {
     }
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationDTO createApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, String userId) {
+    public ApplicationResponseDTO.ToCreateApplicationDTO createApplication(Long applyId, List<MultipartFile> files,
+                                                                           ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
+                                                                           String userId) {
 
         //Verify it is valid apply
         //In constructions!!!
@@ -163,7 +166,8 @@ public class ApplicationService {
             for (MultipartFile file : files) {
                 String fileName = file.getOriginalFilename();
                 String uuid = UUID.randomUUID().toString();
-                String fileUrl = objectStorageService.uploadObject(objectStorageServiceConfig.getApplicationDocsDir(), uuid, file);
+                String fileUrl = objectStorageService.uploadObject(objectStorageServiceConfig.getApplicationDocsDir(),
+                        uuid, file);
 
                 ApplicationDocs applicationDocs = ApplicationDocs.builder()
                         .applicationId(applyId)
@@ -239,7 +243,9 @@ public class ApplicationService {
     }
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationDTO changeApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, String userId) {
+    public ApplicationResponseDTO.ToCreateApplicationDTO changeApplication(Long applyId, List<MultipartFile> files,
+                                                                           ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
+                                                                           String userId) {
         deleteApplication(applyId, userId);
         return createApplication(applyId, files, toApplyClub, userId);
     }
@@ -264,11 +270,13 @@ public class ApplicationService {
     }
 
     @Transactional
-    public void changeApplicationStatus(String userId, ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus){
+    public void changeApplicationStatus(String userId,
+                                        ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus) {
 
-        Optional<Application> applicationOptional = applicationRepository.findById(toChangeApplicationStatus.getApplicationId());
+        Optional<Application> applicationOptional = applicationRepository.findById(
+                toChangeApplicationStatus.getApplicationId());
 
-        if(applicationOptional.isEmpty()){
+        if (applicationOptional.isEmpty()) {
             throw new CustomException(ErrorStatus.APPLICATION_NOT_PRESENT);
         }
 
