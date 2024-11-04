@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -19,12 +17,12 @@ import java.util.List;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Club {
+public class Club extends BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", columnDefinition = "INT")
     @Schema(description = "동아리 ID", example = "1")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "club_name", length = 26, columnDefinition = "CHAR(26)")
@@ -46,50 +44,41 @@ public class Club {
 
     @Column(name = "club_image_url")
     @Schema(description = "동아리 이미지 URL", example = "https://example.com/image.png")
-    private String clubImageUrl;
+    private String clubImageUrl = "https://www.pngarts.com/files/10/Default-Profile-Picture-PNG-Download-Image.png";
 
     @Column(name = "recruiting_status")
     @Schema(description = "모집 상태", example = "true")
-    private boolean recruitingStatus;
-
-    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Schema(description = "동아리 활동 목록")
-    private List<Activity> activities;
-
-    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Schema(description = "동아리 모집 정보")
-    private List<Recruitment> recruitment;
-
-    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Schema(description = "동아리 연락처 정보")
-    private List<ContactInfo> contactInfo;
+    private boolean recruitingStatus = false;
 
     @Column(name = "club_established_at")
     @Schema(description = "동아리 설립 날짜", example = "2020-03-15T10:15:30")
     private LocalDateTime establishedAt;
 
-    @CreatedDate
-    @Column(name = "created_at")
-    @Schema(description = "생성 날짜", example = "2023-10-24T12:00:00")
-    private LocalDateTime createdDate;
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Schema(description = "동아리 활동 목록")
+    private List<Activity> activities = new ArrayList<>();
 
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    @Schema(description = "마지막 업데이트 날짜", example = "2023-10-24T12:00:00")
-    private LocalDateTime updatedAt;
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Schema(description = "동아리 모집 정보")
+    private List<Recruitment> recruitment = new ArrayList<>();
 
-    private Club(String name, ClubCategory category, String shortDescription, String introduction,
-                 String clubImageUrl, boolean recruitingStatus, List<Activity> activities, List<Recruitment> recruitment,
-                 List<ContactInfo> contactInfo, LocalDateTime establishedAt) {
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Schema(description = "동아리 연락처 정보")
+    private List<ContactInfo> contactInfo = new ArrayList<>();
+
+    private Club(
+            String name,
+                 ClubCategory category,
+                 String shortDescription,
+                 String introduction,
+                 String clubImageUrl,
+                 LocalDateTime establishedAt
+    ) {
         this.name = name;
         this.category = category;
         this.shortDescription = shortDescription;
         this.introduction = introduction;
         this.clubImageUrl = clubImageUrl;
-        this.recruitingStatus = recruitingStatus;
-        this.activities = activities;
-        this.recruitment = recruitment;
-        this.contactInfo = contactInfo;
         this.establishedAt = establishedAt;
     }
 
@@ -101,7 +90,19 @@ public class Club {
             String clubImageUrl,
             LocalDateTime establishedAt
     ) {
-        return new Club(name, category, shortDescription, introduction, clubImageUrl, false,
-                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), establishedAt);
+        return new Club(name, category, shortDescription, introduction, clubImageUrl, establishedAt);
+    }
+
+    // @TODO: admin feature 에서 구현 예정
+    public void addActivity(Activity activity) {
+        this.activities.add(activity);
+    }
+
+    public void addRecruitment(Recruitment recruitment) {
+        this.recruitment.add(recruitment);
+    }
+
+    public void addContactInfo(ContactInfo contactInfo) {
+        this.contactInfo.add(contactInfo);
     }
 }
