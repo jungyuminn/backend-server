@@ -22,10 +22,10 @@ public class AuthorizationService {
 
     public final RestClient restClient;
 
-    public String getUserId(HttpServletRequest httpServletRequest){
+    public String getUserId(HttpServletRequest httpServletRequest) {
         String header = httpServletRequest.getHeader(MEMBER_ID_HEADER_KEY);
 
-        if(header!=null){
+        if (header != null) {
             return header;
         }
 
@@ -33,7 +33,7 @@ public class AuthorizationService {
 //        return null;
     }
 
-    public void getAuthByUserIdAndApplyId(String userId, Long applyId){
+    public void getAuthByUserIdAndApplyId(String userId, Long applyId) {
 
         String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
                 .queryParam("userId", userId)
@@ -47,9 +47,9 @@ public class AuthorizationService {
                     .retrieve()
                     .body(Boolean.class);
 
-            if(Boolean.TRUE.equals(result)){
+            if (Boolean.TRUE.equals(result)) {
                 return;
-            }else{
+            } else {
                 throw new CustomException(ErrorStatus._UNAUTHORIZED);
             }
 //            return result != null ? result : false;

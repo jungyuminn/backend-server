@@ -1,6 +1,8 @@
 package club.gach_dong.restClient;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Enumeration;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -9,13 +11,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.io.IOException;
-import java.util.Enumeration;
-
 @Component
 public class HeaderInterceptor implements ClientHttpRequestInterceptor {
     @Override
-    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+            throws IOException {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes != null) {
             HttpServletRequest httpRequest = attributes.getRequest();
