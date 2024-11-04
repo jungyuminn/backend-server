@@ -2,15 +2,13 @@ spring:
   application:
     name: api-gateway
   gateway:
-    default-filters:
-      - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
     globalcors:
       cors-configurations:
         '[/**]':
-          allowedOrigins: '*'
+          allowedOrigins: 'https://www.gachdong.club, https://gachdong.club, https://gateway-dev.gachdong.club'
           allow-credentials: true
           allowedHeaders: '*'
-          allowedMethods: '8'
+          allowedMethods: '*'
 
       routes:
         # Auth Service Routes (Public Endpoints)
