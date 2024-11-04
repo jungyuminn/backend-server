@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+  thymeleaf:
+    cache: false
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  cloud:
+    gcp:
+      storage:
+        credentials:
+          location: ${GCP_SERVICE_KEY}
+        bucket: ${GCP_BUCKET_NAME}
+        project-id: ${GCP_PROJECT_ID}
+
+logging:
+  level:
+    org.hibernate.SQL: debug

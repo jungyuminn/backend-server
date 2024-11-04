@@ -2,10 +2,77 @@ springdoc:
   swagger-ui:
     urls[0]:
       name: "동아리 서비스"
-      url: http://gateway-dev.gachdong.club/club/v3/api-docs
+      url: https://gateway-dev.gachdong.club/club/v3/api-docs
     urls[1]:
       name: "지원 서비스"
-      url: http://gateway-dev.gachdong.club/application/v3/api-docs
+      url: https://gateway-dev.gachdong.club/application/v3/api-docs
     urls[2]:
       name: "인증/인가 서비스"
-      url: http://gateway-dev.gachdong.club/auth/v3/api-docs
+      url: https://gateway-dev.gachdong.club/auth/v3/api-docs
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service-swagger
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/auth/v3/api-docs/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+
+        # Auth Service Routes (Public Endpoints)
+        - id: auth-service-public
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/auth/public/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+
+        # Auth Service Routes (Authenticated Endpoints)
+        - id: auth-service-authenticated
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/auth/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
+
+        - id: club-service-swagger
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/v3/api-docs/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
+
+        # Club Service Routes (Public Endpoints)
+        - id: club-service-public
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/public/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
+
+        # Club Service Routes (Authenticated Endpoints)
+        - id: club-service-authenticated
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
+
+        - id: application-service-swagger
+          uri: http://application-service:8080
+          predicates:
+            - Path=/application/v3/api-docs/**
+          filters:
+            - RewritePath=/application/(?<segment>.*), /$\{segment}
+
+        - id: application-service
+          uri: http://application-service:8080
+          predicates:
+            - Path=/application/**
+          filters:
+            - RewritePath=/application/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter

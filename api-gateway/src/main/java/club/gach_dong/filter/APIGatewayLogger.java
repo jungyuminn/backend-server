@@ -22,7 +22,7 @@ public class APIGatewayLogger implements GlobalFilter {
         long startTime = System.currentTimeMillis();
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
-
+        log.error("[API-GATEWAY] 일단 요청 들어옴: " + request.getURI().getPath());
         // 기존 정보 수집
         String userAgent = request.getHeaders().getFirst("User-Agent");
         String proxyIp = request.getHeaders().getFirst("X-Forwarded-For");

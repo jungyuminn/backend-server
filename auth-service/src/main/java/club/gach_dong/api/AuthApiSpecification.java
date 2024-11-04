@@ -18,7 +18,7 @@ public interface AuthApiSpecification {
     @Operation(
             summary = "비밀번호 변경", description = "기존 비밀번호를 변경합니다.", security = @SecurityRequirement(name = "Authorization")
     )
-    @PostMapping("/change_password")
+    @PostMapping("/change-password")
     ResponseEntity<String> changePassword(
             @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token,
             @Parameter(description = "비밀번호 변경 정보") @Valid @RequestBody ChangePasswordRequest changePasswordRequest);
