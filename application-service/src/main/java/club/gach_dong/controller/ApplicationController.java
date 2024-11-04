@@ -8,11 +8,10 @@ import club.gach_dong.response.status.InSuccess;
 import club.gach_dong.service.ApplicationService;
 import club.gach_dong.service.AuthorizationService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,51 +21,71 @@ public class ApplicationController implements ApplicationApiSpecification {
     public final AuthorizationService authorizationService;
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToGetFormInfoAdminDTO> getFormInfoAdmin(Long formId, HttpServletRequest httpServletRequest) {
+    public ResForm<ApplicationResponseDTO.ToGetFormInfoAdminDTO> getFormInfoAdmin(Long formId,
+                                                                                  HttpServletRequest httpServletRequest) {
         String userId = authorizationService.getUserId(httpServletRequest);
-        ApplicationResponseDTO.ToGetFormInfoAdminDTO toGetFormInfoAdminDTO = applicationService.getFormInfoAdmin(formId, userId);
+        ApplicationResponseDTO.ToGetFormInfoAdminDTO toGetFormInfoAdminDTO = applicationService.getFormInfoAdmin(formId,
+                userId);
         return ResForm.onSuccess(InSuccess.APPLICATION_FORM_GET_ADMIN_INFO, toGetFormInfoAdminDTO);
     }
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToGetFormInfoUserDTO> getFormInfoUser(Long formId, HttpServletRequest httpServletRequest) {
+    public ResForm<ApplicationResponseDTO.ToGetFormInfoUserDTO> getFormInfoUser(Long formId,
+                                                                                HttpServletRequest httpServletRequest) {
         String userId = authorizationService.getUserId(httpServletRequest);
-        ApplicationResponseDTO.ToGetFormInfoUserDTO toGetFormInfoUserDTO = applicationService.getFormInfoUser(formId, userId);
+        ApplicationResponseDTO.ToGetFormInfoUserDTO toGetFormInfoUserDTO = applicationService.getFormInfoUser(formId,
+                userId);
         return ResForm.onSuccess(InSuccess.APPLICATION_FORM_GET_USER_INFO, toGetFormInfoUserDTO);
     }
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToGetApplicationHistoryListDTO> getaApplicationHistory(HttpServletRequest httpServletRequest) {
+    public ResForm<ApplicationResponseDTO.ToGetApplicationHistoryListDTO> getApplicationHistory(
+            HttpServletRequest httpServletRequest) {
         String userId = authorizationService.getUserId(httpServletRequest);
-        ApplicationResponseDTO.ToGetApplicationHistoryListDTO toGetApplicationHistoryListDTO = applicationService.getApplicationHistoryList(userId);
+        ApplicationResponseDTO.ToGetApplicationHistoryListDTO toGetApplicationHistoryListDTO = applicationService.getApplicationHistoryList(
+                userId);
         return ResForm.onSuccess(InSuccess.APPLICATION_FORM_GET_USER_INFO, toGetApplicationHistoryListDTO);
     }
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> createApplicationForm(ApplicationRequestDTO.ToCreateApplicationFormDTO createApplicationFormDTO, HttpServletRequest httpServletRequest) {
+    public ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> createApplicationForm(
+            ApplicationRequestDTO.ToCreateApplicationFormDTO createApplicationFormDTO,
+            HttpServletRequest httpServletRequest) {
         String userId = authorizationService.getUserId(httpServletRequest);
-        ApplicationResponseDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO = applicationService.createApplicationForm(createApplicationFormDTO, userId);
+        ApplicationResponseDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO = applicationService.createApplicationForm(
+                createApplicationFormDTO, userId);
         return ResForm.onSuccess(InSuccess.APPLICATION_FORM_CREATED, toCreateApplicationFormDTO);
     }
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> createApplication(Long applyId, List<MultipartFile> files, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, HttpServletRequest httpServletRequest) {
+    public ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> createApplication(Long applyId,
+                                                                                    List<MultipartFile> files,
+                                                                                    ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
+                                                                                    HttpServletRequest httpServletRequest) {
         String userId = authorizationService.getUserId(httpServletRequest);
-        ApplicationResponseDTO.ToCreateApplicationDTO toCreateApplicationDTO = applicationService.createApplication(applyId, files, toApplyClub, userId);
+        ApplicationResponseDTO.ToCreateApplicationDTO toCreateApplicationDTO = applicationService.createApplication(
+                applyId, files, toApplyClub, userId);
         return ResForm.onSuccess(InSuccess.APPLICATION_SUCCESS, toCreateApplicationDTO);
     }
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> changeApplicationForm(Long formId, ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest) {
+    public ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> changeApplicationForm(Long formId,
+                                                                                            ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO,
+                                                                                            HttpServletRequest httpServletRequest) {
         String userId = authorizationService.getUserId(httpServletRequest);
-        ApplicationResponseDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO1 = applicationService.changeApplicationForm(formId, toCreateApplicationFormDTO, userId);
+        ApplicationResponseDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO1 = applicationService.changeApplicationForm(
+                formId, toCreateApplicationFormDTO, userId);
         return ResForm.onSuccess(InSuccess.APPLICATION_FORM_CHANGED, toCreateApplicationFormDTO1);
     }
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> changeApplication(Long applyId, List<MultipartFile> certificateDocs, ApplicationRequestDTO.ToApplyClubDTO toApplyClub, HttpServletRequest httpServletRequest) {
+    public ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> changeApplication(Long applyId,
+                                                                                    List<MultipartFile> certificateDocs,
+                                                                                    ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
+                                                                                    HttpServletRequest httpServletRequest) {
         String userId = authorizationService.getUserId(httpServletRequest);
-        ApplicationResponseDTO.ToCreateApplicationDTO toChangeApplicationDTO = applicationService.changeApplication(applyId, certificateDocs, toApplyClub, userId);
+        ApplicationResponseDTO.ToCreateApplicationDTO toChangeApplicationDTO = applicationService.changeApplication(
+                applyId, certificateDocs, toApplyClub, userId);
         return ResForm.onSuccess(InSuccess.APPLICATION_CHANGED, toChangeApplicationDTO);
     }
 
@@ -85,7 +104,9 @@ public class ApplicationController implements ApplicationApiSpecification {
     }
 
     @Override
-    public ResForm<?> changeApplicationStatus(Long applyId, ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus, HttpServletRequest httpServletRequest) {
+    public ResForm<?> changeApplicationStatus(Long applyId,
+                                              ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus,
+                                              HttpServletRequest httpServletRequest) {
         String userId = authorizationService.getUserId(httpServletRequest);
         applicationService.changeApplicationStatus(userId, toChangeApplicationStatus);
         return ResForm.onSuccess(InSuccess.APPLICATION_STATUS_CHANGED, null);
