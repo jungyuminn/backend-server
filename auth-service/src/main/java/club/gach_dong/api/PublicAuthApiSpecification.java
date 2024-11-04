@@ -16,7 +16,7 @@ import club.gach_dong.dto.response.AuthResponse;
 public interface PublicAuthApiSpecification {
 
     @Operation(summary = "이메일 인증 코드 발송", description = "이메일로 유효시간 3분의 6자리의 인증 코드를 발송합니다.")
-    @PostMapping("/send_verification_code")
+    @PostMapping("/send-verification-code")
     ResponseEntity<String> sendVerificationCode(
             @Parameter(description = "사용자의 이메일 주소") @RequestParam String email);
 
@@ -35,13 +35,13 @@ public interface PublicAuthApiSpecification {
             @Parameter(description = "로그인 정보") @Valid @RequestBody LoginRequest loginRequest);
 
     @Operation(summary = "비밀번호 재발급", description = "이메일 인증 코드를 입력하여 임시 비밀번호를 재발급합니다.")
-    @PostMapping("/reset_password")
+    @PostMapping("/reset-password")
     ResponseEntity<String> resetPassword(
             @Parameter(description = "사용자의 이메일 주소") @RequestParam String email,
             @Parameter(description = "인증 코드") @RequestParam String code);
 
     @Operation(summary = "인증 코드 검증", description = "사용자가 입력한 인증 코드를 검증합니다.")
-    @PostMapping("/verify_code")
+    @PostMapping("/verify-code")
     ResponseEntity<String> verifyCode(
             @Parameter(description = "사용자의 이메일 주소") @RequestParam String email,
             @Parameter(description = "인증 코드") @RequestParam String code);
