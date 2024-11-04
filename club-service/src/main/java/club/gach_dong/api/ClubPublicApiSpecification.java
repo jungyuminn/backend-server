@@ -3,12 +3,13 @@ package club.gach_dong.api;
 import club.gach_dong.dto.response.ArrayResponse;
 import club.gach_dong.dto.response.ClubActivityResponse;
 import club.gach_dong.dto.response.ClubContactInfoResponse;
+import club.gach_dong.dto.response.ClubRecruitmentDetailResponse;
+import club.gach_dong.dto.response.ClubRecruitmentResponse;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +59,20 @@ public interface ClubPublicApiSpecification {
             @PathVariable Long clubId
     );
 
-    @GetMapping("/test")
-    List<String> getClubTest();
+    @Operation(
+            summary = "동아리 모집 공고 조회",
+            description = "모든 동아리의 모집 공고를 조회합니다."
+    )
+    @GetMapping("/recruitments")
+    ArrayResponse<ClubRecruitmentResponse> getClubRecruitments();
+
+    @Operation(
+            summary = "동아리 별 모집 공고 조회",
+            description = "특정 동아리의 모집 공고를 조회합니다."
+    )
+    @GetMapping("/{clubId}/recruitments")
+    ArrayResponse<ClubRecruitmentDetailResponse> getClubRecruitments(
+            @Parameter(description = "동아리 ID", example = "1", required = true)
+            @PathVariable Long clubId
+    );
 }

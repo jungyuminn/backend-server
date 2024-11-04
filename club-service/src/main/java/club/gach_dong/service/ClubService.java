@@ -3,6 +3,8 @@ package club.gach_dong.service;
 import club.gach_dong.dto.request.CreateClubRequest;
 import club.gach_dong.dto.response.ClubActivityResponse;
 import club.gach_dong.dto.response.ClubContactInfoResponse;
+import club.gach_dong.dto.response.ClubRecruitmentDetailResponse;
+import club.gach_dong.dto.response.ClubRecruitmentResponse;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 
@@ -14,5 +16,6 @@ public interface ClubService {
     ClubResponse createClub(CreateClubRequest createClubRequest);
     List<ClubActivityResponse> getClubActivities(Long clubId);
     List<ClubContactInfoResponse> getClubContactInfo(Long clubId);
-    List<String> getClubTest();
+    List<ClubRecruitmentResponse> getClubRecruitmentList();
+    List<ClubRecruitmentDetailResponse> getClubRecruitment(Long clubId);
 }
