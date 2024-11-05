@@ -40,6 +40,7 @@ dependencies {
 //	implementation "io.opentelemetry:opentelemetry-exporter-zipkin:1.40.0"
 	implementation "io.micrometer:micrometer-registry-prometheus:1.13.2"
 
+
 	// lombok slf4j
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")

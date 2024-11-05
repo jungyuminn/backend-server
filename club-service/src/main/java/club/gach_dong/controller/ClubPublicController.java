@@ -4,6 +4,8 @@ import club.gach_dong.api.ClubPublicApiSpecification;
 import club.gach_dong.dto.response.ArrayResponse;
 import club.gach_dong.dto.response.ClubActivityResponse;
 import club.gach_dong.dto.response.ClubContactInfoResponse;
+import club.gach_dong.dto.response.ClubRecruitmentDetailResponse;
+import club.gach_dong.dto.response.ClubRecruitmentResponse;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 import club.gach_dong.service.ClubService;
@@ -40,7 +42,15 @@ public class ClubPublicController implements ClubPublicApiSpecification {
         return ArrayResponse.of(clubContactInfoResponse);
     }
 
-    public List<String> getClubTest() {
-        return clubService.getClubTest();
+    @Override
+    public ArrayResponse<ClubRecruitmentResponse> getClubRecruitments() {
+        List<ClubRecruitmentResponse> clubRecruitmentsResponse = clubService.getClubRecruitmentList();
+        return ArrayResponse.of(clubRecruitmentsResponse);
+    }
+
+    @Override
+    public ArrayResponse<ClubRecruitmentDetailResponse> getClubRecruitments(Long clubId) {
+        List<ClubRecruitmentDetailResponse> clubRecruitmentDetailResponse = clubService.getClubRecruitment(clubId);
+        return ArrayResponse.of(clubRecruitmentDetailResponse);
     }
 }
