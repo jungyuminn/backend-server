@@ -95,7 +95,7 @@ public class ClubServiceImpl implements ClubService {
 
         return clubs.stream()
                 .flatMap(club -> club.getRecruitment().stream()
-                        .map(recuitment -> ClubRecruitmentResponse.of(club, recuitment)))
+                        .map(recruitment -> ClubRecruitmentResponse.of(club, recruitment)))
                 .collect(Collectors.toList());
     }
 
