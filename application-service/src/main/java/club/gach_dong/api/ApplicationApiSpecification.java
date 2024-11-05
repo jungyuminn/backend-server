@@ -8,12 +8,19 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.validation.annotation.Validated;
-
 import java.util.List;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "지원 API", description = "동아리 지원 관련 API")
 @RestController
@@ -23,19 +30,24 @@ public interface ApplicationApiSpecification {
 
     @Operation(summary = "관리자용 지원서 양식 조회 API", description = "지원서 양식 ID를 이용해 양식을 조회합니다.")
     @GetMapping("/admin/form/{formId}")
-    ResForm<ApplicationResponseDTO.ToGetFormInfoAdminDTO> getFormInfoAdmin(@PathVariable("formId") Long formId, HttpServletRequest httpServletRequest);
+    ResForm<ApplicationResponseDTO.ToGetFormInfoAdminDTO> getFormInfoAdmin(@PathVariable("formId") Long formId,
+                                                                           HttpServletRequest httpServletRequest);
 
     @Operation(summary = "사용자용 지원서 양식 조회 API", description = "지원서 양식 ID를 이용해 양식을 조회합니다.")
     @GetMapping("/form/{formId}")
-    ResForm<ApplicationResponseDTO.ToGetFormInfoUserDTO> getFormInfoUser(@PathVariable("formId") Long formId, HttpServletRequest httpServletRequest);
+    ResForm<ApplicationResponseDTO.ToGetFormInfoUserDTO> getFormInfoUser(@PathVariable("formId") Long formId,
+                                                                         HttpServletRequest httpServletRequest);
 
     @Operation(summary = "사용자 지원 내역 목록 조회 API", description = "지원 내역 목록을 조회합니다.")
-    @GetMapping("/application/list")
-    ResForm<ApplicationResponseDTO.ToGetApplicationHistoryListDTO> getaApplicationHistory(HttpServletRequest httpServletRequest);
+    @GetMapping("/list")
+    ResForm<ApplicationResponseDTO.ToGetApplicationHistoryListDTO> getApplicationHistory(
+            HttpServletRequest httpServletRequest);
 
     @Operation(summary = "동아리 지원서 양식 생성 요청 API", description = "동아리 지원서 양식을 생성합니다.")
-    @PostMapping("/application/admin/form/create")
-    ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> createApplicationForm(@Valid @RequestBody ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest);
+    @PostMapping("/admin/form/create")
+    ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> createApplicationForm(
+            @Valid @RequestBody ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO,
+            HttpServletRequest httpServletRequest);
 
     @Operation(summary = "동아리 지원 API", description = "동아리에 지원합니다.")
     @PostMapping(value = "/{apply_id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -47,11 +59,14 @@ public interface ApplicationApiSpecification {
     );
 
     @Operation(summary = "동아리 지원서 양식 수정 요청 API", description = "동아리 지원서 양식을 수정합니다.")
-    @PutMapping("/application/admin/form/{form_id}")
-    ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> changeApplicationForm(@PathVariable("form_id") Long formId, @Valid @RequestBody ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, HttpServletRequest httpServletRequest);
+    @PutMapping("/admin/form/{form_id}")
+    ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> changeApplicationForm(
+            @PathVariable("form_id") Long formId,
+            @Valid @RequestBody ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO,
+            HttpServletRequest httpServletRequest);
 
     @Operation(summary = "동아리 지원 수정 API", description = "동아리에 지원을 수정합니다.")
-    @PutMapping(value = "/application/{apply_id} ", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/{apply_id} ", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> changeApplication(
             @PathVariable("apply_id") Long applyId,
             @RequestPart(value = "certificateDocs", required = true) @Parameter(description = "업로드할 문서 리스트") List<MultipartFile> certificateDocs,
@@ -65,6 +80,13 @@ public interface ApplicationApiSpecification {
     @Operation(summary = "사용자 지원 취소 API", description = "지원 ID를 이용해 지원을 취소합니다.")
     @DeleteMapping("/apply/{applyId}")
     ResForm<?> deleteApplication(@PathVariable("applyId") Long applyId, HttpServletRequest httpServletRequest);
+
+    @Operation(summary = "사용자 지원 상태 변경 API", description = "지원 ID를 이용해 지원 상태를 변경합니다.")
+    @PutMapping("/status")
+    ResForm<?> changeApplicationStatus(
+            @Valid @RequestBody ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus,
+            HttpServletRequest httpServletRequest);
+
 
 }
 

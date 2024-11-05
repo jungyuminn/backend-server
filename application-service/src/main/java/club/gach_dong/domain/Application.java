@@ -16,7 +16,7 @@ public class Application {
     private Long id;
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private String userId;
 
     @Column(name = "apply_id", nullable = false)
     private Long applyId;
