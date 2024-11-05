@@ -6,21 +6,20 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import club.gach_dong.entity.Role;
+import club.gach_dong.entity.Admin;
 import club.gach_dong.entity.User;
-import club.gach_dong.repository.UserRepository;
+import club.gach_dong.repository.AdminRepository;
 import club.gach_dong.util.JwtUtil;
 import club.gach_dong.dto.request.RegistrationRequest;
-import club.gach_dong.dto.request.ChangePasswordRequest;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class UserService {
+public class AdminService {
 
     @Autowired
-    private UserRepository userRepository;
+    private AdminRepository adminRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -34,34 +33,6 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    public void sendVerificationCode(String email) {
-        try {
-            if (!isValidEmail(email)) {
-                throw new RuntimeException("이메일은 gachon.ac.kr 도메인이어야 합니다.");
-            }
-
-            String code = generateVerificationCode();
-            redisTemplate.opsForValue().set(email, code, 3, TimeUnit.MINUTES);
-            sendVerificationEmail(email, code);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("인증 코드 발송 중 오류 발생: " + e.getMessage());
-        }
-    }
-
-    private String generateVerificationCode() {
-        Random random = new Random();
-        return String.format("%06d", random.nextInt(1000000));
-    }
-
-    private void sendVerificationEmail(String email, String code) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("이메일 인증 코드");
-        message.setText("안녕하세요! 아래의 인증 코드를 입력하여 이메일 인증을 완료해주세요:\n\n" + code);
-        mailSender.send(message);
-    }
-
     public void verifyCode(String email, String code) {
         String storedCode = redisTemplate.opsForValue().get(email);
         if (storedCode != null && storedCode.equals(code)) {
@@ -72,33 +43,33 @@ public class UserService {
     }
 
     public void completeRegistration(RegistrationRequest registrationRequest) {
-        if (userRepository.findByEmail(registrationRequest.email()).isPresent()) {
+        if (adminRepository.findByEmail(registrationRequest.email()).isPresent()) {
             throw new RuntimeException("이메일이 이미 사용 중입니다.");
         }
 
-        User user = User.of(
+        Admin admin = Admin.of(
                 registrationRequest.email(),
                 passwordEncoder.encode(registrationRequest.password()),
                 registrationRequest.name(),
                 registrationRequest.role()
         );
-        userRepository.save(user);
+        adminRepository.save(admin);
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+    public Admin findByEmail(String email) {
+        return adminRepository.findByEmail(email).orElse(null);
     }
 
-    public boolean checkPassword(User user, String rawPassword) {
-        return passwordEncoder.matches(rawPassword, user.getPassword());
+    public boolean checkPassword(Admin admin, String rawPassword) {
+        return passwordEncoder.matches(rawPassword, admin.getPassword());
     }
 
     public void resetPassword(String email, String newPassword) {
-        User user = userRepository.findByEmail(email)
+        Admin admin = adminRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("이메일이 등록되어 있지 않습니다."));
 
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+        admin.setPassword(passwordEncoder.encode(newPassword));
+        adminRepository.save(admin);
     }
 
     public String generateRandomPassword() {
@@ -114,10 +85,9 @@ public class UserService {
     }
 
     public void deleteUser(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-        userRepository.delete(user);
+        Admin admin = adminRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("관리자를 찾을 수 없습니다."));
+        adminRepository.delete(admin);
     }
 
     public void sendResetPasswordEmail(String email, String newPassword) {
@@ -128,20 +98,16 @@ public class UserService {
         mailSender.send(message);
     }
 
-    public void updateUser(User user) {
-        userRepository.save(user);
+    public void updateUser(Admin admin) {
+        adminRepository.save(admin);
     }
 
     public String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
 
-    private boolean isValidEmail(String email) {
-        return email != null && email.matches("^[a-zA-Z0-9._%+-]+@gachon\\.ac\\.kr$");
-    }
-
     public void blacklistToken(String token) {
-        jwtUtil.blacklistUserToken(token);
+        jwtUtil.blacklistAdminToken(token);
     }
 
 }

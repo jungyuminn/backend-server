@@ -9,29 +9,29 @@ import org.springframework.web.bind.annotation.*;
 import club.gach_dong.dto.request.ChangePasswordRequest;
 import club.gach_dong.dto.response.UserProfileResponse;
 
-@Tag(name = "사용자 인증/인가 API", description = "사용자 인증 및 인가 관련 API")
+@Tag(name = "관리자 인증/인가 API", description = "관리자 인증 및 인가 관련 API")
 @RestController
 @RequestMapping("/api/v1")
-public interface AuthApiSpecification {
+public interface AdminAuthApiSpecification {
 
     @Operation(summary = "비밀번호 변경", description = "기존 비밀번호를 변경합니다.")
-    @PostMapping("/change-password")
+    @PostMapping("/admin/change-password")
     ResponseEntity<String> changePassword(
             @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token,
             @Parameter(description = "비밀번호 변경 정보") @Valid @RequestBody ChangePasswordRequest changePasswordRequest);
 
     @Operation(summary = "로그아웃", description = "사용자를 로그아웃합니다.")
-    @PostMapping("/logout")
+    @PostMapping("/admin/logout")
     ResponseEntity<String> logout(
             @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
 
     @Operation(summary = "회원탈퇴", description = "사용자의 계정을 삭제합니다.")
-    @PostMapping("/unregister")
+    @PostMapping("/admin/unregister")
     ResponseEntity<String> deleteAccount(
             @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
 
     @Operation(summary = "회원 정보 조회", description = "사용자의 프로필 정보를 조회합니다.")
-    @GetMapping("/profile")
+    @GetMapping("/admin/profile")
     ResponseEntity<UserProfileResponse> getProfile(
             @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
 }
