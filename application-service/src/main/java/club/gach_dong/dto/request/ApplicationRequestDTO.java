@@ -1,8 +1,10 @@
 package club.gach_dong.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.Map;
 import lombok.Getter;
 
 public class ApplicationRequestDTO {
@@ -22,7 +24,8 @@ public class ApplicationRequestDTO {
 
         @NotNull(message = "지원서 본문이 누락되었습니다.")
         @Size(max = 2000, message = "지원서 본문이 너무 큽니다.")
-        private String formBody;
+        @JsonProperty("formBody")
+        private Map<String, Object> formBody;
     }
 
     @Getter
@@ -43,7 +46,7 @@ public class ApplicationRequestDTO {
     }
 
     @Getter
-    public static class ToChangeApplicationStatus{
+    public static class ToChangeApplicationStatus {
         @NotNull(message = "변경할 Application Id가 누락되었습니다.")
         private Long applicationId;
 
