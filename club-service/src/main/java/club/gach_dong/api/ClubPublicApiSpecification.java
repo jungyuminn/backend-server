@@ -64,7 +64,7 @@ public interface ClubPublicApiSpecification {
             description = "모든 동아리의 모집 공고를 조회합니다."
     )
     @GetMapping("/recruitments")
-    ArrayResponse<ClubRecruitmentResponse> getClubRecruitments();
+    ArrayResponse<ClubRecruitmentResponse> getClubsRecruitments();
 
     @Operation(
             summary = "동아리 별 모집 공고 조회",
