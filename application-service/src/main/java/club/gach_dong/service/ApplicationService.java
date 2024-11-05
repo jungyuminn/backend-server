@@ -74,7 +74,6 @@ public class ApplicationService {
                 .formName(applicationForm.getFormName())
                 .formBody(applicationForm.getBody().toString())
                 .formStatus(String.valueOf(applicationForm.getApplicationFormStatus()))
-                .formSettings(null)
                 .build();
     }
 

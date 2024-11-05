@@ -1,9 +1,8 @@
 package club.gach_dong.dto.response;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.List;
 
 public class ApplicationResponseDTO {
     @Getter
@@ -13,7 +12,6 @@ public class ApplicationResponseDTO {
         private String formName;
         private String formBody;
         private String formStatus;
-        private String formSettings;
     }
 
     @Getter
