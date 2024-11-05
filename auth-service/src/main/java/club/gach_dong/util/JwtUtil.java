@@ -42,7 +42,7 @@ public class JwtUtil {
     public String generateAdminToken(Admin admin) {
         return Jwts.builder()
                 .setSubject(admin.getEmail())
-                .claim("admin_id", admin.getId().toString()) // 관리자의 ID를 클레임에 추가
+                .claim("user_id", admin.getId().toString())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1일 후 만료
                 .signWith(adminJwtKey, SignatureAlgorithm.HS512)
                 .compact();
