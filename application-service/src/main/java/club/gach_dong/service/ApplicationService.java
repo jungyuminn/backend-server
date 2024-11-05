@@ -72,7 +72,7 @@ public class ApplicationService {
         return ApplicationResponseDTO.ToGetFormInfoAdminDTO.builder()
                 .formId(applicationForm.getId())
                 .formName(applicationForm.getFormName())
-                .formBody(applicationForm.getBody().toString())
+                .formBody(applicationForm.getBody())
                 .formStatus(String.valueOf(applicationForm.getApplicationFormStatus()))
                 .build();
     }
@@ -90,7 +90,7 @@ public class ApplicationService {
         return ApplicationResponseDTO.ToGetFormInfoUserDTO.builder()
                 .formId(applicationForm.getId())
                 .formName(applicationForm.getFormName())
-                .formBody(applicationForm.getBody().toString())
+                .formBody(applicationForm.getBody())
                 .build();
     }
 

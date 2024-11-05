@@ -1,6 +1,7 @@
 package club.gach_dong.dto.response;
 
 import java.util.List;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,7 +11,7 @@ public class ApplicationResponseDTO {
     public static class ToGetFormInfoAdminDTO {
         private Long formId;
         private String formName;
-        private String formBody;
+        private Map<String, Object> formBody;
         private String formStatus;
     }
 
@@ -19,7 +20,7 @@ public class ApplicationResponseDTO {
     public static class ToGetFormInfoUserDTO {
         private Long formId;
         private String formName;
-        private String formBody;
+        private Map<String, Object> formBody;
     }
 
     @Getter
