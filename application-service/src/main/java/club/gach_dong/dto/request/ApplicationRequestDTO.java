@@ -34,7 +34,8 @@ public class ApplicationRequestDTO {
         private Long applicationFormId;
 
         @Size(max = 30000, message = "지원서 답변이 너무 큽니다.")
-        private String formBody;
+        @JsonProperty("formBody")
+        private Map<String, Object> formBody;
 
         @NotNull(message = "지원 상태가 누락되었습니다.")
         @Pattern(regexp = "TEMPORARY_SAVED|SAVED|SAVED_CHANGEABLE", message = "지원 상태는 TEMPORARY_SAVED 또는 SAVED, SAVED_CHANGEABLE 이어야 합니다.")
