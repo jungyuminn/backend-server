@@ -11,7 +11,7 @@ import club.gach_dong.dto.response.ClubRecruitmentDetailResponse;
 import club.gach_dong.dto.response.ClubRecruitmentResponse;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
-import club.gach_dong.exception.ClubNotFoundException;
+import club.gach_dong.exception.ClubException;
 import club.gach_dong.repository.ClubRepository;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,7 @@ public class ClubServiceImpl implements ClubService {
     public ClubResponse getClub(Long clubIId) {
         return clubRepository.findById(clubIId)
                 .map(ClubResponse::from)
-                .orElseThrow(ClubNotFoundException::new);
+                .orElseThrow(ClubException.ClubNotFoundException::new);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ClubServiceImpl implements ClubService {
     @Transactional(readOnly = true)
     public List<ClubActivityResponse> getClubActivities(Long clubId) {
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(ClubNotFoundException::new);
+                .orElseThrow(ClubException.ClubNotFoundException::new);
 
         List<Activity> activities = club.getActivities();
 
@@ -79,7 +79,7 @@ public class ClubServiceImpl implements ClubService {
     @Transactional(readOnly = true)
     public List<ClubContactInfoResponse> getClubContactInfo(Long clubId) {
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(ClubNotFoundException::new);
+                .orElseThrow(ClubException.ClubNotFoundException::new);
 
         List<ContactInfo> contactInfos = club.getContactInfo();
 
@@ -103,7 +103,7 @@ public class ClubServiceImpl implements ClubService {
     @Transactional(readOnly = true)
     public List<ClubRecruitmentDetailResponse> getClubRecruitment(Long clubId) {
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(ClubNotFoundException::new);
+                .orElseThrow(ClubException.ClubNotFoundException::new);
 
         List<Recruitment> recruitments = club.getRecruitment();
 
