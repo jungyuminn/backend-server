@@ -21,12 +21,13 @@ public interface ClubService {
     CreateClubResponse getClub(Long clubId);
     List<ClubActivityResponse> getClubActivities(Long clubId);
     List<ClubContactInfoResponse> getClubContactInfo(Long clubId);
-    List<ClubRecruitmentResponse> getClubRecruitmentList();
-    List<ClubRecruitmentDetailResponse> getClubRecruitment(Long clubId);
+    List<ClubRecruitmentResponse> getClubsRecruitments();
+    List<ClubRecruitmentDetailResponse> getClubRecruitments(Long clubId);
+    ClubRecruitmentDetailResponse getClubRecruitment(Long clubId, Long recruitmentId);
 
     //admin
     CreateClubResponse createClub(CreateClubRequest createClubRequest);
     CreateClubActivityResponse createClubActivity(String userReferenceId, CreateClubActivityRequest createClubActivityRequest);
     CreateClubContactInfoResponse createClubContactInfo(String userReferenceId, CreateClubContactInfoRequest createClubContactInfoRequest);
-//    CreateClubRecruitmentResponse createClubRecruitment(String userReferenceId, CreateClubRecruitmentRequest createClubRecruitmentRequest);
+    CreateClubRecruitmentResponse createClubRecruitment(String userReferenceId, CreateClubRecruitmentRequest createClubRecruitmentRequest);
 }

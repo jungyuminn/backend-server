@@ -3,9 +3,11 @@ package club.gach_dong.controller;
 import club.gach_dong.api.ClubAdminApiSpecification;
 import club.gach_dong.dto.request.CreateClubActivityRequest;
 import club.gach_dong.dto.request.CreateClubContactInfoRequest;
+import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
 import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
+import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
 import club.gach_dong.dto.response.CreateClubResponse;
 import club.gach_dong.service.ClubService;
 import lombok.RequiredArgsConstructor;
@@ -51,16 +53,16 @@ public class ClubAdminController implements ClubAdminApiSpecification {
         return new ResponseEntity<>(createClubContactInfoResponse, HttpStatus.CREATED);
     }
 
-//    @Override
-//    public ResponseEntity<CreateClubRecruitmentResponse> createClubRecruitment(
-//            String userReferenceId,
-//            CreateClubRecruitmentRequest createClubRecruitmentRequest
-//    ) {
-//        CreateClubRecruitmentResponse createClubRecruitmentResponse = clubService.createClubRecruitment(
-//                userReferenceId,
-//                createClubRecruitmentRequest
-//        );
-//        return new ResponseEntity<>(createClubRecruitmentResponse, HttpStatus.CREATED);
-//    }
+    @Override
+    public ResponseEntity<CreateClubRecruitmentResponse> createClubRecruitment(
+            String userReferenceId,
+            CreateClubRecruitmentRequest createClubRecruitmentRequest
+    ) {
+        CreateClubRecruitmentResponse createClubRecruitmentResponse = clubService.createClubRecruitment(
+                userReferenceId,
+                createClubRecruitmentRequest
+        );
+        return new ResponseEntity<>(createClubRecruitmentResponse, HttpStatus.CREATED);
+    }
 
 }
