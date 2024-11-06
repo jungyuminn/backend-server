@@ -58,6 +58,7 @@ public interface ClubAdminApiSpecification {
             description = "동아리 연락처 정보를 입력받아 동아리에 추가합니다.",
             security = @SecurityRequirement(name = "Authorization")
     )
+    @PostMapping("/contact-info/create")
     ResponseEntity<CreateClubContactInfoResponse> createClubContactInfo(
             @RequestUserReferenceId
             String userReferenceId,
