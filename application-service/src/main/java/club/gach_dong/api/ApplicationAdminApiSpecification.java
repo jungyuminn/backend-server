@@ -25,25 +25,25 @@ import org.springframework.web.bind.annotation.RestController;
 public interface ApplicationAdminApiSpecification {
 
     @Operation(summary = "관리자용 지원서 양식 조회 API", description = "지원서 양식 ID를 이용해 양식을 조회합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @GetMapping("/admin/form/{formId}")
+    @GetMapping("/form/{formId}")
     ResForm<ApplicationResponseDTO.ToGetFormInfoAdminDTO> getFormInfoAdmin(@PathVariable("formId") Long formId,
                                                                            HttpServletRequest httpServletRequest);
 
     @Operation(summary = "동아리 지원서 양식 생성 요청 API", description = "동아리 지원서 양식을 생성합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @PostMapping("/admin/form/create")
+    @PostMapping("/form/create")
     ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> createApplicationForm(
             @Valid @RequestBody ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO,
             HttpServletRequest httpServletRequest);
 
     @Operation(summary = "동아리 지원서 양식 수정 요청 API", description = "동아리 지원서 양식을 수정합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @PutMapping("/admin/form/{form_id}")
+    @PutMapping("/form/{form_id}")
     ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> changeApplicationForm(
             @PathVariable("form_id") Long formId,
             @Valid @RequestBody ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO,
             HttpServletRequest httpServletRequest);
 
     @Operation(summary = "지원 양식 삭제 API", description = "지원서 양식 ID를 이용해 양식을 삭제합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @DeleteMapping("/admin/form/{formId}")
+    @DeleteMapping("/form/{formId}")
     ResForm<?> deleteApplicationForm(@PathVariable("formId") Long formId, HttpServletRequest httpServletRequest);
 
     @Operation(summary = "사용자 지원 상태 변경 API", description = "지원 ID를 이용해 지원 상태를 변경합니다.", security = @SecurityRequirement(name = "Authorization"))
