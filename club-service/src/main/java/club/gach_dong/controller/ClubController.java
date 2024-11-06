@@ -6,4 +6,9 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 @RequiredArgsConstructor
-public class ClubController implements ClubApiSpecification {}
+public class ClubController implements ClubApiSpecification {
+    @Override
+    public String getUserInfo(String userReferenceId) {
+        return "User Reference ID: " + userReferenceId;
+    }
+}
