@@ -6,7 +6,6 @@ import club.gach_dong.domain.ContactInfo;
 import club.gach_dong.domain.Recruitment;
 import club.gach_dong.dto.request.CreateClubActivityRequest;
 import club.gach_dong.dto.request.CreateClubContactInfoRequest;
-import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
 import club.gach_dong.dto.response.ClubActivityResponse;
 import club.gach_dong.dto.response.ClubContactInfoResponse;
@@ -14,7 +13,6 @@ import club.gach_dong.dto.response.ClubRecruitmentDetailResponse;
 import club.gach_dong.dto.response.ClubRecruitmentResponse;
 import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
-import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
 import club.gach_dong.dto.response.CreateClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 import club.gach_dong.exception.ClubException;
@@ -101,19 +99,6 @@ public class ClubServiceImpl implements ClubService {
 
         return recruitments.stream()
                 .map(recruitment -> ClubRecruitmentDetailResponse.of(club, recruitment))
-                .toList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ClubActivityResponse> getClubActivities(Long clubId) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(ClubException.ClubNotFoundException::new);
-
-        List<Activity> activities = club.getActivities();
-
-        return activities.stream()
-                .map(ClubActivityResponse::from)
                 .toList();
     }
 
