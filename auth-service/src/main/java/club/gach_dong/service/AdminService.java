@@ -46,6 +46,10 @@ public class AdminService {
 
     public void sendRegistrationVerificationCode(String email) {
         try {
+            if (!isValidEmail(email)) {
+                throw new RuntimeException("이메일은 gachon.ac.kr 도메인이어야 합니다.");
+            }
+
             if (adminRepository.findByEmail(email).isPresent()) {
                 throw new RuntimeException("이미 등록된 이메일입니다. 인증 코드를 발송할 수 없습니다.");
             }
@@ -132,6 +136,10 @@ public class AdminService {
 
     public String encodePassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+    private boolean isValidEmail(String email) {
+        return email != null && email.matches("^[a-zA-Z0-9._%+-]+@gachon\\.ac\\.kr$");
     }
 
     public void blacklistToken(String token) {
