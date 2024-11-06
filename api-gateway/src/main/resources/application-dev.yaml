@@ -29,6 +29,23 @@ spring:
           filters:
             - RewritePath=/auth/(?<segment>.*), /$\{segment}
 
+        # Auth Service Routes (Admin Public Endpoints)
+        - id: auth-service-public-admin
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/auth/public/admin/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+
+        # Auth Service Routes (Authenticated Endpoints)
+        - id: auth-service-admin
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/auth/admin/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
+
         # Auth Service Routes (Authenticated Endpoints)
         - id: auth-service-authenticated
           uri: http://auth-service:8080
@@ -52,6 +69,15 @@ spring:
             - Path=/club/public/**
           filters:
             - RewritePath=/club/(?<segment>.*), /$\{segment}
+
+        # User Routes (User Admin Endpoints)
+        - id: user-service-admin
+          uri: http://user-service:8080
+          predicates:
+            - Path=/user/admin/**
+          filters:
+            - RewritePath=/user/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
 
         # Club Service Routes (Authenticated Endpoints)
         - id: club-service-authenticated
