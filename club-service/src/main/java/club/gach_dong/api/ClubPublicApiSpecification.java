@@ -5,7 +5,7 @@ import club.gach_dong.dto.response.ClubActivityResponse;
 import club.gach_dong.dto.response.ClubContactInfoResponse;
 import club.gach_dong.dto.response.ClubRecruitmentDetailResponse;
 import club.gach_dong.dto.response.ClubRecruitmentResponse;
-import club.gach_dong.dto.response.ClubResponse;
+import club.gach_dong.dto.response.CreateClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,7 +34,7 @@ public interface ClubPublicApiSpecification {
             description = "동아리 이름을 이용하여 동아리 정보를 조회합니다."
     )
     @GetMapping("/{clubId}")
-    ClubResponse getClub(
+    CreateClubResponse getClub(
             @Parameter(description = "동아리 ID", example = "1", required = true)
             @PathVariable Long clubId
     );
