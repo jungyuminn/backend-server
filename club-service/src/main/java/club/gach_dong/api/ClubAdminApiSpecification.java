@@ -67,16 +67,17 @@ public interface ClubAdminApiSpecification {
             CreateClubContactInfoRequest createClubContactInfoRequest
     );
 
-//    @Operation(
-//            summary = "동아리 모집 공고 생성",
-//            description = "동아리 모집 공고를 입력받아 동아리에 추가합니다.",
-//            security = @SecurityRequirement(name = "Authorization")
-//    )
-//    ResponseEntity<CreateClubRecruitmentResponse> createClubRecruitment(
-//            @RequestUserReferenceId
-//            String userReferenceId,
-//            @Valid
-//            @RequestBody
-//            CreateClubRecruitmentRequest createClubRecruitmentRequest
-//    );
+    @Operation(
+            summary = "동아리 모집 공고 생성",
+            description = "동아리 모집 공고를 입력받아 동아리에 추가합니다.",
+            security = @SecurityRequirement(name = "Authorization")
+    )
+    @PostMapping("/recruitment/create")
+    ResponseEntity<CreateClubRecruitmentResponse> createClubRecruitment(
+            @RequestUserReferenceId
+            String userReferenceId,
+            @Valid
+            @RequestBody
+            CreateClubRecruitmentRequest createClubRecruitmentRequest
+    );
 }

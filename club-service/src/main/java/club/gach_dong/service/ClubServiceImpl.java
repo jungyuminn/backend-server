@@ -6,6 +6,7 @@ import club.gach_dong.domain.ContactInfo;
 import club.gach_dong.domain.Recruitment;
 import club.gach_dong.dto.request.CreateClubActivityRequest;
 import club.gach_dong.dto.request.CreateClubContactInfoRequest;
+import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
 import club.gach_dong.dto.response.ClubActivityResponse;
 import club.gach_dong.dto.response.ClubContactInfoResponse;
@@ -13,6 +14,7 @@ import club.gach_dong.dto.response.ClubRecruitmentDetailResponse;
 import club.gach_dong.dto.response.ClubRecruitmentResponse;
 import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
+import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
 import club.gach_dong.dto.response.CreateClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 import club.gach_dong.exception.ClubException;
@@ -183,27 +185,29 @@ public class ClubServiceImpl implements ClubService {
         );
     }
 
-//    @Override
-//    public CreateClubRecruitmentResponse createClubRecruitment(
-//            String userReferenceId,
-//            CreateClubRecruitmentRequest createClubRecruitmentRequest
-//    ) {
-//        Club club = clubRepository.findById(createClubContactInfoRequest.clubId())
-//                .orElseThrow(() -> new NotFoundException("Club not found"));
-//
-//        ContactInfo contactInfo = ContactInfo.of(
-//                createClubContactInfoRequest.type(),
-//                createClubContactInfoRequest.contact(),
-//                club
-//        );
-//
-//        club.addContactInfo(contactInfo);
-//
-//        clubRepository.save(club);
-//
-//        return CreateClubContactInfoResponse.of(
-//                club.getId(),
-//                contactInfo.getId()
-//        );
-//    }
+    @Override
+    @Transactional
+    public CreateClubRecruitmentResponse createClubRecruitment(
+            String userReferenceId,
+            CreateClubRecruitmentRequest createClubRecruitmentRequest
+    ) {
+        Club club = clubRepository.findById(createClubRecruitmentRequest.clubId())
+                .orElseThrow(ClubException.ClubNotFoundException::new);
+
+        Recruitment recruitment = Recruitment.of(
+                createClubRecruitmentRequest.title(),
+                createClubRecruitmentRequest.content(),
+                createClubRecruitmentRequest.recruitmentCount(),
+                createClubRecruitmentRequest.startDate(),
+                createClubRecruitmentRequest.endDate(),
+                createClubRecruitmentRequest.processData(),
+                club
+        );
+
+        club.addRecruitment(recruitment);
+
+        clubRepository.save(club);
+
+        return new CreateClubRecruitmentResponse();
+    }
 }

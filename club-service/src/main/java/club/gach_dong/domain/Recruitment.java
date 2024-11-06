@@ -4,9 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Getter
 @Entity
@@ -30,7 +33,7 @@ public class Recruitment {
 
     @Column(name = "recruitment_status", nullable = false)
     @Schema(description = "모집 상태", example = "true")
-    private boolean recruitmentStatus;
+    private boolean recruitmentStatus = true;
 
     @Column(name = "recruitment_count", nullable = false)
     @Schema(description = "모집 인원", example = "10")
@@ -44,22 +47,32 @@ public class Recruitment {
     @Schema(description = "모집 종료일", example = "2024-03-15")
     private LocalDateTime endDate;
 
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "process_data", nullable = false, columnDefinition = "json", length = 30000)
+    @Schema(name = "모집 프로세스 설정", example = "{\n" +
+            "  \"process1\": \"서류 심사\",\n" +
+            "  \"process2\": \"1차 면접\",\n" +
+            "  \"process3\": \"2차 면접\"\n" +
+            " \"process4\": \"최종 합격\"\n" +
+            "}")
+    private Map<String, Object> processData;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id")
     private Club club;
 
-    private Recruitment(String title, String content, Long recruitmentCount, Boolean recruitmentStatus, LocalDateTime startDate, LocalDateTime endDate, Club club) {
+    private Recruitment(String title, String content, Long recruitmentCount, LocalDateTime startDate, LocalDateTime endDate, Map<String, Object> processData, Club club) {
         this.title = title;
         this.content = content;
         this.recruitmentCount = recruitmentCount;
-        this.recruitmentStatus = recruitmentStatus;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.processData = processData;
         this.club = club;
     }
 
-    public static Recruitment of(String title, String content, Long recruitmentCount, Boolean recruitmentStatus, LocalDateTime startDate, LocalDateTime endDate, Club club) {
-        return new Recruitment(title, content, recruitmentCount, recruitmentStatus, startDate, endDate, club);
+    public static Recruitment of(String title, String content, Long recruitmentCount, LocalDateTime startDate, LocalDateTime endDate, Map<String, Object> processData, Club club) {
+        return new Recruitment(title, content, recruitmentCount, startDate, endDate, processData, club);
     }
 
     // TODO: 날짜 계산 로직 개선 + admin feature 에서 구현 예정
