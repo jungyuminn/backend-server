@@ -9,9 +9,9 @@ public record UserProfileResponse(
         @NotNull
         Long id,
 
-        @Schema(description = "사용자 이메일", example = "user@gachon.ac.kr")
+        @Schema(description = "사용자 참조 ID", example = "550e8400-e29b-41d4-a716-446655440000")
         @NotNull
-        String email,
+        String userReferenceId,
 
         @Schema(description = "프로필 이미지 URL", example = "https://example.com/image.png")
         @NotNull
@@ -20,7 +20,7 @@ public record UserProfileResponse(
     public static UserProfileResponse from(User user) {
         return new UserProfileResponse(
                 user.getId(),
-                user.getEmail(),
+                user.getUserReferenceId(),
                 user.getProfileImageUrl()
         );
     }

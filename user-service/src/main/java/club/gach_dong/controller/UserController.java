@@ -13,28 +13,24 @@ import club.gach_dong.entity.User;
 import club.gach_dong.service.UserService;
 import club.gach_dong.exception.ErrorStatus;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 @RestController
 @RequiredArgsConstructor
 public class UserController implements UserApiSpecification {
     private final UserService userService;
 
     @Override
+    @PostMapping(value = "/upload_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponse> uploadProfileImage(
             @Valid @ModelAttribute UserProfileRequest userProfileRequest,
-            HttpServletRequest httpServletRequest) {
+            @club.gach_dong.annotation.RequestUserReferenceId String userReferenceId) {
 
-        String userId = httpServletRequest.getHeader("X-MEMBER-ID");
-
-        if (userId == null || userId.isEmpty()) {
+        if (userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
         try {
-            User user = userService.getOrCreateUser(userId);
-
-            UserProfileResponse userProfileResponse = userService.saveProfileImage(userId, userProfileRequest.image());
+            User user = userService.getOrCreateUser(userReferenceId);
+            UserProfileResponse userProfileResponse = userService.saveProfileImage(userReferenceId, userProfileRequest.image());
             return ResponseEntity.ok(userProfileResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
@@ -44,18 +40,17 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
+    @PostMapping(value = "/update_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponse> updateProfileImage(
             @Valid @ModelAttribute UserProfileRequest userProfileRequest,
-            HttpServletRequest httpServletRequest) {
+            @club.gach_dong.annotation.RequestUserReferenceId String userReferenceId) {
 
-        String userId = httpServletRequest.getHeader("X-MEMBER-ID");
-
-        if (userId == null || userId.isEmpty()) {
+        if (userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
         try {
-            UserProfileResponse userProfileResponse = userService.updateProfileImage(userId, userProfileRequest.image());
+            UserProfileResponse userProfileResponse = userService.updateProfileImage(userReferenceId, userProfileRequest.image());
             return ResponseEntity.ok(userProfileResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
@@ -65,15 +60,14 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    public ResponseEntity<String> deleteProfileImage(HttpServletRequest httpServletRequest) {
-        String userId = httpServletRequest.getHeader("X-MEMBER-ID");
-
-        if (userId == null || userId.isEmpty()) {
+    @DeleteMapping("/delete_profile_image")
+    public ResponseEntity<String> deleteProfileImage(@club.gach_dong.annotation.RequestUserReferenceId String userReferenceId) {
+        if (userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorStatus.USER_NOT_FOUND.getMessage());
         }
 
         try {
-            userService.deleteProfileImage(userId);
+            userService.deleteProfileImage(userReferenceId);
             return ResponseEntity.ok("이미지 삭제 성공");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 삭제 실패");
@@ -81,15 +75,14 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    public ResponseEntity<String> getProfileImage(HttpServletRequest httpServletRequest) {
-        String userId = httpServletRequest.getHeader("X-MEMBER-ID");
-
-        if (userId == null || userId.isEmpty()) {
+    @GetMapping("/profile_image")
+    public ResponseEntity<String> getProfileImage(@club.gach_dong.annotation.RequestUserReferenceId String userReferenceId) {
+        if (userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
         try {
-            String profileImageUrl = userService.getProfileImage(userId);
+            String profileImageUrl = userService.getProfileImage(userReferenceId);
             if (profileImageUrl == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("프로필 이미지가 존재하지 않습니다.");
             }

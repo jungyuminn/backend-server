@@ -14,16 +14,16 @@ public class User {
     private Long id;
 
     @Column(length = 255, nullable = false, unique = true)
-    private String email;
+    private String userReferenceId;
 
     private String profileImageUrl;
 
-    private User(String email, String profileImageUrl) {
-        this.email = email;
+    private User(String userReferenceId, String profileImageUrl) {
+        this.userReferenceId = userReferenceId;
         this.profileImageUrl = profileImageUrl;
     }
 
-    public static User of(String email, String profileImageUrl) {
-        return new User(email, profileImageUrl);
+    public static User of(String userReferenceId, String profileImageUrl) {
+        return new User(userReferenceId, profileImageUrl);
     }
 }
