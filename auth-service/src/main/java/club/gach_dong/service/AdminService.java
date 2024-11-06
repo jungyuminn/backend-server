@@ -33,6 +33,9 @@ public class AdminService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final int PASSWORD_LENGTH = 8;
+
     public void verifyCode(String email, String code) {
         String storedCode = redisTemplate.opsForValue().get(email);
         if (storedCode != null && storedCode.equals(code)) {
@@ -73,13 +76,11 @@ public class AdminService {
     }
 
     public String generateRandomPassword() {
-        int length = 8;
         StringBuilder password = new StringBuilder();
         Random random = new Random();
-        String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-        for (int i = 0; i < length; i++) {
-            password.append(chars.charAt(random.nextInt(chars.length())));
+        for (int i = 0; i < PASSWORD_LENGTH; i++) {
+            password.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
         }
         return password.toString();
     }
