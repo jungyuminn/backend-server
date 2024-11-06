@@ -13,6 +13,7 @@ import club.gach_dong.repository.ApplicationDocsRepository;
 import club.gach_dong.repository.ApplicationFormRepository;
 import club.gach_dong.repository.ApplicationRepository;
 import club.gach_dong.response.status.ErrorStatus;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -74,7 +75,6 @@ public class ApplicationService {
                 .formName(applicationForm.getFormName())
                 .formBody(applicationForm.getBody())
                 .formStatus(String.valueOf(applicationForm.getApplicationFormStatus()))
-                .formSettings(null)
                 .build();
     }
 
@@ -185,6 +185,7 @@ public class ApplicationService {
                 .applicationBody(toApplyClub.getFormBody())
                 .applicationStatus(toApplyClub.getStatus())
                 .clubName(toApplyClub.getClubName())
+                .submitDate(LocalDateTime.now())
                 .build();
 
         if (Objects.equals(application.getApplicationStatus(), "TEMP")) {
@@ -260,6 +261,7 @@ public class ApplicationService {
                         .applicationId(application.getId())
                         .clubName(application.getClubName())
                         .status(application.getApplicationStatus())
+                        .submitDate(application.getSubmitDate())
                         .build())
                 .collect(Collectors.toList());
 
