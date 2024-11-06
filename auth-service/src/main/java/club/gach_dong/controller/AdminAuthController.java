@@ -13,7 +13,6 @@ import club.gach_dong.service.AdminService;
 import club.gach_dong.util.JwtUtil;
 
 @RestController
-@RequestMapping("/admin/auth")
 @RequiredArgsConstructor
 public class AdminAuthController implements AdminAuthApiSpecification {
 
