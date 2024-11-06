@@ -7,7 +7,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import club.gach_dong.entity.Admin;
-import club.gach_dong.entity.User;
 import club.gach_dong.repository.AdminRepository;
 import club.gach_dong.util.JwtUtil;
 import club.gach_dong.dto.request.RegistrationRequest;
@@ -43,6 +42,38 @@ public class AdminService {
         } else {
             throw new RuntimeException("유효하지 않거나 만료된 인증 코드입니다.");
         }
+    }
+
+    public void sendRegistrationVerificationCode(String email) {
+        try {
+            if (!isValidEmail(email)) {
+                throw new RuntimeException("이메일은 gachon.ac.kr 도메인이어야 합니다.");
+            }
+
+            if (adminRepository.findByEmail(email).isPresent()) {
+                throw new RuntimeException("이미 등록된 이메일입니다. 인증 코드를 발송할 수 없습니다.");
+            }
+
+            String code = generateVerificationCode();
+            redisTemplate.opsForValue().set(email, code, 3, TimeUnit.MINUTES);
+            sendVerificationEmail(email, code);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("인증 코드 발송 중 오류 발생: " + e.getMessage());
+        }
+    }
+
+    private String generateVerificationCode() {
+        Random random = new Random();
+        return String.format("%06d", random.nextInt(1000000));
+    }
+
+    private void sendVerificationEmail(String email, String code) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("회원가입 인증 코드");
+        message.setText("안녕하세요! 아래의 인증 코드를 입력하여 회원가입을 완료해주세요:\n\n" + code);
+        mailSender.send(message);
     }
 
     public void completeRegistration(RegistrationRequest registrationRequest) {
@@ -107,8 +138,11 @@ public class AdminService {
         return passwordEncoder.encode(password);
     }
 
+    private boolean isValidEmail(String email) {
+        return email != null && email.matches("^[a-zA-Z0-9._%+-]+@gachon\\.ac\\.kr$");
+    }
+
     public void blacklistToken(String token) {
         jwtUtil.blacklistAdminToken(token);
     }
-
 }
