@@ -106,6 +106,7 @@ public class ClubServiceImpl implements ClubService {
 
     // admin
     @Override
+    @Transactional
     public CreateClubResponse createClub(CreateClubRequest createClubRequest) {
         Club club = Club.of(
                 createClubRequest.name(),
@@ -120,6 +121,7 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
+    @Transactional
     public CreateClubActivityResponse createClubActivity(
             String userReferenceId,
             CreateClubActivityRequest createClubActivityRequest
@@ -147,6 +149,7 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
+    @Transactional
     public CreateClubContactInfoResponse createClubContactInfo(
             String userReferenceId,
             CreateClubContactInfoRequest createClubContactInfoRequest
