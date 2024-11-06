@@ -25,16 +25,16 @@ public class UserController implements UserApiSpecification {
             @Valid @ModelAttribute UserProfileRequest userProfileRequest,
             HttpServletRequest httpServletRequest) {
 
-        String userId = httpServletRequest.getHeader("X-MEMBER-ID");
+        String userReferenceId = httpServletRequest.getHeader("X-MEMBER-ID");
 
-        if (userId == null || userId.isEmpty()) {
+        if (userReferenceId == null || userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
         try {
-            User user = userService.getOrCreateUser(userId);
+            User user = userService.getOrCreateUser(userReferenceId);
 
-            UserProfileResponse userProfileResponse = userService.saveProfileImage(userId, userProfileRequest.image());
+            UserProfileResponse userProfileResponse = userService.saveProfileImage(userReferenceId, userProfileRequest.image());
             return ResponseEntity.ok(userProfileResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
@@ -48,14 +48,14 @@ public class UserController implements UserApiSpecification {
             @Valid @ModelAttribute UserProfileRequest userProfileRequest,
             HttpServletRequest httpServletRequest) {
 
-        String userId = httpServletRequest.getHeader("X-MEMBER-ID");
+        String userReferenceId = httpServletRequest.getHeader("X-MEMBER-ID");
 
-        if (userId == null || userId.isEmpty()) {
+        if (userReferenceId == null || userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
         try {
-            UserProfileResponse userProfileResponse = userService.updateProfileImage(userId, userProfileRequest.image());
+            UserProfileResponse userProfileResponse = userService.updateProfileImage(userReferenceId, userProfileRequest.image());
             return ResponseEntity.ok(userProfileResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
@@ -66,14 +66,14 @@ public class UserController implements UserApiSpecification {
 
     @Override
     public ResponseEntity<String> deleteProfileImage(HttpServletRequest httpServletRequest) {
-        String userId = httpServletRequest.getHeader("X-MEMBER-ID");
+        String userReferenceId = httpServletRequest.getHeader("X-MEMBER-ID");
 
-        if (userId == null || userId.isEmpty()) {
+        if (userReferenceId == null || userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorStatus.USER_NOT_FOUND.getMessage());
         }
 
         try {
-            userService.deleteProfileImage(userId);
+            userService.deleteProfileImage(userReferenceId);
             return ResponseEntity.ok("이미지 삭제 성공");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 삭제 실패");
@@ -82,14 +82,14 @@ public class UserController implements UserApiSpecification {
 
     @Override
     public ResponseEntity<String> getProfileImage(HttpServletRequest httpServletRequest) {
-        String userId = httpServletRequest.getHeader("X-MEMBER-ID");
+        String userReferenceId = httpServletRequest.getHeader("X-MEMBER-ID");
 
-        if (userId == null || userId.isEmpty()) {
+        if (userReferenceId == null || userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
         try {
-            String profileImageUrl = userService.getProfileImage(userId);
+            String profileImageUrl = userService.getProfileImage(userReferenceId);
             if (profileImageUrl == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("프로필 이미지가 존재하지 않습니다.");
             }

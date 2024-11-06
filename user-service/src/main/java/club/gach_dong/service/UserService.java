@@ -59,9 +59,9 @@ public class UserService {
         return "";
     }
 
-    private String saveImageFile(String email, MultipartFile image) throws IOException {
+    private String saveImageFile(String userReferenceId, MultipartFile image) throws IOException {
         String uuid = UUID.randomUUID().toString();
-        String fileName = email + "_" + uuid + "_" + image.getOriginalFilename();
+        String fileName = userReferenceId + "_" + uuid + "_" + image.getOriginalFilename();
         InputStream inputStream = image.getInputStream();
 
         BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucketName, fileName))
@@ -80,14 +80,14 @@ public class UserService {
     }
 
     @Transactional
-    public UserProfileResponse saveProfileImage(String email, MultipartFile image) {
+    public UserProfileResponse saveProfileImage(String userReferenceId, MultipartFile image) {
         validateImage(image);
 
         try {
-            String imageUrl = saveImageFile(email, image);
+            String imageUrl = saveImageFile(userReferenceId, image);
 
-            User user = userRepository.findByEmail(email)
-                    .orElseGet(() -> User.of(email, null));
+            User user = userRepository.findByUserReferenceId(userReferenceId)
+                    .orElseGet(() -> User.of(userReferenceId, null));
             user.setProfileImageUrl(imageUrl);
             userRepository.save(user);
 
@@ -98,15 +98,15 @@ public class UserService {
     }
 
     @Transactional
-    public UserProfileResponse updateProfileImage(String email, MultipartFile image) {
+    public UserProfileResponse updateProfileImage(String userReferenceId, MultipartFile image) {
         validateImage(image);
 
         try {
-            User user = userRepository.findByEmail(email)
+            User user = userRepository.findByUserReferenceId(userReferenceId)
                     .orElseThrow(() -> new RuntimeException(ErrorStatus.USER_NOT_FOUND.getMessage()));
             deleteOldImage(user);
 
-            String imageUrl = saveImageFile(email, image);
+            String imageUrl = saveImageFile(userReferenceId, image);
 
             user.setProfileImageUrl(imageUrl);
             userRepository.save(user);
@@ -118,8 +118,8 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteProfileImage(String email) {
-        User user = userRepository.findByEmail(email)
+    public void deleteProfileImage(String userReferenceId) {
+        User user = userRepository.findByUserReferenceId(userReferenceId)
                 .orElseThrow(() -> new RuntimeException(ErrorStatus.USER_NOT_FOUND.getMessage()));
 
         try {
@@ -131,14 +131,14 @@ public class UserService {
         }
     }
 
-    public String getProfileImage(String email) {
-        User user = userRepository.findByEmail(email)
+    public String getProfileImage(String userReferenceId) {
+        User user = userRepository.findByUserReferenceId(userReferenceId)
                 .orElseThrow(() -> new RuntimeException(ErrorStatus.USER_NOT_FOUND.getMessage()));
         return user.getProfileImageUrl();
     }
 
-    public User getOrCreateUser(String email) {
-        return userRepository.findByEmail(email)
-                .orElseGet(() -> User.of(email, null));
+    public User getOrCreateUser(String userReferenceId) {
+        return userRepository.findByUserReferenceId(userReferenceId)
+                .orElseGet(() -> User.of(userReferenceId, null));
     }
 }
