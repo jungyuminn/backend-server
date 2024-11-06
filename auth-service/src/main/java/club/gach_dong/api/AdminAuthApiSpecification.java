@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import club.gach_dong.dto.request.ChangePasswordRequest;
 import club.gach_dong.dto.response.UserProfileResponse;
 
-@Tag(name = "사용자 인증/인가 API", description = "사용자 인증 및 인가 관련 API")
+@Tag(name = "관리자 인증/인가 API", description = "관리자 인증 및 인가 관련 API")
 @RestController
-@RequestMapping("/api/v1")
-public interface AuthApiSpecification {
+@RequestMapping("admin/api/v1")
+public interface AdminAuthApiSpecification {
 
     @Operation(summary = "비밀번호 변경", description = "기존 비밀번호를 변경합니다.")
     @PostMapping("/change-password")

@@ -9,8 +9,8 @@ import java.util.UUID;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "auth_user")
-public class User {
+@Table(name = "auth_admin")
+public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,7 +33,7 @@ public class User {
 
     private boolean enabled;
 
-    private User(UUID user_reference_id, String email, String password, String name, Role role, boolean enabled) {
+    private Admin(UUID user_reference_id, String email, String password, String name, Role role, boolean enabled) {
         this.user_reference_id = user_reference_id;
         this.email = email;
         this.password = password;
@@ -42,7 +42,7 @@ public class User {
         this.enabled = enabled;
     }
 
-    public static User of(String email, String password, String name, Role role) {
-        return new User(UUID.randomUUID(), email, password, name, role, true);
+    public static Admin of(String email, String password, String name, Role role) {
+        return new Admin(UUID.randomUUID(), email, password, name, role, true);
     }
 }
