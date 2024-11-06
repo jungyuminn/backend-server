@@ -19,7 +19,6 @@ public class UserController implements UserApiSpecification {
     private final UserService userService;
 
     @Override
-    @PostMapping(value = "/upload_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponse> uploadProfileImage(
             @Valid @ModelAttribute UserProfileRequest userProfileRequest,
             @club.gach_dong.annotation.RequestUserReferenceId String userReferenceId) {
@@ -40,7 +39,6 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @PostMapping(value = "/update_profile_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponse> updateProfileImage(
             @Valid @ModelAttribute UserProfileRequest userProfileRequest,
             @club.gach_dong.annotation.RequestUserReferenceId String userReferenceId) {
@@ -60,7 +58,6 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @DeleteMapping("/delete_profile_image")
     public ResponseEntity<String> deleteProfileImage(@club.gach_dong.annotation.RequestUserReferenceId String userReferenceId) {
         if (userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorStatus.USER_NOT_FOUND.getMessage());
@@ -75,7 +72,6 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    @GetMapping("/profile_image")
     public ResponseEntity<String> getProfileImage(@club.gach_dong.annotation.RequestUserReferenceId String userReferenceId) {
         if (userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
