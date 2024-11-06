@@ -12,7 +12,11 @@ import java.util.UUID;
 @Table(name = "auth_admin")
 public class Admin {
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private UUID userId;
 
     @Column(length = 255, nullable = false, unique = true)
     private String email;
@@ -29,16 +33,16 @@ public class Admin {
 
     private boolean enabled;
 
-    private Admin(String email, String password, String name, Role role, boolean enabled, UUID id) {
+    private Admin(UUID userId, String email, String password, String name, Role role, boolean enabled) {
+        this.userId = userId;
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
         this.enabled = enabled;
-        this.id = id;
     }
 
     public static Admin of(String email, String password, String name, Role role) {
-        return new Admin(email, password, name, role, true, UUID.randomUUID());
+        return new Admin(UUID.randomUUID(), email, password, name, role, true);
     }
 }

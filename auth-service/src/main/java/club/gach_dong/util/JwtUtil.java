@@ -33,7 +33,7 @@ public class JwtUtil {
     public String generateUserToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getEmail())
-                .claim("user_id", user.getId().toString())
+                .claim("user_id", user.getUserId().toString())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1일 후 만료
                 .signWith(userJwtKey, SignatureAlgorithm.HS512)
                 .compact();
@@ -42,7 +42,7 @@ public class JwtUtil {
     public String generateAdminToken(Admin admin) {
         return Jwts.builder()
                 .setSubject(admin.getEmail())
-                .claim("user_id", admin.getId().toString())
+                .claim("user_id", admin.getUserId().toString())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1일 후 만료
                 .signWith(adminJwtKey, SignatureAlgorithm.HS512)
                 .compact();
