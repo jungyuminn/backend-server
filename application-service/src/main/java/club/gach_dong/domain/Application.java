@@ -46,7 +46,7 @@ public class Application {
     @Column(name = "club_name", nullable = false, length = 80)
     private String clubName;
 
-    @Column(name = "submmit_date", nullable = false)
+    @Column(name = "submit_date", nullable = false)
     private LocalDateTime submitDate;
 
 }
