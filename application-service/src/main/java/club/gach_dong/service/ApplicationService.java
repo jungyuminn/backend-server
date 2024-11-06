@@ -289,4 +289,30 @@ public class ApplicationService {
 
         applicationRepository.updateApplicationStatus(toChangeApplicationStatus.getStatus(), application);
     }
+
+    @Transactional(readOnly = true)
+    public ApplicationResponseDTO.ToGetApplicationListAdminDTO getApplicationListAdmin(String userId, Long applyId) {
+
+        //Verify Club Admin Auth with Apply_Id, User_Id
+        authorizationService.getAuthByUserIdAndApplyId(userId, applyId);
+
+        List<Application> applicationList = applicationRepository.findAllByApplyId(applyId);
+
+        if (applicationList.isEmpty()) {
+            throw new CustomException(ErrorStatus.APPLICATION_NOT_PRESENT);
+        }
+        
+        List<ApplicationResponseDTO.ToGetApplicationDTO> toGetApplicationDTOs = applicationList.stream()
+                .map(application -> ApplicationResponseDTO.ToGetApplicationDTO.builder()
+                        .applicationId(application.getId())
+                        .status(application.getApplicationStatus())
+                        .submitDate(application.getSubmitDate())
+                        .applicationBody(application.getApplicationBody())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ApplicationResponseDTO.ToGetApplicationListAdminDTO.builder()
+                .toGetApplicationDTO(toGetApplicationDTOs)
+                .build();
+    }
 }
