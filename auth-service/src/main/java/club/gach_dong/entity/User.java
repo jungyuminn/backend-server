@@ -16,7 +16,7 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private UUID userId;
+    private UUID user_reference_id;
 
     @Column(length = 255, nullable = false, unique = true)
     private String email;
@@ -33,8 +33,8 @@ public class User {
 
     private boolean enabled;
 
-    private User(UUID userId, String email, String password, String name, Role role, boolean enabled) {
-        this.userId = userId;
+    private User(UUID user_reference_id, String email, String password, String name, Role role, boolean enabled) {
+        this.user_reference_id = user_reference_id;
         this.email = email;
         this.password = password;
         this.name = name;
