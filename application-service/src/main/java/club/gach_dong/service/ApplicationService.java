@@ -154,6 +154,9 @@ public class ApplicationService {
             }
         }
 
+        ApplicationForm applicationForm = applicationFormRepository.findById(toApplyClub.getApplicationFormId())
+                .orElseThrow(() -> new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND));
+
         if (files != null) {
             //업로드 할 파일 검증 (길이, 확장자 등)
             fileService.validateFiles(files);
@@ -301,7 +304,7 @@ public class ApplicationService {
         if (applicationList.isEmpty()) {
             throw new CustomException(ErrorStatus.APPLICATION_NOT_PRESENT);
         }
-        
+
         List<ApplicationResponseDTO.ToGetApplicationDTO> toGetApplicationDTOs = applicationList.stream()
                 .map(application -> ApplicationResponseDTO.ToGetApplicationDTO.builder()
                         .applicationId(application.getId())

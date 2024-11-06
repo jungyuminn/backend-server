@@ -17,22 +17,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "지원 API", description = "동아리 지원 관련 API")
+@Tag(name = "지원 API(사용자)", description = "동아리 지원 관련 사용자용 API")
 @RestController
 @RequestMapping("/api/v1")
 @Validated
 public interface ApplicationApiSpecification {
-
-    @Operation(summary = "관리자용 지원서 양식 조회 API", description = "지원서 양식 ID를 이용해 양식을 조회합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @GetMapping("/admin/form/{formId}")
-    ResForm<ApplicationResponseDTO.ToGetFormInfoAdminDTO> getFormInfoAdmin(@PathVariable("formId") Long formId,
-                                                                           HttpServletRequest httpServletRequest);
 
     @Operation(summary = "사용자용 지원서 양식 조회 API", description = "지원서 양식 ID를 이용해 양식을 조회합니다.", security = @SecurityRequirement(name = "Authorization"))
     @GetMapping("/form/{formId}")
@@ -44,12 +38,6 @@ public interface ApplicationApiSpecification {
     ResForm<ApplicationResponseDTO.ToGetApplicationHistoryListDTO> getApplicationHistory(
             HttpServletRequest httpServletRequest);
 
-    @Operation(summary = "동아리 지원서 양식 생성 요청 API", description = "동아리 지원서 양식을 생성합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @PostMapping("/admin/form/create")
-    ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> createApplicationForm(
-            @Valid @RequestBody ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO,
-            HttpServletRequest httpServletRequest);
-
     @Operation(summary = "동아리 지원 API", description = "동아리에 지원합니다.", security = @SecurityRequirement(name = "Authorization"))
     @PostMapping(value = "/{apply_id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> createApplication(
@@ -59,13 +47,6 @@ public interface ApplicationApiSpecification {
             HttpServletRequest httpServletRequest
     );
 
-    @Operation(summary = "동아리 지원서 양식 수정 요청 API", description = "동아리 지원서 양식을 수정합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @PutMapping("/admin/form/{form_id}")
-    ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> changeApplicationForm(
-            @PathVariable("form_id") Long formId,
-            @Valid @RequestBody ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO,
-            HttpServletRequest httpServletRequest);
-
     @Operation(summary = "동아리 지원 수정 API", description = "동아리에 지원을 수정합니다.", security = @SecurityRequirement(name = "Authorization"))
     @PutMapping(value = "/{apply_id} ", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> changeApplication(
@@ -74,23 +55,9 @@ public interface ApplicationApiSpecification {
             @RequestPart(value = "toApplyClub", required = true) @Parameter(description = "동아리 지원에 필요한 요청 데이터") @Valid ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
             HttpServletRequest httpServletRequest);
 
-    @Operation(summary = "지원 양식 삭제 API", description = "지원서 양식 ID를 이용해 양식을 삭제합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @DeleteMapping("/admin/form/{formId}")
-    ResForm<?> deleteApplicationForm(@PathVariable("formId") Long formId, HttpServletRequest httpServletRequest);
-
     @Operation(summary = "사용자 지원 취소 API", description = "지원 ID를 이용해 지원을 취소합니다.", security = @SecurityRequirement(name = "Authorization"))
     @DeleteMapping("/apply/{applyId}")
     ResForm<?> deleteApplication(@PathVariable("applyId") Long applyId, HttpServletRequest httpServletRequest);
-
-    @Operation(summary = "사용자 지원 상태 변경 API", description = "지원 ID를 이용해 지원 상태를 변경합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @PutMapping("/status")
-    ResForm<?> changeApplicationStatus(
-            @Valid @RequestBody ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus,
-            HttpServletRequest httpServletRequest);
-
-    @Operation(summary = "지원 목록 조회 API", description = "지원 ID를 이용해 지원 목록을 조회합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @GetMapping("/admin/{applyId}")
-    ResForm<?> getClubApplicationList(@PathVariable("applyId") Long applyId, HttpServletRequest httpServletRequest);
 
 //    @Operation(summary = "지원 상세 조회 API", description = "지원 ID를 이용해 지원 내역을 조회합니다.")
 //    @DeleteMapping("/admin/{applicationId}")

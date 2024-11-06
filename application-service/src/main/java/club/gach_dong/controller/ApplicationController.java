@@ -21,15 +21,6 @@ public class ApplicationController implements ApplicationApiSpecification {
     public final AuthorizationService authorizationService;
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToGetFormInfoAdminDTO> getFormInfoAdmin(Long formId,
-                                                                                  HttpServletRequest httpServletRequest) {
-        String userId = authorizationService.getUserId(httpServletRequest);
-        ApplicationResponseDTO.ToGetFormInfoAdminDTO toGetFormInfoAdminDTO = applicationService.getFormInfoAdmin(formId,
-                userId);
-        return ResForm.onSuccess(InSuccess.APPLICATION_FORM_GET_ADMIN_INFO, toGetFormInfoAdminDTO);
-    }
-
-    @Override
     public ResForm<ApplicationResponseDTO.ToGetFormInfoUserDTO> getFormInfoUser(Long formId,
                                                                                 HttpServletRequest httpServletRequest) {
         String userId = authorizationService.getUserId(httpServletRequest);
@@ -48,16 +39,6 @@ public class ApplicationController implements ApplicationApiSpecification {
     }
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> createApplicationForm(
-            ApplicationRequestDTO.ToCreateApplicationFormDTO createApplicationFormDTO,
-            HttpServletRequest httpServletRequest) {
-        String userId = authorizationService.getUserId(httpServletRequest);
-        ApplicationResponseDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO = applicationService.createApplicationForm(
-                createApplicationFormDTO, userId);
-        return ResForm.onSuccess(InSuccess.APPLICATION_FORM_CREATED, toCreateApplicationFormDTO);
-    }
-
-    @Override
     public ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> createApplication(Long applyId,
                                                                                     List<MultipartFile> files,
                                                                                     ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
@@ -66,16 +47,6 @@ public class ApplicationController implements ApplicationApiSpecification {
         ApplicationResponseDTO.ToCreateApplicationDTO toCreateApplicationDTO = applicationService.createApplication(
                 applyId, files, toApplyClub, userId);
         return ResForm.onSuccess(InSuccess.APPLICATION_SUCCESS, toCreateApplicationDTO);
-    }
-
-    @Override
-    public ResForm<ApplicationResponseDTO.ToCreateApplicationFormDTO> changeApplicationForm(Long formId,
-                                                                                            ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO,
-                                                                                            HttpServletRequest httpServletRequest) {
-        String userId = authorizationService.getUserId(httpServletRequest);
-        ApplicationResponseDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO1 = applicationService.changeApplicationForm(
-                formId, toCreateApplicationFormDTO, userId);
-        return ResForm.onSuccess(InSuccess.APPLICATION_FORM_CHANGED, toCreateApplicationFormDTO1);
     }
 
     @Override
@@ -90,36 +61,10 @@ public class ApplicationController implements ApplicationApiSpecification {
     }
 
     @Override
-    public ResForm<?> deleteApplicationForm(Long formId, HttpServletRequest httpServletRequest) {
-        String userId = authorizationService.getUserId(httpServletRequest);
-        applicationService.deleteApplicationForm(formId, userId);
-        return ResForm.onSuccess(InSuccess.APPLICATION_FORM_DELETED, null);
-    }
-
-    @Override
     public ResForm<?> deleteApplication(Long applyId, HttpServletRequest httpServletRequest) {
         String userId = authorizationService.getUserId(httpServletRequest);
         applicationService.deleteApplication(applyId, userId);
         return ResForm.onSuccess(InSuccess.APPLICATION_DELETED, null);
-    }
-
-    @Override
-    public ResForm<?> changeApplicationStatus(ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus,
-                                              HttpServletRequest httpServletRequest) {
-        String userId = authorizationService.getUserId(httpServletRequest);
-        applicationService.changeApplicationStatus(userId, toChangeApplicationStatus);
-        return ResForm.onSuccess(InSuccess.APPLICATION_STATUS_CHANGED, null);
-    }
-
-    @Override
-    public ResForm<ApplicationResponseDTO.ToGetApplicationListAdminDTO> getClubApplicationList(Long applyId,
-                                                                                               HttpServletRequest httpServletRequest) {
-        String userId = authorizationService.getUserId(httpServletRequest);
-
-        ApplicationResponseDTO.ToGetApplicationListAdminDTO toGetApplicationListAdminDTO = applicationService.getApplicationListAdmin(
-                userId, applyId);
-
-        return ResForm.onSuccess(InSuccess._OK, toGetApplicationListAdminDTO);
     }
 
 //    @Override

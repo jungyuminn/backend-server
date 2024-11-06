@@ -18,7 +18,7 @@ public class AuthorizationService {
     @Value("${msa.url.club}")
     private String clubUrl;
 
-    private final static String MEMBER_ID_HEADER_KEY = "X-MEMBER-ID";
+    private final static String MEMBER_ID_HEADER_KEY = "X-USER-REFERENCE-ID";
 
     public final RestClient restClient;
 
