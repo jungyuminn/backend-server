@@ -1,6 +1,7 @@
 package club.gach_dong.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import lombok.Builder;
@@ -57,6 +58,9 @@ public class ApplicationResponseDTO {
 
         @Schema(description = "지원 상태(합격, 불합격, 서류 합격 등)", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
         private String status;
+
+        @Schema(description = "지원한 날짜", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private LocalDateTime submitDate;
     }
 
     @Getter

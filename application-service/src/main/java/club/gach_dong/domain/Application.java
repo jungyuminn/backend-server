@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -44,5 +45,8 @@ public class Application {
 
     @Column(name = "club_name", nullable = false, length = 80)
     private String clubName;
+
+    @Column(name = "submmit_date", nullable = false)
+    private LocalDateTime submitDate;
 
 }
