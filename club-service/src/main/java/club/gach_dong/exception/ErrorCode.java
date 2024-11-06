@@ -21,7 +21,9 @@ public enum ErrorCode {
 
     GACHDONG_USER_SERVICE_FAILED("SERVICE0001", "가츠동의 user-service 호출이 실패했습니다"),
 
-    USER_NOT_FOUND("USER401", "사용자 ID를 찾을 수 없습니다.");
+    USER_NOT_FOUND("USER401", "사용자 ID를 찾을 수 없습니다."),
+
+    RECRUITMENT_NOT_FOUND("RECRUITMENT001", "모집 공고를 찾을 수 없습니다."),;
 
     private final String code;
     private final String message;

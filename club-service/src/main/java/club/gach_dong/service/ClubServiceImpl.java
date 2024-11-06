@@ -80,7 +80,7 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ClubRecruitmentResponse> getClubRecruitmentList() {
+    public List<ClubRecruitmentResponse> getClubsRecruitments() {
         List<Club> clubs = clubRepository.findAllWithRecruitments();
 
         return clubs.stream()
@@ -91,7 +91,7 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ClubRecruitmentDetailResponse> getClubRecruitment(Long clubId) {
+    public List<ClubRecruitmentDetailResponse> getClubRecruitments(Long clubId) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(ClubException.ClubNotFoundException::new);
 
@@ -100,6 +100,19 @@ public class ClubServiceImpl implements ClubService {
         return recruitments.stream()
                 .map(recruitment -> ClubRecruitmentDetailResponse.of(club, recruitment))
                 .toList();
+    }
+
+    @Override
+    public ClubRecruitmentDetailResponse getClubRecruitment(Long clubId, Long recruitmentId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(ClubException.ClubNotFoundException::new);
+
+        Recruitment recruitment = club.getRecruitment().stream()
+                .filter(r -> r.getId().equals(recruitmentId))
+                .findFirst()
+                .orElseThrow(ClubException.RecruitmentNotFoundException::new);
+
+        return ClubRecruitmentDetailResponse.of(club, recruitment);
     }
 
     // admin
@@ -125,7 +138,6 @@ public class ClubServiceImpl implements ClubService {
             CreateClubActivityRequest createClubActivityRequest
     ) {
 
-        // PR 머지 후, 예외 처리 로직 추가
         Club club = clubRepository.findById(createClubActivityRequest.clubId())
                 .orElseThrow(ClubException.ClubNotFoundException::new);
 
@@ -152,7 +164,6 @@ public class ClubServiceImpl implements ClubService {
             String userReferenceId,
             CreateClubContactInfoRequest createClubContactInfoRequest
     ) {
-        // PR 머지 후, 예외 처리 로직 추가
         Club club = clubRepository.findById(createClubContactInfoRequest.clubId())
                 .orElseThrow(ClubException.ClubNotFoundException::new);
 
@@ -177,7 +188,6 @@ public class ClubServiceImpl implements ClubService {
 //            String userReferenceId,
 //            CreateClubRecruitmentRequest createClubRecruitmentRequest
 //    ) {
-//        // PR 머지 후, 예외 처리 로직 추가
 //        Club club = clubRepository.findById(createClubContactInfoRequest.clubId())
 //                .orElseThrow(() -> new NotFoundException("Club not found"));
 //

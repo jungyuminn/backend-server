@@ -44,13 +44,18 @@ public class ClubPublicController implements ClubPublicApiSpecification {
 
     @Override
     public ArrayResponse<ClubRecruitmentResponse> getClubsRecruitments() {
-        List<ClubRecruitmentResponse> clubRecruitmentsResponse = clubService.getClubRecruitmentList();
+        List<ClubRecruitmentResponse> clubRecruitmentsResponse = clubService.getClubsRecruitments();
         return ArrayResponse.of(clubRecruitmentsResponse);
     }
 
     @Override
     public ArrayResponse<ClubRecruitmentDetailResponse> getClubRecruitments(Long clubId) {
-        List<ClubRecruitmentDetailResponse> clubRecruitmentDetailResponse = clubService.getClubRecruitment(clubId);
+        List<ClubRecruitmentDetailResponse> clubRecruitmentDetailResponse = clubService.getClubRecruitments(clubId);
         return ArrayResponse.of(clubRecruitmentDetailResponse);
+    }
+
+    @Override
+    public ClubRecruitmentDetailResponse getClubRecruitment(Long clubId, Long recruitmentId) {
+        return clubService.getClubRecruitment(clubId, recruitmentId);
     }
 }
