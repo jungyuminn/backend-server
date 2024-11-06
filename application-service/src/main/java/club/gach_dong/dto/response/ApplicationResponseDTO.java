@@ -79,4 +79,28 @@ public class ApplicationResponseDTO {
         private Long applyId;
     }
 
+    @Getter
+    @Builder
+    @Schema(description = "관리자용 동아리 지원 리스트 반환 DTO")
+    public static class ToGetApplicationListAdminDTO {
+        @Schema(description = "접수된 지원 목록 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private List<ToGetApplicationDTO> toGetApplicationDTO;
+    }
+
+    @Getter
+    @Builder
+    @Schema(description = "관리자용 지원 내역 상세 조회 결과 반환 DTO")
+    public static class ToGetApplicationDTO {
+        @Schema(description = "지원 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private Long applicationId;
+
+        @Schema(description = "지원 상태(합격, 불합격, 서류 합격 등)", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private String status;
+
+        @Schema(description = "지원한 날짜", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private LocalDateTime submitDate;
+
+        @Schema(description = "답변 내용", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private Map<String, Object> applicationBody;
+    }
 }

@@ -87,6 +87,12 @@ public interface ApplicationApiSpecification {
             @Valid @RequestBody ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus,
             HttpServletRequest httpServletRequest);
 
+    @Operation(summary = "지원 목록 조회 API", description = "지원 ID를 이용해 지원 목록을 조회합니다.")
+    @GetMapping("/admin/{applyId}")
+    ResForm<?> getClubApplicationList(@PathVariable("applyId") Long applyId, HttpServletRequest httpServletRequest);
 
+//    @Operation(summary = "지원 상세 조회 API", description = "지원 ID를 이용해 지원 내역을 조회합니다.")
+//    @DeleteMapping("/admin/{applicationId}")
+//    ResForm<?> getApplication(@PathVariable("applicationId") Long applicationId, HttpServletRequest httpServletRequest);
 }
 

@@ -111,5 +111,21 @@ public class ApplicationController implements ApplicationApiSpecification {
         return ResForm.onSuccess(InSuccess.APPLICATION_STATUS_CHANGED, null);
     }
 
+    @Override
+    public ResForm<ApplicationResponseDTO.ToGetApplicationListAdminDTO> getClubApplicationList(Long applyId,
+                                                                                               HttpServletRequest httpServletRequest) {
+        String userId = authorizationService.getUserId(httpServletRequest);
+
+        ApplicationResponseDTO.ToGetApplicationListAdminDTO toGetApplicationListAdminDTO = applicationService.getApplicationListAdmin(
+                userId, applyId);
+
+        return ResForm.onSuccess(InSuccess._OK, toGetApplicationListAdminDTO);
+    }
+
+//    @Override
+//    public ResForm<?> getApplication(Long applicationId, HttpServletRequest httpServletRequest) {
+//        return null;
+//    }
+
     ;
 }
