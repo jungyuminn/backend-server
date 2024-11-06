@@ -21,6 +21,16 @@ public class PublicAdminAuthController implements PublicAdminAuthApiSpecificatio
     private final JwtUtil jwtUtil;
 
     @Override
+    public ResponseEntity<String> sendRegistrationVerificationCode(@RequestParam String email) {
+        try {
+            adminService.sendRegistrationVerificationCode(email);
+            return ResponseEntity.ok("회원가입용 인증 코드가 이메일로 발송되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입용 인증 코드 발송 실패: " + e.getMessage());
+        }
+    }
+
+    @Override
     public ResponseEntity<String> completeRegistration(@Valid @RequestBody RegistrationRequest registrationRequest) {
         try {
             adminService.completeRegistration(registrationRequest);

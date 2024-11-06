@@ -52,6 +52,25 @@ public class UserService {
         }
     }
 
+    public void sendRegistrationVerificationCode(String email) {
+        try {
+            if (!isValidEmail(email)) {
+                throw new RuntimeException("이메일은 gachon.ac.kr 도메인이어야 합니다.");
+            }
+
+            if (userRepository.findByEmail(email).isPresent()) {
+                throw new RuntimeException("이미 등록된 이메일입니다.");
+            }
+
+            String code = generateVerificationCode();
+            redisTemplate.opsForValue().set(email, code, 3, TimeUnit.MINUTES);
+            sendVerificationEmail(email, code);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("인증 코드 발송 중 오류 발생: " + e.getMessage());
+        }
+    }
+
     private String generateVerificationCode() {
         Random random = new Random();
         return String.format("%06d", random.nextInt(1000000));
@@ -144,5 +163,4 @@ public class UserService {
     public void blacklistToken(String token) {
         jwtUtil.blacklistUserToken(token);
     }
-
 }

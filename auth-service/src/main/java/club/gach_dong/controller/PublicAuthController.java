@@ -41,6 +41,16 @@ public class PublicAuthController implements PublicAuthApiSpecification {
     }
 
     @Override
+    public ResponseEntity<String> sendRegistrationVerificationCode(@RequestParam String email) {
+        try {
+            userService.sendRegistrationVerificationCode(email);
+            return ResponseEntity.ok("회원가입용 인증 코드가 이메일로 발송되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("인증 코드 발송 실패: " + e.getMessage());
+        }
+    }
+
+    @Override
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         User user = userService.findByEmail(loginRequest.email());
 

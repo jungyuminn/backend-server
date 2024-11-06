@@ -20,6 +20,11 @@ public interface PublicAuthApiSpecification {
     ResponseEntity<String> sendVerificationCode(
             @Parameter(description = "사용자의 이메일 주소") @RequestParam String email);
 
+    @Operation(summary = "회원가입용 인증 코드 발송", description = "이메일로 회원가입을 위한 유효시간 3분의 6자리의 인증 코드를 발송합니다.")
+    @PostMapping("/send-registration-verification-code")
+    ResponseEntity<String> sendRegistrationVerificationCode(
+            @Parameter(description = "회원가입을 위한 이메일 주소") @RequestParam String email);
+
     @Operation(summary = "회원가입", description = "회원가입을 완료합니다. \n" +
             "- email: 사용자 이메일 (gachon.ac.kr 도메인) \n" +
             "- password: 8~16자 영문, 숫자, 특수문자를 포함한 비밀번호 \n" +
