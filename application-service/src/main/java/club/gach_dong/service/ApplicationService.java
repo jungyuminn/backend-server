@@ -13,6 +13,7 @@ import club.gach_dong.repository.ApplicationDocsRepository;
 import club.gach_dong.repository.ApplicationFormRepository;
 import club.gach_dong.repository.ApplicationRepository;
 import club.gach_dong.response.status.ErrorStatus;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -74,7 +75,6 @@ public class ApplicationService {
                 .formName(applicationForm.getFormName())
                 .formBody(applicationForm.getBody())
                 .formStatus(String.valueOf(applicationForm.getApplicationFormStatus()))
-                .formSettings(null)
                 .build();
     }
 
@@ -185,6 +185,7 @@ public class ApplicationService {
                 .applicationBody(toApplyClub.getFormBody())
                 .applicationStatus(toApplyClub.getStatus())
                 .clubName(toApplyClub.getClubName())
+                .submitDate(LocalDateTime.now())
                 .build();
 
         if (Objects.equals(application.getApplicationStatus(), "TEMP")) {
@@ -260,6 +261,7 @@ public class ApplicationService {
                         .applicationId(application.getId())
                         .clubName(application.getClubName())
                         .status(application.getApplicationStatus())
+                        .submitDate(application.getSubmitDate())
                         .build())
                 .collect(Collectors.toList());
 
@@ -286,5 +288,31 @@ public class ApplicationService {
         authorizationService.getAuthByUserIdAndApplyId(userId, application.getApplyId());
 
         applicationRepository.updateApplicationStatus(toChangeApplicationStatus.getStatus(), application);
+    }
+
+    @Transactional(readOnly = true)
+    public ApplicationResponseDTO.ToGetApplicationListAdminDTO getApplicationListAdmin(String userId, Long applyId) {
+
+        //Verify Club Admin Auth with Apply_Id, User_Id
+        authorizationService.getAuthByUserIdAndApplyId(userId, applyId);
+
+        List<Application> applicationList = applicationRepository.findAllByApplyId(applyId);
+
+        if (applicationList.isEmpty()) {
+            throw new CustomException(ErrorStatus.APPLICATION_NOT_PRESENT);
+        }
+        
+        List<ApplicationResponseDTO.ToGetApplicationDTO> toGetApplicationDTOs = applicationList.stream()
+                .map(application -> ApplicationResponseDTO.ToGetApplicationDTO.builder()
+                        .applicationId(application.getId())
+                        .status(application.getApplicationStatus())
+                        .submitDate(application.getSubmitDate())
+                        .applicationBody(application.getApplicationBody())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ApplicationResponseDTO.ToGetApplicationListAdminDTO.builder()
+                .toGetApplicationDTO(toGetApplicationDTOs)
+                .build();
     }
 }
