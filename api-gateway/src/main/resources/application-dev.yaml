@@ -1,5 +1,6 @@
 springdoc:
   swagger-ui:
+    enabled: true
     urls[0]:
       name: "동아리 서비스"
       url: https://gateway-dev.gachdong.club/club/v3/api-docs

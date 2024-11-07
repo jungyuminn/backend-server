@@ -1,22 +1,23 @@
 spring:
   application:
     name: api-gateway
-  gateway:
-    default-filters:
-      - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
-    globalcors:
-      add-to-simple-url-handler-mapping: true
-      cors-configurations:
-        "[/**]":
-          allowedOrigins: "https://www.gachdong.club, https://gachdong.club, https://gateway-dev.gachdong.club"
-          allow-credentials: true
-          allowedHeaders: "*"
-          allowedMethods:
-            - PUT
-            - GET
-            - POST
-            - DELETE
-            - OPTIONS
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          "[/**]":
+            allowedOrigins: "https://www.gachdong.club, https://gachdong.club, https://gateway-dev.gachdong.club"
+            allow-credentials: true
+            allowedHeaders: "*"
+            allowedMethods:
+              - PUT
+              - GET
+              - POST
+              - DELETE
+              - OPTIONS
 
       routes:
         - id: auth-service-swagger
@@ -100,6 +101,14 @@ spring:
           filters:
             - RewritePath=/application/(?<segment>.*), /$\{segment}
 
+        - id: admin-application-service
+          uri: http://application-service:8080
+          predicates:
+            - Path=/application/admin/**
+          filters:
+            - RewritePath=/application/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
+            -
         - id: application-service
           uri: http://application-service:8080
           predicates:
