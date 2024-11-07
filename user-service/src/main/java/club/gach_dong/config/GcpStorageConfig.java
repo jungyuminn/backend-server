@@ -22,6 +22,9 @@ public class GcpStorageConfig {
     @Value("${spring.cloud.gcp.storage.project-id}")
     private String projectId;
 
+    @Value("${GCP_SERVICE_KEY}")
+    private String credentialsJson;
+
     @Bean
     public Storage gcpStorage() throws IOException {
         GoogleCredentials credentials = GoogleCredentials.fromStream(
@@ -29,15 +32,14 @@ public class GcpStorageConfig {
         );
 
         return StorageOptions.newBuilder()
-                .setCredentials(credentialsPath)
+                .setCredentials(credentials)
                 .setProjectId(projectId)
                 .build()
                 .getService();
     }
-}
 
-@Bean
-public String bucketName() {
-    return bucketName;
-}
+    @Bean
+    public String bucketName() {
+        return bucketName;
+    }
 }
