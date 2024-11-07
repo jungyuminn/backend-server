@@ -108,7 +108,7 @@ spring:
           filters:
             - RewritePath=/application/(?<segment>.*), /$\{segment}
             - JWTAuthenticationFilter
-            -
+
         - id: application-service
           uri: http://application-service:8080
           predicates:
