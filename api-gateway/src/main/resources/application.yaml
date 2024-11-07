@@ -7,66 +7,58 @@ spring:
     globalcors:
       add-to-simple-url-handler-mapping: true
       cors-configurations:
-        '[/**]':
-          allowedOrigins: 'https://www.gachdong.club, https://gachdong.club, https://gateway-dev.gachdong.club'
+        "[/**]":
+          allowedOrigins: "https://www.gachdong.club, https://gachdong.club, https://gateway-dev.gachdong.club"
           allow-credentials: true
-          allowedHeaders: '*'
+          allowedHeaders: "*"
           allowedMethods:
-              - PUT
-              - GET
-              - POST
-              - DELETE
-              - OPTIONS
+            - PUT
+            - GET
+            - POST
+            - DELETE
+            - OPTIONS
 
       routes:
-        # Auth Service Routes (Public Endpoints)
-        - id: auth-service-public
-          uri: http://auth-service:8080
-          predicates:
-            - Path=/auth/public/api/v1/**
-          filters:
-            - RewritePath=/auth/(?<segment>.*), /$\{segment}
-
-        # Auth Service Routes (Authenticated Endpoints)
-        - id: auth-service-authenticated
-          uri: http://auth-service:8080
-          predicates:
-            - Path=/auth/api/v1/**
-          filters:
-            - RewritePath=/auth/(?<segment>.*), /$\{segment}
-            - JWTAuthenticationFilter
-
-        # Club Service Routes (Public Endpoints)
-        - id: club-service-public
-          uri: http://club-service:8080
-          predicates:
-            - Path=/club/public/api/v1/**
-          filters:
-            - RewritePath=/club/(?<segment>.*), /$\{segment}
-
-        # Club Service Routes (Authenticated Endpoints)
-        - id: club-service-authenticated
-          uri: http://club-service:8080
-          predicates:
-            - Path=/club/api/v1/**
-          filters:
-            - RewritePath=/club/(?<segment>.*), /$\{segment}
-            - JWTAuthenticationFilter
-
-        - id: application-service
-          uri: http://application-service:8080
-          predicates:
-            - Path=/application/api/v1/**
-          filters:
-            - RewritePath=/application/(?<segment>.*), /$\{segment}
-            - JWTAuthenticationFilter
-
         - id: auth-service-swagger
           uri: http://auth-service:8080
           predicates:
             - Path=/auth/v3/api-docs/**
           filters:
             - RewritePath=/auth/(?<segment>.*), /$\{segment}
+
+        # Auth Service Routes (Public Endpoints)
+        - id: auth-service-public
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/auth/public/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+
+        # Auth Service Routes (Admin Public Endpoints)
+        - id: auth-service-public-admin
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/auth/public/admin/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+
+        # Auth Service Routes (Authenticated Endpoints)
+        - id: auth-service-admin
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/auth/admin/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
+
+        # Auth Service Routes (Authenticated Endpoints)
+        - id: auth-service-authenticated
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/auth/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
 
         - id: club-service-swagger
           uri: http://club-service:8080
@@ -75,12 +67,61 @@ spring:
           filters:
             - RewritePath=/club/(?<segment>.*), /$\{segment}
 
+        # Club Service Routes (Public Endpoints)
+        - id: club-service-public
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/public/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
+
+        # Club Routes (Club Admin Endpoints)
+        - id: club-service-admin
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/admin/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
+
+        # Club Service Routes (Authenticated Endpoints)
+        - id: club-service-authenticated
+          uri: http://club-service:8080
+          predicates:
+            - Path=/club/**
+          filters:
+            - RewritePath=/club/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
+
         - id: application-service-swagger
           uri: http://application-service:8080
           predicates:
             - Path=/application/v3/api-docs/**
           filters:
             - RewritePath=/application/(?<segment>.*), /$\{segment}
+
+        - id: application-service
+          uri: http://application-service:8080
+          predicates:
+            - Path=/application/**
+          filters:
+            - RewritePath=/application/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
+
+        - id: user-service-swagger
+          uri: http://user-service:8080
+          predicates:
+            - Path=/user/v3/api-docs/**
+          filters:
+            - RewritePath=/user/(?<segment>.*), /$\{segment}
+
+        - id: user-service
+          uri: http://user-service:8080
+          predicates:
+            - Path=/user/v3/api-docs/**
+          filters:
+            - RewritePath=/user/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
 
 springdoc:
   swagger-ui:
@@ -96,6 +137,10 @@ springdoc:
     urls[2]:
       name: "인증/인가 서비스"
       url: https://gateway.gachdong.club/auth/v3/api-docs
+
+    urls[3]:
+      name: "사용자 서비스"
+      url: https://gateway.gachdong.club/user/v3/api-docs
 
 logging:
   level:
