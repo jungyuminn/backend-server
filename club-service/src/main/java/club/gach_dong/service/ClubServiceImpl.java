@@ -105,6 +105,7 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ClubRecruitmentDetailResponse getClubRecruitment(Long clubId, Long recruitmentId) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(ClubException.ClubNotFoundException::new);
