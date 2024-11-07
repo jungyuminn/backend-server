@@ -10,5 +10,5 @@ springdoc:
       name: "인증/인가 서비스"
       url: https://gateway-dev.gachdong.club/auth/v3/api-docs
     urls[3]:
-    name: "사용자 서비스"
-    url: https://gateway-dev.gachdong.club/user/v3/api-docs
+      name: "사용자 서비스"
+      url: https://gateway-dev.gachdong.club/user/v3/api-docs
