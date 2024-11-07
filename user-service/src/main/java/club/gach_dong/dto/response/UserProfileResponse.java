@@ -1,8 +1,9 @@
 package club.gach_dong.dto.response;
 
+import club.gach_dong.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import test.user.entity.User;
+
 
 public record UserProfileResponse(
         @Schema(description = "사용자 ID", example = "1")
