@@ -20,5 +20,5 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Query("UPDATE application a SET a.applicationStatus = :status WHERE a = :application")
     void updateApplicationStatus(@Param("status") String status, @Param("application") Application application);
 
-    List<Application> findAllByApplyId(Long applyId);
+    List<Application> findAllByApplyIdAndApplicationStatus(Long applyId, String status);
 }

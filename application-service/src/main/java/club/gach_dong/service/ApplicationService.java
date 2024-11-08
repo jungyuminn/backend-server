@@ -299,7 +299,8 @@ public class ApplicationService {
         //Verify Club Admin Auth with Apply_Id, User_Id
         authorizationService.getAuthByUserIdAndApplyId(userId, applyId);
 
-        List<Application> applicationList = applicationRepository.findAllByApplyId(applyId);
+        List<Application> applicationList = applicationRepository.findAllByApplyIdAndApplicationStatus(applyId,
+                "SAVED");
 
         if (applicationList.isEmpty()) {
             throw new CustomException(ErrorStatus.APPLICATION_NOT_PRESENT);
