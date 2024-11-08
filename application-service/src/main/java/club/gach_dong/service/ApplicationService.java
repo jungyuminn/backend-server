@@ -149,8 +149,10 @@ public class ApplicationService {
         Optional<Application> applicationOptional = applicationRepository.findByUserIdAndApplyId(userId, applyId);
         if (applicationOptional.isPresent()) {
             Application application = applicationOptional.get();
-            if (!Objects.equals(application.getApplicationStatus(), "TEMP")) {
+            if (!Objects.equals(application.getApplicationStatus(), "TEMPORARY_SAVED")) {
                 throw new CustomException(ErrorStatus.APPLICATION_DUPLICATED);
+            } else {
+                deleteApplication(applyId, userId);
             }
         }
 
@@ -190,10 +192,6 @@ public class ApplicationService {
                 .clubName(toApplyClub.getClubName())
                 .submitDate(LocalDateTime.now())
                 .build();
-
-        if (Objects.equals(application.getApplicationStatus(), "TEMP")) {
-            deleteApplication(applyId, userId);
-        }
 
         Application applicationId = applicationRepository.save(application);
 
