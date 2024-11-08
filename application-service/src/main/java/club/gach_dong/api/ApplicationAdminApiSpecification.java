@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "지원 API(관리자)", description = "동아리 지원 관련 관리자용 API")
 @RestController
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/admin/api/v1")
 @Validated
 public interface ApplicationAdminApiSpecification {
 
