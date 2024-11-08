@@ -151,9 +151,10 @@ public class ApplicationService {
             Application application = applicationOptional.get();
             if (!Objects.equals(application.getApplicationStatus(), "TEMPORARY_SAVED")) {
                 throw new CustomException(ErrorStatus.APPLICATION_DUPLICATED);
-            } else {
-                deleteApplication(applyId, userId);
             }
+
+            deleteApplication(applyId, userId);
+
         }
 
         ApplicationForm applicationForm = applicationFormRepository.findById(toApplyClub.getApplicationFormId())
