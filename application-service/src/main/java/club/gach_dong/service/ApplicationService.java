@@ -7,6 +7,7 @@ import club.gach_dong.domain.ApplicationFormStatus;
 import club.gach_dong.dto.request.ApplicationRequestDTO;
 import club.gach_dong.dto.response.ApplicationResponseDTO;
 import club.gach_dong.exception.ApplicationException;
+import club.gach_dong.exception.ApplicationException.ApplicationDuplicatedException;
 import club.gach_dong.exception.ApplicationException.ApplicationFormInUseException;
 import club.gach_dong.exception.ApplicationException.ApplicationNotChangeableException;
 import club.gach_dong.exception.ApplicationException.ApplicationUnauthorizedException;
@@ -136,9 +137,13 @@ public class ApplicationService {
         Optional<Application> applicationOptional = applicationRepository.findByUserIdAndApplyId(userId, applyId);
         if (applicationOptional.isPresent()) {
             Application application = applicationOptional.get();
-            if (!Objects.equals(application.getApplicationStatus(), "TEMP")) {
-                throw new ApplicationException.ApplicationDuplicatedException();
+
+            if (!Objects.equals(application.getApplicationStatus(), "TEMPORARY_SAVED")) {
+                throw new ApplicationDuplicatedException();
             }
+
+            deleteApplication(applyId, userId);
+
         }
 
         ApplicationForm applicationForm = applicationFormRepository.findById(toApplyClub.getApplicationFormId())
@@ -177,10 +182,6 @@ public class ApplicationService {
                 .clubName(toApplyClub.getClubName())
                 .submitDate(LocalDateTime.now())
                 .build();
-
-        if (Objects.equals(application.getApplicationStatus(), "TEMP")) {
-            deleteApplication(applyId, userId);
-        }
 
         Application applicationId = applicationRepository.save(application);
 
@@ -271,7 +272,8 @@ public class ApplicationService {
         //Verify Club Admin Auth with Apply_Id, User_Id
         authorizationService.getAuthByUserIdAndApplyId(userId, applyId);
 
-        List<Application> applicationList = applicationRepository.findAllByApplyId(applyId);
+        List<Application> applicationList = applicationRepository.findAllByApplyIdAndApplicationStatus(applyId,
+                "SAVED");
 
 //        if (applicationList.isEmpty()) {
 //            throw new CustomException(ErrorCode.APPLICATION_NOT_PRESENT);
