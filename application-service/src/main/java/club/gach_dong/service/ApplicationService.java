@@ -149,9 +149,12 @@ public class ApplicationService {
         Optional<Application> applicationOptional = applicationRepository.findByUserIdAndApplyId(userId, applyId);
         if (applicationOptional.isPresent()) {
             Application application = applicationOptional.get();
-            if (!Objects.equals(application.getApplicationStatus(), "TEMP")) {
+            if (!Objects.equals(application.getApplicationStatus(), "TEMPORARY_SAVED")) {
                 throw new CustomException(ErrorStatus.APPLICATION_DUPLICATED);
             }
+
+            deleteApplication(applyId, userId);
+
         }
 
         ApplicationForm applicationForm = applicationFormRepository.findById(toApplyClub.getApplicationFormId())
@@ -190,10 +193,6 @@ public class ApplicationService {
                 .clubName(toApplyClub.getClubName())
                 .submitDate(LocalDateTime.now())
                 .build();
-
-        if (Objects.equals(application.getApplicationStatus(), "TEMP")) {
-            deleteApplication(applyId, userId);
-        }
 
         Application applicationId = applicationRepository.save(application);
 
@@ -299,7 +298,8 @@ public class ApplicationService {
         //Verify Club Admin Auth with Apply_Id, User_Id
         authorizationService.getAuthByUserIdAndApplyId(userId, applyId);
 
-        List<Application> applicationList = applicationRepository.findAllByApplyId(applyId);
+        List<Application> applicationList = applicationRepository.findAllByApplyIdAndApplicationStatus(applyId,
+                "SAVED");
 
         if (applicationList.isEmpty()) {
             throw new CustomException(ErrorStatus.APPLICATION_NOT_PRESENT);
