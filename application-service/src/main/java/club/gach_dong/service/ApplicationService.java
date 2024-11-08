@@ -6,13 +6,16 @@ import club.gach_dong.domain.ApplicationForm;
 import club.gach_dong.domain.ApplicationFormStatus;
 import club.gach_dong.dto.request.ApplicationRequestDTO;
 import club.gach_dong.dto.response.ApplicationResponseDTO;
-import club.gach_dong.exception.CustomException;
+import club.gach_dong.exception.ApplicationException;
+import club.gach_dong.exception.ApplicationException.ApplicationFormInUseException;
+import club.gach_dong.exception.ApplicationException.ApplicationNotChangeableException;
+import club.gach_dong.exception.ApplicationException.ApplicationUnauthorizedException;
+import club.gach_dong.exception.FileException.FileTooManyException;
 import club.gach_dong.gcp.ObjectStorageService;
 import club.gach_dong.gcp.ObjectStorageServiceConfig;
 import club.gach_dong.repository.ApplicationDocsRepository;
 import club.gach_dong.repository.ApplicationFormRepository;
 import club.gach_dong.repository.ApplicationRepository;
-import club.gach_dong.response.status.ErrorStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -60,12 +63,8 @@ public class ApplicationService {
     @Transactional(readOnly = true)
     public ApplicationResponseDTO.ToGetFormInfoAdminDTO getFormInfoAdmin(Long formId, String userId) {
 
-        Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
-        if (applicationFormOptional.isEmpty()) {
-            throw new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND);
-        }
-
-        ApplicationForm applicationForm = applicationFormOptional.get();
+        ApplicationForm applicationForm = applicationFormRepository.findById(formId)
+                .orElseThrow(ApplicationException.ApplicationFormNotFoundException::new);
 
         //Verify Club Admin Auth with Apply_Id, User_Id
         authorizationService.getAuthByUserIdAndApplyId(userId, applicationForm.getApplyId());
@@ -81,12 +80,8 @@ public class ApplicationService {
     @Transactional(readOnly = true)
     public ApplicationResponseDTO.ToGetFormInfoUserDTO getFormInfoUser(Long formId, String userId) {
 
-        Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
-        if (applicationFormOptional.isEmpty()) {
-            throw new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND);
-        }
-
-        ApplicationForm applicationForm = applicationFormOptional.get();
+        ApplicationForm applicationForm = applicationFormRepository.findById(formId)
+                .orElseThrow(ApplicationException.ApplicationFormNotFoundException::new);
 
         return ApplicationResponseDTO.ToGetFormInfoUserDTO.builder()
                 .formId(applicationForm.getId())
@@ -98,18 +93,14 @@ public class ApplicationService {
     @Transactional
     public void deleteApplicationForm(Long formId, String userId) {
 
-        Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
-        if (applicationFormOptional.isEmpty()) {
-            throw new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND);
-        }
-
-        ApplicationForm applicationForm = applicationFormOptional.get();
+        ApplicationForm applicationForm = applicationFormRepository.findById(formId)
+                .orElseThrow(ApplicationException.ApplicationFormNotFoundException::new);
 
         //Verify Club Admin Auth with Apply_Id, User_Id
         authorizationService.getAuthByUserIdAndApplyId(userId, applicationForm.getApplyId());
 
         if (applicationForm.getApplicationFormStatus() == ApplicationFormStatus.IN_USE) {
-            throw new CustomException(ErrorStatus.APPLICATION_FORM_IN_USE);
+            throw new ApplicationFormInUseException();
         }
 
         applicationFormRepository.deleteById(formId);
@@ -124,12 +115,8 @@ public class ApplicationService {
         //Verify Club Admin Auth with Apply_Id, User_Id
         authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getApplyId());
 
-        Optional<ApplicationForm> applicationFormOptional = applicationFormRepository.findById(formId);
-        if (applicationFormOptional.isEmpty()) {
-            throw new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND);
-        }
-
-        ApplicationForm applicationForm = applicationFormOptional.get();
+        ApplicationForm applicationForm = applicationFormRepository.findById(formId)
+                .orElseThrow(ApplicationException.ApplicationFormNotFoundException::new);
 
         applicationFormRepository.deleteById(formId);
 
@@ -150,19 +137,19 @@ public class ApplicationService {
         if (applicationOptional.isPresent()) {
             Application application = applicationOptional.get();
             if (!Objects.equals(application.getApplicationStatus(), "TEMP")) {
-                throw new CustomException(ErrorStatus.APPLICATION_DUPLICATED);
+                throw new ApplicationException.ApplicationDuplicatedException();
             }
         }
 
         ApplicationForm applicationForm = applicationFormRepository.findById(toApplyClub.getApplicationFormId())
-                .orElseThrow(() -> new CustomException(ErrorStatus.APPLICATION_FORM_NOT_FOUND));
+                .orElseThrow(ApplicationException.ApplicationFormNotFoundException::new);
 
         if (files != null) {
             //업로드 할 파일 검증 (길이, 확장자 등)
             fileService.validateFiles(files);
 
             if (files.size() > 5) {
-                throw new CustomException(ErrorStatus.FILE_TOO_MANY);
+                throw new FileTooManyException();
             }
 
             //uploadFiles
@@ -204,34 +191,25 @@ public class ApplicationService {
 
     public void checkValidApply(Long applyId) {
 
-        //send to apply
-
-        if (false) {
-            throw new CustomException(ErrorStatus._BAD_REQUEST);
-        }
+        //send to apply (Mocking API)
+        //Needed to Be changed
 
     }
 
     @Transactional
     public void deleteApplication(Long applyId, String userId) {
 
-        Optional<Application> applicationOptional = applicationRepository.findByUserIdAndApplyId(userId, applyId);
-
-        //If application not present
-        if (applicationOptional.isEmpty()) {
-            throw new CustomException(ErrorStatus.APPLICATION_NOT_PRESENT);
-        }
-
-        Application application = applicationOptional.get();
+        Application application = applicationRepository.findByUserIdAndApplyId(userId, applyId)
+                .orElseThrow(ApplicationException.ApplicationNotFoundException::new);
 
         //If application is not owner of user
         if (!userId.equals(application.getUserId())) {
-            throw new CustomException(ErrorStatus.APPLICATION_UNAUTHORIZED);
+            throw new ApplicationUnauthorizedException();
         }
 
         //If application couldn't be deleted.
         if (Objects.equals(application.getApplicationStatus(), "SAVED")) {
-            throw new CustomException(ErrorStatus.APPLICATION_NOT_CHANGEABLE);
+            throw new ApplicationNotChangeableException();
         }
 
         List<ApplicationDocs> applicationDocsList = applicationDocsRepository.findAllByApplicationId(applyId);
@@ -278,14 +256,8 @@ public class ApplicationService {
     public void changeApplicationStatus(String userId,
                                         ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus) {
 
-        Optional<Application> applicationOptional = applicationRepository.findById(
-                toChangeApplicationStatus.getApplicationId());
-
-        if (applicationOptional.isEmpty()) {
-            throw new CustomException(ErrorStatus.APPLICATION_NOT_PRESENT);
-        }
-
-        Application application = applicationOptional.get();
+        Application application = applicationRepository.findById(toChangeApplicationStatus.getApplicationId())
+                .orElseThrow(ApplicationException.ApplicationNotFoundException::new);
 
         //Verify Club Admin Auth with Apply_Id, User_Id
         authorizationService.getAuthByUserIdAndApplyId(userId, application.getApplyId());
@@ -301,9 +273,9 @@ public class ApplicationService {
 
         List<Application> applicationList = applicationRepository.findAllByApplyId(applyId);
 
-        if (applicationList.isEmpty()) {
-            throw new CustomException(ErrorStatus.APPLICATION_NOT_PRESENT);
-        }
+//        if (applicationList.isEmpty()) {
+//            throw new CustomException(ErrorCode.APPLICATION_NOT_PRESENT);
+//        }
 
         List<ApplicationResponseDTO.ToGetApplicationDTO> toGetApplicationDTOs = applicationList.stream()
                 .map(application -> ApplicationResponseDTO.ToGetApplicationDTO.builder()
