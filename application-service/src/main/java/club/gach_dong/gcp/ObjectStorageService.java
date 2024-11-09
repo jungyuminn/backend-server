@@ -1,17 +1,19 @@
 package club.gach_dong.gcp;
 
-import club.gach_dong.exception.CustomException;
-import club.gach_dong.response.status.ErrorStatus;
+import club.gach_dong.exception.FileException;
+import club.gach_dong.exception.FileException.FileFormatNotFoundException;
 import com.google.cloud.WriteChannel;
-import com.google.cloud.storage.*;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageException;
+import java.nio.ByteBuffer;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.nio.ByteBuffer;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class ObjectStorageService {
     private final Storage storage;
 
     private static final Logger logger = LogManager.getLogger(ObjectStorageService.class);
-    
+
     /**
      * @param directory: ObjectStorageConfig 및 application.yml에 정의되어있는 object storage 내 디렉토리
      * @param objectKey: 업로드할 파일의 이름
@@ -35,7 +37,7 @@ public class ObjectStorageService {
 
         String contentType = file.getContentType();
         if (contentType == null) {
-            throw new CustomException(ErrorStatus.FILE_FORMAT_NOT_FOUND);
+            throw new FileFormatNotFoundException();
         }
 
         BlobId blobId = BlobId.of(objectStorageServiceConfig.getBucketName(), directory + "/" + objectKey);
@@ -48,11 +50,13 @@ public class ObjectStorageService {
             logger.info("Object created");
         } catch (Exception ex) {
             logger.error("Failed to upload object: {}", ex.getMessage(), ex);
-            throw new CustomException(ErrorStatus._BAD_REQUEST);
+            throw new FileException.FileUploadFailedException();
         }
 
         // Construct the URL to access the uploaded object
-        String url = "https://storage.googleapis.com/" + objectStorageServiceConfig.getBucketName() + "/" + directory + "/" + objectKey;
+        String url =
+                "https://storage.googleapis.com/" + objectStorageServiceConfig.getBucketName() + "/" + directory + "/"
+                        + objectKey;
         return url;
     }
 
@@ -71,7 +75,8 @@ public class ObjectStorageService {
         String objectKey = extractSegments[1];
 
         if (directory == null || objectKey == null) {
-            logger.warn("Url format is Wrong. objectKey: {}, bucketName: {} have to be not null.", objectKey, bucketName);
+            logger.warn("Url format is Wrong. objectKey: {}, bucketName: {} have to be not null.", objectKey,
+                    bucketName);
             //throw new CustomException(ErrorStatus.FILE_DELETE_FAILED_CRITICAL);
             return;
         }

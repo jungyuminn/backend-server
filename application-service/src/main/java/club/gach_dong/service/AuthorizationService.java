@@ -1,14 +1,11 @@
 package club.gach_dong.service;
 
-import club.gach_dong.exception.CustomException;
-import club.gach_dong.response.status.ErrorStatus;
+import club.gach_dong.exception.UserException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.util.UriComponentsBuilder;
 
 
 @Service
@@ -29,7 +26,7 @@ public class AuthorizationService {
             return header;
         }
 
-        throw new CustomException(ErrorStatus.USER_NOT_FOUND);
+        throw new UserException.UserNotFound();
 //        return null;
     }
 

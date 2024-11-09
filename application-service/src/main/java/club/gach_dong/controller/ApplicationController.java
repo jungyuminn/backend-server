@@ -7,7 +7,6 @@ import club.gach_dong.response.ResForm;
 import club.gach_dong.response.status.InSuccess;
 import club.gach_dong.service.ApplicationService;
 import club.gach_dong.service.AuthorizationService;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,19 +21,19 @@ public class ApplicationController implements ApplicationApiSpecification {
 
     @Override
     public ResForm<ApplicationResponseDTO.ToGetFormInfoUserDTO> getFormInfoUser(Long formId,
-                                                                                HttpServletRequest httpServletRequest) {
-        String userId = authorizationService.getUserId(httpServletRequest);
+                                                                                String userReferenceId) {
+
         ApplicationResponseDTO.ToGetFormInfoUserDTO toGetFormInfoUserDTO = applicationService.getFormInfoUser(formId,
-                userId);
+                userReferenceId);
         return ResForm.onSuccess(InSuccess.APPLICATION_FORM_GET_USER_INFO, toGetFormInfoUserDTO);
     }
 
     @Override
     public ResForm<ApplicationResponseDTO.ToGetApplicationHistoryListDTO> getApplicationHistory(
-            HttpServletRequest httpServletRequest) {
-        String userId = authorizationService.getUserId(httpServletRequest);
+            String userReferenceId) {
+
         ApplicationResponseDTO.ToGetApplicationHistoryListDTO toGetApplicationHistoryListDTO = applicationService.getApplicationHistoryList(
-                userId);
+                userReferenceId);
         return ResForm.onSuccess(InSuccess.APPLICATION_FORM_GET_USER_INFO, toGetApplicationHistoryListDTO);
     }
 
@@ -42,10 +41,10 @@ public class ApplicationController implements ApplicationApiSpecification {
     public ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> createApplication(Long applyId,
                                                                                     List<MultipartFile> files,
                                                                                     ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
-                                                                                    HttpServletRequest httpServletRequest) {
-        String userId = authorizationService.getUserId(httpServletRequest);
+                                                                                    String userReferenceId) {
+
         ApplicationResponseDTO.ToCreateApplicationDTO toCreateApplicationDTO = applicationService.createApplication(
-                applyId, files, toApplyClub, userId);
+                applyId, files, toApplyClub, userReferenceId);
         return ResForm.onSuccess(InSuccess.APPLICATION_SUCCESS, toCreateApplicationDTO);
     }
 
@@ -53,17 +52,17 @@ public class ApplicationController implements ApplicationApiSpecification {
     public ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> changeApplication(Long applyId,
                                                                                     List<MultipartFile> certificateDocs,
                                                                                     ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
-                                                                                    HttpServletRequest httpServletRequest) {
-        String userId = authorizationService.getUserId(httpServletRequest);
+                                                                                    String userReferenceId) {
+
         ApplicationResponseDTO.ToCreateApplicationDTO toChangeApplicationDTO = applicationService.changeApplication(
-                applyId, certificateDocs, toApplyClub, userId);
+                applyId, certificateDocs, toApplyClub, userReferenceId);
         return ResForm.onSuccess(InSuccess.APPLICATION_CHANGED, toChangeApplicationDTO);
     }
 
     @Override
-    public ResForm<?> deleteApplication(Long applyId, HttpServletRequest httpServletRequest) {
-        String userId = authorizationService.getUserId(httpServletRequest);
-        applicationService.deleteApplication(applyId, userId);
+    public ResForm<?> deleteApplication(Long applyId, String userReferenceId) {
+
+        applicationService.deleteApplication(applyId, userReferenceId);
         return ResForm.onSuccess(InSuccess.APPLICATION_DELETED, null);
     }
 
