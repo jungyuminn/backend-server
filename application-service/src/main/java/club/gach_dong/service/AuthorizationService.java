@@ -1,11 +1,14 @@
 package club.gach_dong.service;
 
-import club.gach_dong.exception.UserException;
-import jakarta.servlet.http.HttpServletRequest;
+import club.gach_dong.exception.ApplicationException.ApplicationUnauthorizedException;
+import club.gach_dong.exception.ClubException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 
 @Service
@@ -19,48 +22,77 @@ public class AuthorizationService {
 
     public final RestClient restClient;
 
-    public String getUserId(HttpServletRequest httpServletRequest) {
-        String header = httpServletRequest.getHeader(MEMBER_ID_HEADER_KEY);
-
-        if (header != null) {
-            return header;
-        }
-
-        throw new UserException.UserNotFound();
-//        return null;
-    }
+//    public String getUserId(HttpServletRequest httpServletRequest) {
+//        String header = httpServletRequest.getHeader(MEMBER_ID_HEADER_KEY);
+//
+//        if (header != null) {
+//            return header;
+//        }
+//
+//        throw new UserException.UserNotFound();
+////        return null;
+//    }
 
     public void getAuthByUserIdAndApplyId(String userId, Long applyId) {
 
-        return;
-//        String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
-//                .queryParam("userId", userId)
-//                .queryParam("applyId", applyId)
-//                .toUriString();
-//
-//        try {
-//            Boolean result = restClient.get()
-//                    .uri(uri + "/authTest")
-//                    .accept(MediaType.APPLICATION_JSON)
-//                    .retrieve()
-//                    .body(Boolean.class);
-//
-//            if (Boolean.TRUE.equals(result)) {
-//                return;
-//            } else {
-////                throw new CustomException(ErrorStatus._UNAUTHORIZED);
-//                return;
-//            }
-////            return result != null ? result : false;
-//
-//        } catch (org.springframework.web.client.RestClientException e) {
-//            System.err.println("REST 클라이언트 오류 발생: " + e.getMessage());
-//            throw new CustomException(ErrorStatus._UNAUTHORIZED);
-////            return false;
-//        } catch (Exception e) {
-//            System.err.println("예상치 못한 오류 발생: " + e.getMessage());
-//            throw new CustomException(ErrorStatus._UNAUTHORIZED);
-////            return false;
-//        }
+        String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
+                .path("/authTest")
+                .queryParam("userId", userId)
+                .queryParam("applyId", applyId)
+                .toUriString();
+
+        try {
+            Boolean result = restClient.get()
+                    .uri(uri)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .body(Boolean.class);
+
+            if (Boolean.FALSE.equals(result)) {
+                throw new ClubException.ClubAdminUnauthorizedException();
+            }
+//            return result != null ? result : false;
+
+        } catch (RestClientException e) {
+            System.err.println("REST 클라이언트 오류 발생: " + e.getMessage());
+            throw new ClubException.ClubAdminCommunicateFailedException();
+//            return false;
+        } catch (Exception e) {
+            System.err.println("예상치 못한 오류 발생: " + e.getMessage());
+            throw new ClubException.ClubAdminCommunicateFailedException();
+//            return false;
+        }
     }
+
+    public void getApplyIsValid(Long applyId) {
+
+        String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
+                .path("/validApplyTest/{applyId}")
+                .buildAndExpand(applyId)
+                .toUriString();
+
+        try {
+            Boolean result = restClient.get()
+                    .uri(uri)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .body(Boolean.class);
+
+            if (Boolean.FALSE.equals(result)) {
+                throw new ApplicationUnauthorizedException();
+            }
+//            return result != null ? result : false;
+
+        } catch (RestClientException e) {
+            System.err.println("REST 클라이언트 오류 발생: " + e.getMessage());
+            throw new ClubException.ClubAdminCommunicateFailedException();
+//            return false;
+        } catch (Exception e) {
+            System.err.println("예상치 못한 오류 발생: " + e.getMessage());
+            throw new ClubException.ClubAdminCommunicateFailedException();
+//            return false;
+        }
+    }
+
+
 }

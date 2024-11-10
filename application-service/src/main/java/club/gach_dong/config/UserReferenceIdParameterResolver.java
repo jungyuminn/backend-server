@@ -1,6 +1,7 @@
 package club.gach_dong.config;
 
 import club.gach_dong.annotation.RequestUserReferenceId;
+import club.gach_dong.exception.UserException.UserNotFound;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,9 @@ public class UserReferenceIdParameterResolver implements HandlerMethodArgumentRe
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String referenceId = request.getHeader(REFERENCE_ID_HEADER_KEY);
 
-        return referenceId != null ? referenceId : "";
+        if (referenceId != null) {
+            return referenceId;
+        }
+        throw new UserNotFound();
     }
 }
