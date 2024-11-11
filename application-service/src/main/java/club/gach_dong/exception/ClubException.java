@@ -9,4 +9,10 @@ public class ClubException {
             super(ErrorCode.CLUB_UNAUTHORIZED);
         }
     }
+
+    public static class ClubAdminCommunicateFailedException extends DomainException {
+        public ClubAdminCommunicateFailedException() {
+            super(ErrorCode.CLUB_UNABLE_TO_REQUEST);
+        }
+    }
 }

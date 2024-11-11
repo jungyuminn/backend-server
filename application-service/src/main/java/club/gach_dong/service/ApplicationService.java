@@ -113,6 +113,9 @@ public class ApplicationService {
                                                                                    ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO,
                                                                                    String userId) {
 
+        //Verify it is valid apply
+        authorizationService.getApplyIsValid(toCreateApplicationFormDTO.getApplyId());
+
         //Verify Club Admin Auth with Apply_Id, User_Id
         authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getApplyId());
 
@@ -130,8 +133,7 @@ public class ApplicationService {
                                                                            String userId) {
 
         //Verify it is valid apply
-        //In constructions!!!
-        checkValidApply(applyId);
+        authorizationService.getApplyIsValid(applyId);
 
         //Check it is duplicated
         Optional<Application> applicationOptional = applicationRepository.findByUserIdAndApplyId(userId, applyId);
@@ -188,13 +190,6 @@ public class ApplicationService {
         return ApplicationResponseDTO.ToCreateApplicationDTO.builder()
                 .applyId(applicationId.getId())
                 .build();
-    }
-
-    public void checkValidApply(Long applyId) {
-
-        //send to apply (Mocking API)
-        //Needed to Be changed
-
     }
 
     @Transactional
