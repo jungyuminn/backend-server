@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import club.gach_dong.annotation.RequestUserReferenceId;
 import club.gach_dong.api.UserApiSpecification;
 import club.gach_dong.dto.request.UserProfileRequest;
 import club.gach_dong.dto.response.UserProfileResponse;
@@ -21,7 +22,7 @@ public class UserController implements UserApiSpecification {
     @Override
     public ResponseEntity<UserProfileResponse> uploadProfileImage(
             @Valid @ModelAttribute UserProfileRequest userProfileRequest,
-            @club.gach_dong.annotation.RequestUserReferenceId String userReferenceId) {
+            @RequestUserReferenceId String userReferenceId) {
 
         if (userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -41,7 +42,7 @@ public class UserController implements UserApiSpecification {
     @Override
     public ResponseEntity<UserProfileResponse> updateProfileImage(
             @Valid @ModelAttribute UserProfileRequest userProfileRequest,
-            @club.gach_dong.annotation.RequestUserReferenceId String userReferenceId) {
+            @RequestUserReferenceId String userReferenceId) {
 
         if (userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -58,7 +59,7 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    public ResponseEntity<String> deleteProfileImage(@club.gach_dong.annotation.RequestUserReferenceId String userReferenceId) {
+    public ResponseEntity<String> deleteProfileImage(@RequestUserReferenceId String userReferenceId) {
         if (userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorStatus.USER_NOT_FOUND.getMessage());
         }
@@ -72,7 +73,7 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    public ResponseEntity<String> getProfileImage(@club.gach_dong.annotation.RequestUserReferenceId String userReferenceId) {
+    public ResponseEntity<String> getProfileImage(@RequestUserReferenceId String userReferenceId) {
         if (userReferenceId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
