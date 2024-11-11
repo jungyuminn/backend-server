@@ -15,13 +15,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class AuthorizationService {
 
-    @Value("${msa.url.club.url}")
+    @Value("${msa.url.club}")
     private String clubUrl;
 
-    @Value("${msa.url.club.auth}")
+    @Value("${msa.url.auth}")
     private String authUrl;
 
-    @Value("${msa.url.club.apply}")
+    @Value("${msa.url.apply}")
     private String applyUrl;
 
     private final static String MEMBER_ID_HEADER_KEY = "X-USER-REFERENCE-ID";
