@@ -2,6 +2,8 @@ package club.gach_dong.service;
 
 import club.gach_dong.exception.ApplicationException.ApplicationUnauthorizedException;
 import club.gach_dong.exception.ClubException;
+import club.gach_dong.exception.UserException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -24,20 +26,21 @@ public class AuthorizationService {
     @Value("${msa.url.apply}")
     private String applyUrl;
 
-    private final static String MEMBER_ID_HEADER_KEY = "X-USER-REFERENCE-ID";
+    private final static String REFERENCE_ID_HEADER_KEY = "X-USER-REFERENCE-ID";
 
     public final RestClient restClient;
 
-//    public String getUserId(HttpServletRequest httpServletRequest) {
-//        String header = httpServletRequest.getHeader(MEMBER_ID_HEADER_KEY);
-//
-//        if (header != null) {
-//            return header;
-//        }
-//
-//        throw new UserException.UserNotFound();
-////        return null;
-//    }
+    @Deprecated
+    public String getUserId(HttpServletRequest httpServletRequest) {
+        String header = httpServletRequest.getHeader(REFERENCE_ID_HEADER_KEY);
+
+        if (header != null) {
+            return header;
+        }
+
+        throw new UserException.UserNotFound();
+//        return null;
+    }
 
     public void getAuthByUserIdAndApplyId(String userId, Long applyId) {
 
