@@ -20,11 +20,6 @@ public class HeaderInterceptor implements ClientHttpRequestInterceptor {
         if (attributes != null) {
             HttpServletRequest httpRequest = attributes.getRequest();
             Enumeration<String> headerNames = httpRequest.getHeaderNames();
-//            String userReferenceId = httpRequest.getHeader("X-USER-REFERENCE-ID");
-//
-//            if (userReferenceId != null) {
-//                request.getHeaders().set("X-USER-REFERENCE-ID", userReferenceId);
-//            }
 
             String authorization = httpRequest.getHeader("Authorization");
             if (authorization != null) {

@@ -1,4 +1,4 @@
-package club.gach_dong.service;
+package club.gach_dong.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

@@ -62,6 +62,6 @@ public class Notification {
       String publishType,
       NotificationTemplate template
     )  {
-        return new Notification(userReferenceId, publishType, template.getTitle(), template.getContent(), template.getType());
+        return new Notification(userReferenceId, template.getTitle(), template.getContent(), template.getType(), publishType);
     }
 }
