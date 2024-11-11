@@ -42,4 +42,8 @@ spring:
 
 msa:
   url:
-    club: ${CLUB_URL}
+    club:
+      url: ${CLUB_URL}
+      auth: ${CLUB_AUTH}
+      apply: ${CLUB_APPLY}
+

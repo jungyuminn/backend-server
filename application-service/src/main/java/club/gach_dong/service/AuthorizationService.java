@@ -15,8 +15,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class AuthorizationService {
 
-    @Value("${msa.url.club}")
+    @Value("${msa.url.club.url}")
     private String clubUrl;
+
+    @Value("${msa.url.club.auth}")
+    private String authUrl;
+
+    @Value("${msa.url.club.apply}")
+    private String applyUrl;
 
     private final static String MEMBER_ID_HEADER_KEY = "X-USER-REFERENCE-ID";
 
@@ -36,7 +42,7 @@ public class AuthorizationService {
     public void getAuthByUserIdAndApplyId(String userId, Long applyId) {
 
         String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
-                .path("/authTest")
+                .path("/" + authUrl)
                 .queryParam("userId", userId)
                 .queryParam("applyId", applyId)
                 .toUriString();
@@ -67,7 +73,7 @@ public class AuthorizationService {
     public void getApplyIsValid(Long applyId) {
 
         String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
-                .path("/validApplyTest/{applyId}")
+                .path("/" + applyUrl + "/{applyId}")
                 .buildAndExpand(applyId)
                 .toUriString();
 
