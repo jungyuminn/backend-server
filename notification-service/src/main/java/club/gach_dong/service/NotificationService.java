@@ -1,5 +1,7 @@
 package club.gach_dong.service;
 
+import static club.gach_dong.exception.NotificationException.*;
+
 import club.gach_dong.domain.Notification;
 import club.gach_dong.domain.NotificationTemplate;
 import club.gach_dong.dto.request.CreateNotificationRequest;
@@ -37,13 +39,7 @@ public class NotificationService {
     }
 
     public NotificationResponse createAndPublishNotification(String userReferenceId, CreateNotificationRequest request) {
-        UserProfileResponse userProfile = restClient.get()
-                .uri(gatewayEndpoint+"/auth/api/v1/profile")
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .body(UserProfileResponse.class);
-
-        String userEamil = userProfile.email();
+        UserProfileResponse userProfile = getUserProfileResponse();
 
         NotificationTemplate template = templateRepository.findByType(request.type());
         Notification notification = Notification.from(userReferenceId, request.publishType(), template);
@@ -51,14 +47,26 @@ public class NotificationService {
 
         switch (request.publishType()) {
             case "EMAIL":
-                emailService.sendEmailNotice(userEamil, notification.getTitle(), notification.getMessage());
+                emailService.sendEmailNotice(userProfile.email(), notification.getTitle(), notification.getMessage());
+                break;
+            case "WEB":
+                // TODO : 추후에 Web Push Notification을 전송하도록 수정
                 break;
             default:
-                break;
+                throw new NotSupportedPublishTypeException();
         }
         // TODO : 추후에 RabbitMQ를 사용하여 Notification을 전송하도록 수정
 //        rabbitTemplate.convertAndSend("notifications", notification);
         return NotificationResponse.from(notification);
+    }
+
+    private UserProfileResponse getUserProfileResponse() {
+        return restClient.get()
+                .uri(gatewayEndpoint + "/auth/api/v1/profile")
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .onStatus(httpStatusCode -> !httpStatusCode.is2xxSuccessful(), (request, response) -> new AuthAPIFailedException())
+                .body(UserProfileResponse.class);
     }
 }
 

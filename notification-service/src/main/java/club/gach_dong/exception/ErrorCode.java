@@ -19,10 +19,13 @@ public enum ErrorCode {
     CLUB_UNAUTHORIZED("CLUBADMIN401", "인증이 필요합니다."),
 
     GACHDONG_USER_SERVICE_FAILED("SERVICE0001", "가츠동의 user-service 호출이 실패했습니다"),
+    GACHDONG_AUTH_SERVICE_FAILED("SERVICE0002", "가츠동의 auth-service 호출이 실패했습니다"),
 
     USER_NOT_FOUND("USER401", "사용자 ID를 찾을 수 없습니다."),
 
-    RECRUITMENT_NOT_FOUND("RECRUITMENT001", "모집 공고를 찾을 수 없습니다."),;
+    RECRUITMENT_NOT_FOUND("RECRUITMENT001", "모집 공고를 찾을 수 없습니다."),
+
+    NOT_SUPPORTED_PUBLISH_TYPE("NOTIFICATION001", "지원하지 않는 발송 타입입니다.");
 
     private final String code;
     private final String message;
