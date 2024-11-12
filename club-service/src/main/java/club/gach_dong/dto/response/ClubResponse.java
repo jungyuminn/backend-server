@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-public record CreateClubResponse(
+public record ClubResponse(
         @Schema(description = "동아리 ID", example = "1")
         @NotNull
         Long clubId,
@@ -45,8 +45,8 @@ public record CreateClubResponse(
         LocalDateTime updatedAt
 ) {
 
-    public static CreateClubResponse from(Club club) {
-        return new CreateClubResponse(
+    public static ClubResponse from(Club club) {
+        return new ClubResponse(
                 club.getId(),
                 club.getName(),
                 club.getCategory(),
