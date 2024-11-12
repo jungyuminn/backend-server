@@ -59,6 +59,11 @@ public interface ApplicationApiSpecification {
     @DeleteMapping("/apply/{applyId}")
     ResForm<?> deleteApplication(@PathVariable("applyId") Long applyId, @RequestUserReferenceId String userReferenceId);
 
+    @Operation(summary = "사용자 임시저장 여부 및 내용 반환 API", description = "지원 ID를 이용해 해당 사용자가 해당 임시적으로 저장한 지원이 있는지 확인 및 내용을 반환합니다.", security = @SecurityRequirement(name = "Authorization"))
+    @GetMapping("/apply/{applyId}")
+    ResForm<?> getTempApplication(@PathVariable("applyId") Long recruitmentId,
+                                  @RequestUserReferenceId String userReferenceId);
+
 //    @Operation(summary = "지원 상세 조회 API", description = "지원 ID를 이용해 지원 내역을 조회합니다.")
 //    @DeleteMapping("/admin/{applicationId}")
 //    ResForm<?> getApplication(@PathVariable("applicationId") Long applicationId, HttpServletRequest httpServletRequest);

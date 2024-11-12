@@ -239,6 +239,7 @@ public class ApplicationService {
                         .clubName(application.getClubName())
                         .status(application.getApplicationStatus())
                         .submitDate(application.getSubmitDate())
+//                        .applicationBody(application.getApplicationBody())
                         .build())
                 .collect(Collectors.toList());
 
@@ -285,6 +286,22 @@ public class ApplicationService {
 
         return ApplicationResponseDTO.ToGetApplicationListAdminDTO.builder()
                 .toGetApplicationDTO(toGetApplicationDTOs)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public ApplicationResponseDTO.ToGetApplicationTempDTO getApplicationTemp(Long recruitmentId, String userId) {
+
+        Application application = applicationRepository.findByApplyIdAndApplicationStatusAndUserId(recruitmentId,
+                "TEMPORARY_SAVED", userId).orElse(null);
+
+        if (application == null) {
+            return null;
+        }
+
+        return ApplicationResponseDTO.ToGetApplicationTempDTO.builder()
+                .applicationId(application.getId())
+                .applicationBody(application.getApplicationBody())
                 .build();
     }
 }
