@@ -288,4 +288,20 @@ public class ApplicationService {
                 .toGetApplicationDTO(toGetApplicationDTOs)
                 .build();
     }
+
+    @Transactional(readOnly = true)
+    public ApplicationResponseDTO.ToGetApplicationTempDTO getApplicationTemp(Long recruitmentId, String userId) {
+
+        Application application = applicationRepository.findByApplyIdAndApplicationStatusAndUserId(recruitmentId,
+                "TEMPORARY_SAVED", userId).orElse(null);
+
+        if (application == null) {
+            return null;
+        }
+
+        return ApplicationResponseDTO.ToGetApplicationTempDTO.builder()
+                .applicationId(application.getId())
+                .applicationBody(application.getApplicationBody())
+                .build();
+    }
 }

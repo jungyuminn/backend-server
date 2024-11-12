@@ -106,4 +106,15 @@ public class ApplicationResponseDTO {
         @Schema(description = "답변 내용", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
         private Map<String, Object> applicationBody;
     }
+
+    @Getter
+    @Builder
+    @Schema(description = "사용자용 특정 지원에 대한 임시저장 여부 반환 DTO")
+    public static class ToGetApplicationTempDTO {
+        @Schema(description = "임시 저장된 지원 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private Long applicationId;
+
+        @Schema(description = "임시 저장된 답변 내용", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private Map<String, Object> applicationBody;
+    }
 }

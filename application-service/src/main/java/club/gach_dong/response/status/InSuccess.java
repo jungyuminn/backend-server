@@ -21,9 +21,7 @@ public enum InSuccess {
     APPLICATION_CHANGED(HttpStatus.OK, "APPLICATION203", "신청 수정에 성공했습니다."),
     APPLICATION_HISTORY_GET_SUCCESS(HttpStatus.OK, "APPLICATION204", "지원 내역 조회에 성공했습니다."),
     APPLICATION_STATUS_CHANGED(HttpStatus.OK, "APPLICATION205", "지원 상태 수정에 성공했습니다."),
-
-
-    ;
+    APPLICATION_TEMP_STATUS_GET_SUCCESS(HttpStatus.OK, "APPLICATION206", "해당 지원의 임시저장 정보 확인에 성공했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

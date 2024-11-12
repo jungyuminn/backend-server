@@ -21,4 +21,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     void updateApplicationStatus(@Param("status") String status, @Param("application") Application application);
 
     List<Application> findAllByApplyIdAndApplicationStatus(Long applyId, String status);
+
+    Optional<Application> findByApplyIdAndApplicationStatusAndUserId(Long applyId, String status, String userId);
 }

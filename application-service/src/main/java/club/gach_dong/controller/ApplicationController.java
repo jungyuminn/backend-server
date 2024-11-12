@@ -66,6 +66,14 @@ public class ApplicationController implements ApplicationApiSpecification {
         return ResForm.onSuccess(InSuccess.APPLICATION_DELETED, null);
     }
 
+    @Override
+    public ResForm<ApplicationResponseDTO.ToGetApplicationTempDTO> getTempApplication(Long recruitmentId,
+                                                                                      String userReferenceId) {
+        ApplicationResponseDTO.ToGetApplicationTempDTO applicationTempDTO = applicationService.getApplicationTemp(
+                recruitmentId, userReferenceId);
+        return ResForm.onSuccess(InSuccess.APPLICATION_TEMP_STATUS_GET_SUCCESS, applicationTempDTO);
+    }
+
 //    @Override
 //    public ResForm<?> getApplication(Long applicationId, HttpServletRequest httpServletRequest) {
 //        return null;
