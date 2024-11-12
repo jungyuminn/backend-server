@@ -12,6 +12,7 @@ import club.gach_dong.dto.response.CreateClubContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.service.ClubService;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -81,7 +82,8 @@ public class ClubAdminController implements ClubAdminApiSpecification {
 
     @Override
     public Boolean isValidRecruitment(Long recruitmentId) {
-        return clubService.isValidRecruitment(recruitmentId);
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        return clubService.isValidRecruitment(recruitmentId, currentDateTime);
     }
 
 

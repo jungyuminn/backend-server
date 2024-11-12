@@ -75,9 +75,7 @@ public class Recruitment {
         return new Recruitment(title, content, recruitmentCount, startDate, endDate, processData, club);
     }
 
-    // TODO: 날짜 계산 로직 개선 + admin feature 에서 구현 예정
-    public Boolean isRecruiting(LocalDateTime currentDate) {
-        long remainingDay = ChronoUnit.DAYS.between(currentDate, endDate);
-        return false;
+    public Boolean isRecruiting(LocalDateTime currentDateTime) {
+        return currentDateTime.isBefore(this.endDate);
     }
 }

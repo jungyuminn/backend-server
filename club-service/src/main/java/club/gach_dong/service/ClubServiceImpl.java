@@ -23,6 +23,7 @@ import club.gach_dong.exception.ClubException;
 import club.gach_dong.exception.ClubException.ClubNotFoundException;
 import club.gach_dong.repository.ClubRepository;
 import club.gach_dong.repository.RecruitmentRepository;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -248,13 +249,9 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public Boolean isValidRecruitment(Long recruitmentId) {
-        Optional<Recruitment> recruitment = recruitmentRepository.findById(recruitmentId);
-
-        if (recruitment.isEmpty()) {
-            return false;
-        }
-
-        return true;
+    public Boolean isValidRecruitment(Long recruitmentId, LocalDateTime currentDateTime) {
+        return recruitmentRepository.findById(recruitmentId)
+                .map(recruitment -> recruitment.isRecruiting(currentDateTime))
+                .orElse(false); // 모집 정보가 없으면 false 반환
     }
 }
