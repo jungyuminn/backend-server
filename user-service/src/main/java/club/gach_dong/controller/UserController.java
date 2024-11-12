@@ -57,7 +57,7 @@ public class UserController implements UserApiSpecification {
     }
 
     @Override
-    public ResponseEntity<String> getProfileImage(@RequestUserReferenceId String userReferenceId) {
+    public ResponseEntity<String> getProfileImage(@PathVariable String userReferenceId) {
         if (userReferenceId.isEmpty()) {
             throw new UserException.UserNotFound();
         }

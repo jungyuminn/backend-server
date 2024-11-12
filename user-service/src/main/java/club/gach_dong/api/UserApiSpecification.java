@@ -33,7 +33,8 @@ public interface UserApiSpecification {
             @Parameter(hidden = true) @RequestUserReferenceId String userReferenceId);
 
     @Operation(summary = "프로필 이미지 조회", description = "사용자의 프로필 이미지를 조회합니다.")
-    @GetMapping("/profile-image")
+    @GetMapping("/profile-image/{userReferenceId}")
     ResponseEntity<String> getProfileImage(
-            @Parameter(hidden = true) @RequestUserReferenceId String userReferenceId);
+            @Parameter(description = "사용자 참조 ID", required = true)
+            @PathVariable String userReferenceId);
 }
