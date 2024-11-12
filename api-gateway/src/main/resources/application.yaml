@@ -168,7 +168,7 @@ springdoc:
 
     urls[4]:
       name: "알림 서비스"
-      url: https://gateway-dev.gachdong.club/notification/v3/api-docs
+      url: https://gateway.gachdong.club/notification/v3/api-docs
 
 logging:
   level:
