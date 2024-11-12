@@ -5,11 +5,15 @@ import club.gach_dong.dto.request.CreateClubActivityRequest;
 import club.gach_dong.dto.request.CreateClubContactInfoRequest;
 import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
+import club.gach_dong.dto.response.AdminAuthorizedClubResponse;
+import club.gach_dong.dto.response.ArrayResponse;
 import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
-import club.gach_dong.dto.response.CreateClubResponse;
+import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.service.ClubService;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +25,11 @@ public class ClubAdminController implements ClubAdminApiSpecification {
     private final ClubService clubService;
 
     @Override
-    public ResponseEntity<CreateClubResponse> createClub(
+    public ResponseEntity<ClubResponse> createClub(
             String userReferenceId,
             CreateClubRequest createClubRequest
     ) {
-        CreateClubResponse createClubResponse = clubService.createClub(createClubRequest);
+        ClubResponse createClubResponse = clubService.createClub(userReferenceId, createClubRequest);
         return new ResponseEntity<>(createClubResponse, HttpStatus.CREATED);
     }
 
@@ -64,5 +68,23 @@ public class ClubAdminController implements ClubAdminApiSpecification {
         );
         return new ResponseEntity<>(createClubRecruitmentResponse, HttpStatus.CREATED);
     }
+
+    @Override
+    public ArrayResponse<AdminAuthorizedClubResponse> getAuthorizedClubs(String userReferenceId) {
+        List<AdminAuthorizedClubResponse> authorizedClubs = clubService.getAuthorizedClubs(userReferenceId);
+        return ArrayResponse.of(authorizedClubs);
+    }
+
+    @Override
+    public Boolean hasAuthority(String userReferenceId, Long clubId) {
+        return clubService.hasAuthority(userReferenceId, clubId);
+    }
+
+    @Override
+    public Boolean isValidRecruitment(Long recruitmentId) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        return clubService.isValidRecruitment(recruitmentId, currentDateTime);
+    }
+
 
 }

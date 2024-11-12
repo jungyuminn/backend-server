@@ -2,12 +2,14 @@ package club.gach_dong.service;
 
 import club.gach_dong.domain.Activity;
 import club.gach_dong.domain.Club;
+import club.gach_dong.domain.ClubAdmin;
 import club.gach_dong.domain.ContactInfo;
 import club.gach_dong.domain.Recruitment;
 import club.gach_dong.dto.request.CreateClubActivityRequest;
 import club.gach_dong.dto.request.CreateClubContactInfoRequest;
 import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
+import club.gach_dong.dto.response.AdminAuthorizedClubResponse;
 import club.gach_dong.dto.response.ClubActivityResponse;
 import club.gach_dong.dto.response.ClubContactInfoResponse;
 import club.gach_dong.dto.response.ClubRecruitmentDetailResponse;
@@ -15,26 +17,31 @@ import club.gach_dong.dto.response.ClubRecruitmentResponse;
 import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
-import club.gach_dong.dto.response.CreateClubResponse;
+import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 import club.gach_dong.exception.ClubException;
+import club.gach_dong.exception.ClubException.ClubNotFoundException;
 import club.gach_dong.repository.ClubRepository;
+import club.gach_dong.repository.RecruitmentRepository;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ClubServiceImpl implements ClubService {
 
     private final ClubRepository clubRepository;
+    private final RecruitmentRepository recruitmentRepository;
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubSummaryResponse> getAllClubs() {
         List<ClubSummaryResponse> clubList = new ArrayList<>();
 
@@ -47,18 +54,16 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public CreateClubResponse getClub(Long clubIId) {
+    public ClubResponse getClub(Long clubIId) {
         return clubRepository.findById(clubIId)
-                .map(CreateClubResponse::from)
-                .orElseThrow(ClubException.ClubNotFoundException::new);
+                .map(ClubResponse::from)
+                .orElseThrow(ClubNotFoundException::new);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubActivityResponse> getClubActivities(Long clubId) {
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(ClubException.ClubNotFoundException::new);
+                .orElseThrow(ClubNotFoundException::new);
 
         List<Activity> activities = club.getActivities();
 
@@ -68,10 +73,9 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubContactInfoResponse> getClubContactInfo(Long clubId) {
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(ClubException.ClubNotFoundException::new);
+                .orElseThrow(ClubNotFoundException::new);
 
         List<ContactInfo> contactInfos = club.getContactInfo();
 
@@ -81,7 +85,6 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubRecruitmentResponse> getClubsRecruitments() {
         List<Club> clubs = clubRepository.findAllWithRecruitments();
 
@@ -92,10 +95,9 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ClubRecruitmentDetailResponse> getClubRecruitments(Long clubId) {
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(ClubException.ClubNotFoundException::new);
+                .orElseThrow(ClubNotFoundException::new);
 
         List<Recruitment> recruitments = club.getRecruitment();
 
@@ -105,10 +107,9 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public ClubRecruitmentDetailResponse getClubRecruitment(Long clubId, Long recruitmentId) {
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(ClubException.ClubNotFoundException::new);
+                .orElseThrow(ClubNotFoundException::new);
 
         Recruitment recruitment = club.getRecruitment().stream()
                 .filter(r -> r.getId().equals(recruitmentId))
@@ -121,17 +122,19 @@ public class ClubServiceImpl implements ClubService {
     // admin
     @Override
     @Transactional
-    public CreateClubResponse createClub(CreateClubRequest createClubRequest) {
+    public ClubResponse createClub(String userReferenceId, CreateClubRequest createClubRequest) {
+
         Club club = Club.of(
                 createClubRequest.name(),
                 createClubRequest.category(),
                 createClubRequest.shortDescription(),
                 createClubRequest.introduction(),
                 createClubRequest.clubImageUrl(),
+                userReferenceId,
                 createClubRequest.establishedAt()
         );
         Club savedClub = clubRepository.save(club);
-        return CreateClubResponse.from(savedClub);
+        return ClubResponse.from(savedClub);
     }
 
     @Override
@@ -142,7 +145,7 @@ public class ClubServiceImpl implements ClubService {
     ) {
 
         Club club = clubRepository.findById(createClubActivityRequest.clubId())
-                .orElseThrow(ClubException.ClubNotFoundException::new);
+                .orElseThrow(ClubNotFoundException::new);
 
         Activity activity = Activity.of(
                 createClubActivityRequest.title(),
@@ -168,7 +171,7 @@ public class ClubServiceImpl implements ClubService {
             CreateClubContactInfoRequest createClubContactInfoRequest
     ) {
         Club club = clubRepository.findById(createClubContactInfoRequest.clubId())
-                .orElseThrow(ClubException.ClubNotFoundException::new);
+                .orElseThrow(ClubNotFoundException::new);
 
         ContactInfo contactInfo = ContactInfo.of(
                 createClubContactInfoRequest.type(),
@@ -193,7 +196,7 @@ public class ClubServiceImpl implements ClubService {
             CreateClubRecruitmentRequest createClubRecruitmentRequest
     ) {
         Club club = clubRepository.findById(createClubRecruitmentRequest.clubId())
-                .orElseThrow(ClubException.ClubNotFoundException::new);
+                .orElseThrow(ClubNotFoundException::new);
 
         Recruitment recruitment = Recruitment.of(
                 createClubRecruitmentRequest.title(),
@@ -210,5 +213,45 @@ public class ClubServiceImpl implements ClubService {
         clubRepository.save(club);
 
         return new CreateClubRecruitmentResponse();
+    }
+
+    @Override
+    public List<AdminAuthorizedClubResponse> getAuthorizedClubs(String userReferenceId) {
+        List<Club> clubs = clubRepository.findAll();
+
+        List<Club> clubByAdmin = clubs.stream()
+                .filter(club -> club.getAdmins().stream()
+                        .anyMatch(admin -> admin.getUserReferenceId().equals(userReferenceId)))
+                .collect(Collectors.toList());
+
+        if (clubByAdmin.isEmpty()) {
+            throw new ClubNotFoundException();
+        }
+
+        return clubByAdmin.stream()
+                .map(club -> {
+                    ClubAdmin admin = club.getAdmins().stream()
+                            .filter(a -> a.getUserReferenceId().equals(userReferenceId))
+                            .findFirst()
+                            .orElseThrow(ClubNotFoundException::new);
+                    return AdminAuthorizedClubResponse.from(club, admin);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Boolean hasAuthority(String userReferenceId, Long clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(ClubNotFoundException::new);
+
+        return club.getAdmins().stream()
+                .anyMatch(admin -> admin.getUserReferenceId().equals(userReferenceId));
+    }
+
+    @Override
+    public Boolean isValidRecruitment(Long recruitmentId, LocalDateTime currentDateTime) {
+        return recruitmentRepository.findById(recruitmentId)
+                .map(recruitment -> recruitment.isRecruiting(currentDateTime))
+                .orElse(false); // 모집 정보가 없으면 false 반환
     }
 }

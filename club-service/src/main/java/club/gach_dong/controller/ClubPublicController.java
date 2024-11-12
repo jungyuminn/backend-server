@@ -6,7 +6,7 @@ import club.gach_dong.dto.response.ClubActivityResponse;
 import club.gach_dong.dto.response.ClubContactInfoResponse;
 import club.gach_dong.dto.response.ClubRecruitmentDetailResponse;
 import club.gach_dong.dto.response.ClubRecruitmentResponse;
-import club.gach_dong.dto.response.CreateClubResponse;
+import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 import club.gach_dong.service.ClubService;
 import java.util.List;
@@ -26,7 +26,7 @@ public class ClubPublicController implements ClubPublicApiSpecification {
     }
 
     @Override
-    public CreateClubResponse getClub(Long clubId) {
+    public ClubResponse getClub(Long clubId) {
         return clubService.getClub(clubId);
     }
 

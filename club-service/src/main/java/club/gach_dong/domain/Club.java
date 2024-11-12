@@ -66,12 +66,17 @@ public class Club extends BaseEntity {
     @Schema(description = "동아리 연락처 정보")
     private List<ContactInfo> contactInfo = new ArrayList<>();
 
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Schema(description = "동아리 관리자 목록")
+    private List<ClubAdmin> admins = new ArrayList<>();
+
     private Club(
             String name,
                  ClubCategory category,
                  String shortDescription,
                  String introduction,
                  String clubImageUrl,
+                 String userReferenceId,
                  LocalDateTime establishedAt
     ) {
         this.name = name;
@@ -80,6 +85,7 @@ public class Club extends BaseEntity {
         this.introduction = introduction;
         this.clubImageUrl = clubImageUrl;
         this.establishedAt = establishedAt;
+        addPresident(userReferenceId);
     }
 
     public static Club of(
@@ -88,12 +94,12 @@ public class Club extends BaseEntity {
             String shortDescription,
             String introduction,
             String clubImageUrl,
+            String userReferenceId,
             LocalDateTime establishedAt
     ) {
-        return new Club(name, category, shortDescription, introduction, clubImageUrl, establishedAt);
+        return new Club(name, category, shortDescription, introduction, clubImageUrl, userReferenceId, establishedAt);
     }
 
-    // @TODO: admin feature 에서 구현 예정
     public void addActivity(Activity activity) {
         this.activities.add(activity);
     }
@@ -104,5 +110,14 @@ public class Club extends BaseEntity {
 
     public void addContactInfo(ContactInfo contactInfo) {
         this.contactInfo.add(contactInfo);
+    }
+
+    public void addPresident(String userReferenceId) {
+        ClubAdmin presidentAdmin = ClubAdmin.createPresident(this, userReferenceId);
+        this.admins.add(presidentAdmin);
+    }
+
+    public void addAdminMember(ClubAdmin clubAdmin) {
+        this.admins.add(clubAdmin);
     }
 }
