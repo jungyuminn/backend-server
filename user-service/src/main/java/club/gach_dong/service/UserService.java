@@ -1,15 +1,15 @@
 package club.gach_dong.service;
 
-
-
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.google.cloud.storage.*;
 import org.springframework.web.multipart.MultipartFile;
 import club.gach_dong.dto.response.UserProfileResponse;
 import club.gach_dong.entity.User;
-import club.gach_dong.exception.ErrorStatus;
+import club.gach_dong.exception.FileException;
 import club.gach_dong.repository.UserRepository;
 
 import java.io.IOException;
@@ -34,20 +34,20 @@ public class UserService {
         String originalFilename = image.getOriginalFilename();
 
         if (contentType == null || !contentType.startsWith("image/")) {
-            throw new IllegalArgumentException("유효하지 않은 이미지 형식입니다. 이미지 파일을 업로드해 주세요.");
+            throw new FileException.FileFormatNotSupportedException();
         }
 
         validateImageExtension(originalFilename);
 
         if (image.getSize() > MAX_IMAGE_SIZE) {
-            throw new IllegalArgumentException("이미지 크기가 너무 큽니다. 최대 10MB까지 지원합니다.");
+            throw new FileException.FileTooLargeException();
         }
     }
 
     private void validateImageExtension(String fileName) {
         String fileExtension = getFileExtension(fileName);
         if (!ALLOWED_EXTENSIONS.contains(fileExtension.toLowerCase())) {
-            throw new IllegalArgumentException("허용되지 않는 이미지 형식입니다. PNG, JPG, JPEG 파일만 업로드 가능합니다.");
+            throw new FileException.FileFormatNotSupportedException();
         }
     }
 
@@ -93,7 +93,7 @@ public class UserService {
 
             return UserProfileResponse.from(user);
         } catch (IOException e) {
-            throw new RuntimeException("이미지 업로드 실패: " + e.getMessage(), e);
+            throw new FileException.FileUploadFailedException();
         }
     }
 
@@ -103,7 +103,7 @@ public class UserService {
 
         try {
             User user = userRepository.findByUserReferenceId(userReferenceId)
-                    .orElseThrow(() -> new RuntimeException(ErrorStatus.USER_NOT_FOUND.getMessage()));
+                    .orElseThrow(() -> new FileException.FileNotFoundException());
             deleteOldImage(user);
 
             String imageUrl = saveImageFile(userReferenceId, image);
@@ -113,27 +113,27 @@ public class UserService {
 
             return UserProfileResponse.from(user);
         } catch (IOException e) {
-            throw new RuntimeException("이미지 수정 실패", e);
+            throw new FileException.FileUploadFailedException();
         }
     }
 
     @Transactional
     public void deleteProfileImage(String userReferenceId) {
         User user = userRepository.findByUserReferenceId(userReferenceId)
-                .orElseThrow(() -> new RuntimeException(ErrorStatus.USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new FileException.FileNotFoundException());
 
         try {
             deleteOldImage(user);
             user.setProfileImageUrl(null);
             userRepository.save(user);
         } catch (IOException e) {
-            throw new RuntimeException("이미지 삭제 실패", e);
+            throw new FileException.FileDeleteFailedException();
         }
     }
 
     public String getProfileImage(String userReferenceId) {
         User user = userRepository.findByUserReferenceId(userReferenceId)
-                .orElseThrow(() -> new RuntimeException(ErrorStatus.USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new FileException.FileNotFoundException());
         return user.getProfileImageUrl();
     }
 
