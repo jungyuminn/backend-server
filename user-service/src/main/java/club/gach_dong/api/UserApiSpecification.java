@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "사용자 프로필 이미지 API", description = "사용자 프로필 이미지 관련 API")
+@RestController
 @RequestMapping("/api/v1")
 public interface UserApiSpecification {
 
