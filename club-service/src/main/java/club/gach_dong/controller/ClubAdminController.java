@@ -79,4 +79,10 @@ public class ClubAdminController implements ClubAdminApiSpecification {
         return clubService.hasAuthority(userReferenceId, clubId);
     }
 
+    @Override
+    public Boolean isValidRecruitment(Long recruitmentId) {
+        return clubService.isValidRecruitment(recruitmentId);
+    }
+
+
 }

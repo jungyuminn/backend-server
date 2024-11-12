@@ -22,6 +22,8 @@ import club.gach_dong.dto.response.ClubSummaryResponse;
 import club.gach_dong.exception.ClubException;
 import club.gach_dong.exception.ClubException.ClubNotFoundException;
 import club.gach_dong.repository.ClubRepository;
+import club.gach_dong.repository.RecruitmentRepository;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ClubServiceImpl implements ClubService {
 
     private final ClubRepository clubRepository;
+    private final RecruitmentRepository recruitmentRepository;
 
     @Override
     public List<ClubSummaryResponse> getAllClubs() {
@@ -242,5 +245,16 @@ public class ClubServiceImpl implements ClubService {
 
         return club.getAdmins().stream()
                 .anyMatch(admin -> admin.getUserReferenceId().equals(userReferenceId));
+    }
+
+    @Override
+    public Boolean isValidRecruitment(Long recruitmentId) {
+        Optional<Recruitment> recruitment = recruitmentRepository.findById(recruitmentId);
+
+        if (recruitment.isEmpty()) {
+            return false;
+        }
+
+        return true;
     }
 }

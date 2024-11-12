@@ -33,4 +33,5 @@ public interface ClubService {
     CreateClubRecruitmentResponse createClubRecruitment(String userReferenceId, CreateClubRecruitmentRequest createClubRecruitmentRequest);
     List<AdminAuthorizedClubResponse> getAuthorizedClubs(String userReferenceId);
     Boolean hasAuthority(String userReferenceId, Long clubId);
+    Boolean isValidRecruitment(Long recruitmentId);
 }

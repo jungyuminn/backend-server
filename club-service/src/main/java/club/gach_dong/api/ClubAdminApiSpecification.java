@@ -109,4 +109,15 @@ public interface ClubAdminApiSpecification {
             @PathParam("clubId")
             Long clubId
     );
+
+    @Operation(
+            summary = "유효한 동아리 모집 공고인지 확인",
+            description = "유효한 동아리 모집 공고인지 확인합니다.",
+            security = @SecurityRequirement(name = "Authorization")
+    )
+    @GetMapping("/recruitment/{recruitmentId}/is-valid")
+    Boolean isValidRecruitment(
+            @RequestParam("recruitmentId")
+            Long recruitmentId
+    );
 }
