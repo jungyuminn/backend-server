@@ -70,10 +70,10 @@ public class JWTAuthenticationFilter extends AbstractGatewayFilterFactory<Object
         try {
             // JWT 토큰 검증 및 클레임 추출
             Claims claims = jwtParser.parseClaimsJws(token).getBody();
-            String userId = claims.get(USER_REFERENCE_ID_CLAIM_KEY, String.class);
+            String userReferenceId = claims.get(USER_REFERENCE_ID_CLAIM_KEY, String.class);
 
             // 요청 헤더에 사용자 ID 추가
-            ServerHttpRequest mutatedRequest = exchange.getRequest().mutate().header(REFERENCE_ID_HEADER_KEY, userId).build();
+            ServerHttpRequest mutatedRequest = exchange.getRequest().mutate().header(REFERENCE_ID_HEADER_KEY, userReferenceId).build();
             return chain.filter(exchange.mutate().request(mutatedRequest).build());
         } catch (ExpiredJwtException e) {
             return createErrorResponse(exchange, "AUTH0003", "토큰이 만료되었습니다.");
