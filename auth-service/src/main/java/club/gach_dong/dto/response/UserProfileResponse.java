@@ -12,13 +12,17 @@ public record UserProfileResponse(
         String name,
 
         @Schema(description = "사용자 권한", example = "USER, ADMIN")
-        String role
+        String role,
+
+        @Schema(description = "프로필 이미지 URL", example = "https://example.com/profile.png")
+        String profileImageUrl
 ) {
     public static UserProfileResponse from(User user) {
         return new UserProfileResponse(
                 user.getEmail(),
                 user.getName(),
-                user.getRole().name()
+                user.getRole().name(),
+                user.getProfileImageUrl()
         );
     }
 
@@ -26,7 +30,8 @@ public record UserProfileResponse(
         return new UserProfileResponse(
                 admin.getEmail(),
                 admin.getName(),
-                admin.getRole().name()
+                admin.getRole().name(),
+                admin.getProfileImageUrl()
         );
     }
 }

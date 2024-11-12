@@ -9,6 +9,7 @@ import club.gach_dong.api.AdminAuthApiSpecification;
 import club.gach_dong.dto.request.ChangePasswordRequest;
 import club.gach_dong.dto.response.UserProfileResponse;
 import club.gach_dong.entity.Admin;
+import club.gach_dong.entity.User;
 import club.gach_dong.service.AdminService;
 import club.gach_dong.util.JwtUtil;
 
@@ -75,11 +76,17 @@ public class AdminAuthController implements AdminAuthApiSpecification {
         }
 
         try {
-            String email = jwtUtil.getAdminEmailFromToken(token);
-            Admin admin = adminService.findByEmail(email);
+            String userReferenceId = jwtUtil.getAdminReferenceIdFromToken(token);
+
+            Admin admin = adminService.findByUserReferenceId(userReferenceId);
             if (admin == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
+
+            String profileImageUrl = adminService.getProfileImageUrl(userReferenceId);
+
+            admin.setProfileImageUrl(profileImageUrl);
+            adminService.updateAdminProfileImage(admin);
 
             UserProfileResponse userProfileResponse = UserProfileResponse.from(admin);
             return ResponseEntity.ok(userProfileResponse);
@@ -87,5 +94,4 @@ public class AdminAuthController implements AdminAuthApiSpecification {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-
 }
