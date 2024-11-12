@@ -17,13 +17,18 @@ public record AdminAuthorizedClubResponse(
 
         @Schema(description = "동아리 관리자 권한", example = "CLUB_ADMIN", nullable = false)
         @NotNull
-        ClubAdminRole clubAdminRole
+        ClubAdminRole clubAdminRole,
+
+        @Schema(description = "동아리 이미지 URL", example = "https://example.com/club.png")
+        @NotNull
+        String clubImageUrl
 ) {
     public static AdminAuthorizedClubResponse from(Club club, ClubAdmin admin) {
         return new AdminAuthorizedClubResponse(
                 club.getId(),
                 club.getName(),
-                admin.getClubAdminRole()
+                admin.getClubAdminRole(),
+                club.getClubImageUrl()
         );
     }
 }
