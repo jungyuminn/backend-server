@@ -239,6 +239,7 @@ public class ApplicationService {
                         .clubName(application.getClubName())
                         .status(application.getApplicationStatus())
                         .submitDate(application.getSubmitDate())
+//                        .applicationBody(application.getApplicationBody())
                         .build())
                 .collect(Collectors.toList());
 

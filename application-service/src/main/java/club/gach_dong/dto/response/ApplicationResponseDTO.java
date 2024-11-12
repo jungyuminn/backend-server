@@ -61,6 +61,9 @@ public class ApplicationResponseDTO {
 
         @Schema(description = "지원한 날짜", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
         private LocalDateTime submitDate;
+
+//        @Schema(description = "지원 응답 내용(Json)", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+//        private Map<String, Object> applicationBody;
     }
 
     @Getter
