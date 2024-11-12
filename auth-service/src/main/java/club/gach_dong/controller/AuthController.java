@@ -75,11 +75,17 @@ public class AuthController implements AuthApiSpecification {
         }
 
         try {
-            String email = jwtUtil.getUserEmailFromToken(token);
-            User user = userService.findByEmail(email);
+            String userReferenceId = jwtUtil.getUserReferenceIdFromToken(token);
+
+            User user = userService.findByUserReferenceId(userReferenceId);
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
+
+            String profileImageUrl = userService.getProfileImageUrl(userReferenceId);
+
+            user.setProfileImageUrl(profileImageUrl);
+            userService.updateUserProfileImage(user);
 
             UserProfileResponse userProfileResponse = UserProfileResponse.from(user);
             return ResponseEntity.ok(userProfileResponse);
@@ -87,5 +93,4 @@ public class AuthController implements AuthApiSpecification {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-
 }

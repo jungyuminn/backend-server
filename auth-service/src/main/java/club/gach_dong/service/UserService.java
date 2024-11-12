@@ -1,11 +1,13 @@
 package club.gach_dong.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import club.gach_dong.entity.Role;
 import club.gach_dong.entity.User;
 import club.gach_dong.repository.UserRepository;
@@ -13,7 +15,9 @@ import club.gach_dong.util.JwtUtil;
 import club.gach_dong.dto.request.RegistrationRequest;
 import club.gach_dong.dto.request.ChangePasswordRequest;
 
+import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -33,6 +37,12 @@ public class UserService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Value("${user.service.url}")
+    private String userServiceUrl;
 
     private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int PASSWORD_LENGTH = 8;
@@ -162,5 +172,25 @@ public class UserService {
 
     public void blacklistToken(String token) {
         jwtUtil.blacklistUserToken(token);
+    }
+
+    public String getProfileImageUrl(String userReferenceId) {
+        String url = userServiceUrl + userReferenceId;
+
+        try {
+            String profileImageUrl = restTemplate.getForObject(url, String.class);
+
+            return profileImageUrl != null ? profileImageUrl : "";
+        } catch (Exception e) {
+            return "";
+        }
+    }
+    public User findByUserReferenceId(String userReferenceId) {
+        return userRepository.findByUserReferenceId(userReferenceId)
+                .orElse(null);
+    }
+
+    public void updateUserProfileImage(User user) {
+        userRepository.save(user);
     }
 }

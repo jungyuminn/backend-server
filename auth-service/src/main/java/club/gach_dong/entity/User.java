@@ -16,7 +16,7 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private UUID user_reference_id;
+    private String userReferenceId;
 
     @Column(length = 255, nullable = false, unique = true)
     private String email;
@@ -33,16 +33,20 @@ public class User {
 
     private boolean enabled;
 
-    private User(UUID user_reference_id, String email, String password, String name, Role role, boolean enabled) {
-        this.user_reference_id = user_reference_id;
+    @Column(length = 255)
+    private String profileImageUrl;
+
+    private User(String userReferenceId, String email, String password, String name, Role role, boolean enabled, String profileImageUrl) {
+        this.userReferenceId = userReferenceId;
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
         this.enabled = enabled;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public static User of(String email, String password, String name, Role role) {
-        return new User(UUID.randomUUID(), email, password, name, role, true);
+        return new User(UUID.randomUUID().toString(), email, password, name, role, true, null);
     }
 }

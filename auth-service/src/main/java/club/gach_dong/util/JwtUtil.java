@@ -33,7 +33,7 @@ public class JwtUtil {
     public String generateUserToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getEmail())
-                .claim("user_reference_id", user.getUser_reference_id().toString())
+                .claim("user_reference_id", user.getUserReferenceId())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1일 후 만료
                 .signWith(userJwtKey, SignatureAlgorithm.HS512)
                 .compact();
@@ -42,7 +42,7 @@ public class JwtUtil {
     public String generateAdminToken(Admin admin) {
         return Jwts.builder()
                 .setSubject(admin.getEmail())
-                .claim("user_reference_id", admin.getUser_reference_id().toString())
+                .claim("user_reference_id", admin.getUserReferenceId())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1일 후 만료
                 .signWith(adminJwtKey, SignatureAlgorithm.HS512)
                 .compact();
@@ -60,6 +60,18 @@ public class JwtUtil {
         }
     }
 
+    public String getUserReferenceIdFromToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(userJwtKey)
+                    .parseClaimsJws(token.replace("Bearer ", ""))
+                    .getBody();
+            return claims.get("user_reference_id", String.class);
+        } catch (Exception e) {
+            throw new RuntimeException("유효하지 않은 사용자 토큰입니다.");
+        }
+    }
+
     public String getAdminEmailFromToken(String token) {
         try {
             return Jwts.parser()
@@ -67,6 +79,18 @@ public class JwtUtil {
                     .parseClaimsJws(token.replace("Bearer ", ""))
                     .getBody()
                     .getSubject();
+        } catch (Exception e) {
+            throw new RuntimeException("유효하지 않은 관리자 토큰입니다.");
+        }
+    }
+
+    public String getAdminReferenceIdFromToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(adminJwtKey)
+                    .parseClaimsJws(token.replace("Bearer ", ""))
+                    .getBody();
+            return claims.get("user_reference_id", String.class);
         } catch (Exception e) {
             throw new RuntimeException("유효하지 않은 관리자 토큰입니다.");
         }

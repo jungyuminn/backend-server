@@ -1,12 +1,15 @@
 package club.gach_dong.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import club.gach_dong.entity.Admin;
+import club.gach_dong.entity.User;
 import club.gach_dong.repository.AdminRepository;
 import club.gach_dong.util.JwtUtil;
 import club.gach_dong.dto.request.RegistrationRequest;
@@ -31,6 +34,12 @@ public class AdminService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Value("${user.service.url}")
+    private String userServiceUrl;
 
     private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int PASSWORD_LENGTH = 8;
@@ -144,5 +153,26 @@ public class AdminService {
 
     public void blacklistToken(String token) {
         jwtUtil.blacklistAdminToken(token);
+    }
+
+    public String getProfileImageUrl(String userReferenceId) {
+        String url = userServiceUrl + userReferenceId;
+
+
+        try {
+            String profileImageUrl = restTemplate.getForObject(url, String.class);
+
+            return profileImageUrl != null ? profileImageUrl : "";
+        } catch (Exception e) {
+            return "";
+        }
+    }
+    public Admin findByUserReferenceId(String userReferenceId) {
+        return adminRepository.findByUserReferenceId(userReferenceId)
+                .orElse(null);
+    }
+
+    public void updateAdminProfileImage(Admin admin) {
+        adminRepository.save(admin);
     }
 }
