@@ -1,15 +1,15 @@
 package club.gach_dong.exception;
 
 public class NotificationException {
-    public static class RecruitmentNotFoundException extends DomainException {
-        public RecruitmentNotFoundException() {
-            super(ErrorCode.RECRUITMENT_NOT_FOUND);
+    public static class AuthAPIFailedException extends DomainException {
+        public AuthAPIFailedException() {
+            super(ErrorCode.GACHDONG_AUTH_SERVICE_FAILED);
         }
     }
 
-    public static class ClubNotFoundException extends DomainException {
-        public ClubNotFoundException() {
-            super(ErrorCode.CLUB_NOT_FOUND);
+    public static class NotSupportedPublishTypeException extends DomainException {
+        public NotSupportedPublishTypeException() {
+            super(ErrorCode.NOT_SUPPORTED_PUBLISH_TYPE);
         }
     }
 }
