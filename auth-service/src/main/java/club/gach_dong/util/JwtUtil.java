@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -31,37 +33,41 @@ public class JwtUtil {
     }
 
     public String generateUserToken(User user) {
+        Date expirationDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .claim("user_reference_id", user.getUserReferenceId())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1일 후 만료
+                .setExpiration(expirationDate)
                 .signWith(userJwtKey, SignatureAlgorithm.HS512)
                 .compact();
     }
 
     public String generateAdminToken(Admin admin) {
+        Date expirationDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
         return Jwts.builder()
                 .setSubject(admin.getEmail())
                 .claim("user_reference_id", admin.getUserReferenceId())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1일 후 만료
+                .setExpiration(expirationDate)
                 .signWith(adminJwtKey, SignatureAlgorithm.HS512)
                 .compact();
     }
 
     public String generateUserRefreshToken(User user) {
+        Date expirationDate = Date.from(Instant.now().plus(7, ChronoUnit.DAYS));
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .claim("user_reference_id", user.getUserReferenceId())
-                .setExpiration(new Date(System.currentTimeMillis() + 604800000)) // 7일 후 만료
+                .setExpiration(expirationDate)
                 .signWith(userJwtKey, SignatureAlgorithm.HS512)
                 .compact();
     }
 
     public String generateAdminRefreshToken(Admin admin) {
+        Date expirationDate = Date.from(Instant.now().plus(7, ChronoUnit.DAYS));
         return Jwts.builder()
                 .setSubject(admin.getEmail())
                 .claim("user_reference_id", admin.getUserReferenceId())
-                .setExpiration(new Date(System.currentTimeMillis() + 604800000)) // 7일 후 만료
+                .setExpiration(expirationDate)
                 .signWith(adminJwtKey, SignatureAlgorithm.HS512)
                 .compact();
     }
