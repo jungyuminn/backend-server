@@ -12,7 +12,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class UserReferenceIdParameterResolver implements HandlerMethodArgumentResolver {
 
-    private static final String REFERENCE_ID_HEADER_KEY = "X-USER-MEMBER-ID";
+    private static final String REFERENCE_ID_HEADER_KEY = "X-USER-REFERENCE-ID";
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
