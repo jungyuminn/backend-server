@@ -16,15 +16,11 @@ public class Admin {
     @Column(length = 255, nullable = false, unique = true)
     private String userReferenceId;
 
-    @Column(nullable = false)
-    private String clubName;
-
-    public Admin(String userReferenceId, String clubName) {
+    public Admin(String userReferenceId) {
         this.userReferenceId = userReferenceId;
-        this.clubName = clubName;
     }
 
-    public static Admin of(String userReferenceId, String clubName) {
-        return new Admin(userReferenceId, clubName);
+    public static Admin of(String userReferenceId) {
+        return new Admin(userReferenceId);
     }
 }

@@ -1,84 +1,63 @@
-package club.gach_dong.service;
+package club.gachdong.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import club.gach_dong.entity.Admin;
-import club.gach_dong.entity.InviteCode;
-import club.gach_dong.repository.AdminRepository;
-import club.gach_dong.client.ClubServiceClient;
-import club.gach_dong.repository.InviteCodeRepository;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+import club.gachdong.entity.InviteCode;
+import club.gachdong.repository.InviteCodeRepository;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AdminService {
+    @Autowired
+    private RestTemplate restTemplate;
 
-    private final AdminRepository adminRepository;
-    private final ClubServiceClient clubServiceClient;
+    @Value("${club.service.url}")
+    private String clubServiceUrl;
+
     private final InviteCodeRepository inviteCodeRepository;
 
-    public String getClubNameByUserReferenceId(String userReferenceId) {
-        String clubName = clubServiceClient.getClubNameByUserReferenceId(userReferenceId);
 
-        if (clubName != null) {
-            Admin admin = Admin.of(userReferenceId, clubName);
-            adminRepository.save(admin);
-        }
-
-        return clubName;
-    }
-
-    public String transferClub(String currentOwnerId, String targetUserReferenceId) {
-        Optional<Admin> currentOwner = adminRepository.findByUserReferenceId(currentOwnerId);
-
-        if (currentOwner.isPresent()) {
-            String clubName = currentOwner.get().getClubName();
-
-            adminRepository.delete(currentOwner.get());
-
-            Admin newOwner = Admin.of(targetUserReferenceId, clubName);
-            adminRepository.save(newOwner);
-
-            return "동아리가 성공적으로 이전되었습니다.";
-        } else {
-            throw new RuntimeException("현재 소유자를 찾을 수 없습니다.");
-        }
-    }
-
-    public String generateInviteCode(String userReferenceId) {
-        String clubName = adminRepository.findByUserReferenceId(userReferenceId)
-                .map(Admin::getClubName)
-                .orElseThrow(() -> new RuntimeException("동아리 정보를 찾을 수 없습니다."));
-
+    public InviteCode generateInviteCode(String userReferenceId) {
         String inviteCode = UUID.randomUUID().toString();
+        LocalDateTime expiryDate = LocalDateTime.now().plusDays(1);
+        InviteCode newInviteCode = InviteCode.of(userReferenceId, inviteCode, expiryDate);
 
-        InviteCode code = new InviteCode();
-        code.setClubName(clubName);
-        code.setCode(inviteCode);
-        code.setExpiryDate(LocalDateTime.now().plusHours(24));
-        inviteCodeRepository.save(code);
-
-        return inviteCode;
+        return inviteCodeRepository.save(newInviteCode);
     }
 
-    public boolean registerInviteCode(String userReferenceId, String inviteCode) {
-        String clubName = adminRepository.findByUserReferenceId(userReferenceId)
-                .map(Admin::getClubName)
-                .orElse(null);
-
-        InviteCode inviteCodeEntity = inviteCodeRepository.findByCode(inviteCode);
-
-        if (inviteCodeEntity == null || !inviteCodeEntity.getClubName().equals(clubName) ||
-                inviteCodeEntity.getExpiryDate().isBefore(LocalDateTime.now())) {
-            return false;
+    public InviteCode registerInviteCode(String inviteCode, String userReferenceId) {
+        InviteCode existingCode = inviteCodeRepository.findByinviteCode(inviteCode);
+        if (existingCode == null || existingCode.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("유효하지 않거나 만료된 초대 코드입니다.");
         }
 
-        Admin newAdmin = Admin.of(userReferenceId, clubName);
-        adminRepository.save(newAdmin);
+        // 항상 성공했다고 가정
+        return existingCode;
 
-        return true;
+        /* 실제 게이트웨이 엔드포인트로 변경 필요
+        String url = clubServiceUrl + "/some-endpoint";
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(url, userReferenceId, String.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return existingCode;
+            } else {
+                throw new IllegalArgumentException("외부 서비스 요청 실패: " + response.getStatusCode());
+            }
+        } catch (HttpClientErrorException e) {
+            throw new IllegalArgumentException("외부 서비스 요청 실패: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("예기치 않은 오류가 발생했습니다: " + e.getMessage(), e);
+        }
+
+         */
     }
 }

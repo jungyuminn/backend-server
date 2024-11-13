@@ -6,5 +6,5 @@ import club.gach_dong.entity.InviteCode;
 
 @Repository
 public interface InviteCodeRepository extends JpaRepository<InviteCode, Long> {
-    InviteCode findByCode(String code);
+    InviteCode findByinviteCode(String inviteCode);
 }

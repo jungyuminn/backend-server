@@ -15,13 +15,22 @@ public class InviteCode {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String clubName;
+    @Column(length = 255, nullable = false)
+    private String userReferenceId;
 
     @Column(nullable = false, unique = true)
-    private String code;
+    private String inviteCode;
 
     @Column(nullable = false)
     private LocalDateTime expiryDate;
 
+    public InviteCode(String userReferenceId, String inviteCode, LocalDateTime expiryDate) {
+        this.userReferenceId = userReferenceId;
+        this.inviteCode = inviteCode;
+        this.expiryDate = expiryDate;
+    }
+
+    public static InviteCode of(String userReferenceId, String inviteCode, LocalDateTime expiryDate) {
+        return new InviteCode(userReferenceId, inviteCode, expiryDate);
+    }
 }

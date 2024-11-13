@@ -1,43 +1,45 @@
 package club.gach_dong.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import club.gach_dong.annotation.RequestUserReferenceId;
+import club.gach_dong.api.AdminApiSpecification;
+import club.gach_dong.dto.response.InviteCodeRegisterResponse;
+import club.gach_dong.dto.response.InviteCodeResponse;
+import club.gach_dong.entity.InviteCode;
+import club.gach_dong.exception.UserException;
 import club.gach_dong.service.AdminService;
 
 @RestController
 @RequiredArgsConstructor
-public class AdminController {
-
+public class AdminController implements AdminApiSpecification {
     private final AdminService adminService;
 
-    public ResponseEntity<String> getClubName(@RequestUserReferenceId String userReferenceId) {
-        String clubName = adminService.getClubNameByUserReferenceId(userReferenceId);
-        return new ResponseEntity<>(clubName, HttpStatus.OK);
+    @Override
+    public ResponseEntity<InviteCodeResponse> createInviteCode(@RequestUserReferenceId String userReferenceId) {
+
+        if (userReferenceId.isEmpty()) {
+            throw new UserException.UserNotFound();
+        }
+
+        InviteCode inviteCode = adminService.generateInviteCode(userReferenceId);
+        InviteCodeResponse response = InviteCodeResponse.from(inviteCode);
+        return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<String> transferClub(
-            @RequestParam String targetUserReferenceId,
+    public ResponseEntity<InviteCodeRegisterResponse> registerInviteCode(
+            @RequestParam String inviteCode,
             @RequestUserReferenceId String userReferenceId) {
 
-        String result = adminService.transferClub(userReferenceId, targetUserReferenceId);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    public ResponseEntity<String> generateInviteCode(@RequestUserReferenceId String userReferenceId) {
-        String inviteCode = adminService.generateInviteCode(userReferenceId);
-        return new ResponseEntity<>(inviteCode, HttpStatus.CREATED);
-    }
-
-    public ResponseEntity<String> registerInviteCode(@RequestParam String clubName, @RequestParam String inviteCode) {
-        boolean success = adminService.registerInviteCode(clubName, inviteCode);
-
-        if (success) {
-            return new ResponseEntity<>("동아리에 성공적으로 가입되었습니다.", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("초대코드가 유효하지 않습니다.", HttpStatus.BAD_REQUEST);
+        if (userReferenceId.isEmpty()) {
+            throw new UserException.UserNotFound();
         }
+
+        InviteCode registeredCode = adminService.registerInviteCode(inviteCode, userReferenceId);
+        InviteCodeRegisterResponse response = InviteCodeRegisterResponse.from(registeredCode, userReferenceId);
+
+        return ResponseEntity.ok(response);
     }
+
 }
