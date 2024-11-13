@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import club.gach_dong.api.AuthApiSpecification;
 import club.gach_dong.dto.request.ChangePasswordRequest;
+import club.gach_dong.dto.response.TokenResponse;
 import club.gach_dong.dto.response.UserProfileResponse;
 import club.gach_dong.entity.User;
 import club.gach_dong.service.UserService;
@@ -42,15 +43,19 @@ public class AuthController implements AuthApiSpecification {
     }
 
     @Override
-    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token, @RequestHeader("Refresh-Token") String refreshToken) {
         try {
             String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+
             userService.blacklistToken(jwtToken);
+            userService.blacklistUserRefreshToken(refreshToken);
+
             return ResponseEntity.ok("로그아웃 되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그아웃 실패: " + e.getMessage());
         }
     }
+
 
     @Override
     public ResponseEntity<String> deleteAccount(@RequestHeader("Authorization") String token) {
@@ -91,6 +96,26 @@ public class AuthController implements AuthApiSpecification {
             return ResponseEntity.ok(userProfileResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @Override
+    public ResponseEntity<TokenResponse> refreshToken(@RequestHeader("Authorization") String refreshToken) {
+        if (!jwtUtil.validateUserRefreshToken(refreshToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(TokenResponse.withMessage("유효하지 않은 Refresh Token입니다."));
+        }
+
+        try {
+            String email = jwtUtil.getUserEmailFromToken(refreshToken);
+            User user = userService.findByEmail(email);
+
+            String newAccessToken = jwtUtil.generateUserToken(user);
+
+            return ResponseEntity.ok(TokenResponse.of(newAccessToken));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(TokenResponse.withMessage("Access Token 재발급 실패: " + e.getMessage()));
         }
     }
 }

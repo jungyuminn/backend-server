@@ -174,6 +174,10 @@ public class UserService {
         jwtUtil.blacklistUserToken(token);
     }
 
+    public void blacklistUserRefreshToken(String refreshToken) {
+        jwtUtil.blacklistUserRefreshToken(refreshToken);
+    }
+
     public String getProfileImageUrl(String userReferenceId) {
         String url = userServiceUrl + userReferenceId;
 

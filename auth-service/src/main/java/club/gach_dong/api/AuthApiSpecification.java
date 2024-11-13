@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import club.gach_dong.dto.request.ChangePasswordRequest;
+import club.gach_dong.dto.response.TokenResponse;
 import club.gach_dong.dto.response.UserProfileResponse;
 
 @Tag(name = "사용자 인증/인가 API", description = "사용자 인증 및 인가 관련 API")
@@ -23,7 +24,8 @@ public interface AuthApiSpecification {
     @Operation(summary = "로그아웃", description = "사용자를 로그아웃합니다.")
     @PostMapping("/logout")
     ResponseEntity<String> logout(
-            @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
+            @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token,
+            @Parameter(description = "Refresh Token") @RequestHeader("Refresh-Token") String refreshToken);
 
     @Operation(summary = "회원탈퇴", description = "사용자의 계정을 삭제합니다.")
     @PostMapping("/unregister")
@@ -34,4 +36,9 @@ public interface AuthApiSpecification {
     @GetMapping("/profile")
     ResponseEntity<UserProfileResponse> getProfile(
             @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
+
+    @Operation(summary = "Refresh Token 재발급", description = "유효한 Refresh Token을 사용하여 새로운 Access Token을 발급받습니다.")
+    @PostMapping("/refresh-token")
+    ResponseEntity<TokenResponse> refreshToken(
+            @Parameter(description = "Refresh Token") @RequestHeader("Authorization") String refreshToken);
 }

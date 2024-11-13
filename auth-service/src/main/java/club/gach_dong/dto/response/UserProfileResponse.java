@@ -5,6 +5,9 @@ import club.gach_dong.entity.Admin;
 import club.gach_dong.entity.User;
 
 public record UserProfileResponse(
+        @Schema(description = "사용자 고유 식별자", example = "uuid-1234-5678")
+        String userReferenceId,
+
         @Schema(description = "사용자 이메일", example = "user@gachon.ac.kr")
         String email,
 
@@ -19,6 +22,7 @@ public record UserProfileResponse(
 ) {
     public static UserProfileResponse from(User user) {
         return new UserProfileResponse(
+                user.getUserReferenceId(),
                 user.getEmail(),
                 user.getName(),
                 user.getRole().name(),
@@ -28,6 +32,7 @@ public record UserProfileResponse(
 
     public static UserProfileResponse from(Admin admin) {
         return new UserProfileResponse(
+                admin.getUserReferenceId(),
                 admin.getEmail(),
                 admin.getName(),
                 admin.getRole().name(),

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -31,19 +33,41 @@ public class JwtUtil {
     }
 
     public String generateUserToken(User user) {
+        Date expirationDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .claim("user_reference_id", user.getUserReferenceId())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1일 후 만료
+                .setExpiration(expirationDate)
                 .signWith(userJwtKey, SignatureAlgorithm.HS512)
                 .compact();
     }
 
     public String generateAdminToken(Admin admin) {
+        Date expirationDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
         return Jwts.builder()
                 .setSubject(admin.getEmail())
                 .claim("user_reference_id", admin.getUserReferenceId())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1일 후 만료
+                .setExpiration(expirationDate)
+                .signWith(adminJwtKey, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    public String generateUserRefreshToken(User user) {
+        Date expirationDate = Date.from(Instant.now().plus(7, ChronoUnit.DAYS));
+        return Jwts.builder()
+                .setSubject(user.getEmail())
+                .claim("user_reference_id", user.getUserReferenceId())
+                .setExpiration(expirationDate)
+                .signWith(userJwtKey, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    public String generateAdminRefreshToken(Admin admin) {
+        Date expirationDate = Date.from(Instant.now().plus(7, ChronoUnit.DAYS));
+        return Jwts.builder()
+                .setSubject(admin.getEmail())
+                .claim("user_reference_id", admin.getUserReferenceId())
+                .setExpiration(expirationDate)
                 .signWith(adminJwtKey, SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -151,6 +175,64 @@ public class JwtUtil {
 
         if (remainingValidity > 0) {
             redisTemplate.opsForValue().set(token, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    public void blacklistUserRefreshToken(String refreshToken) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(userJwtKey)
+                .parseClaimsJws(refreshToken.replace("Bearer ", ""))
+                .getBody();
+
+        Date expirationDate = claims.getExpiration();
+        Date currentDate = new Date();
+
+        long remainingValidity = expirationDate.getTime() - currentDate.getTime();
+
+        if (remainingValidity > 0) {
+            redisTemplate.opsForValue().set(refreshToken, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    public void blacklistAdminRefreshToken(String adminRefreshToken) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(adminJwtKey)
+                .parseClaimsJws(adminRefreshToken.replace("Bearer ", ""))
+                .getBody();
+
+        Date expirationDate = claims.getExpiration();
+        Date currentDate = new Date();
+
+        long remainingValidity = expirationDate.getTime() - currentDate.getTime();
+
+        if (remainingValidity > 0) {
+            redisTemplate.opsForValue().set(adminRefreshToken, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    public boolean validateUserRefreshToken(String refreshToken) {
+        if (isTokenBlacklisted(refreshToken.replace("Bearer ", ""))) {
+            return false;
+        }
+
+        try {
+            Jwts.parser().setSigningKey(userJwtKey).parseClaimsJws(refreshToken.replace("Bearer ", ""));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean validateAdminRefreshToken(String adminRefreshToken) {
+        if (isTokenBlacklisted(adminRefreshToken.replace("Bearer ", ""))) {
+            return false;
+        }
+
+        try {
+            Jwts.parser().setSigningKey(adminJwtKey).parseClaimsJws(adminRefreshToken.replace("Bearer ", ""));
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 
