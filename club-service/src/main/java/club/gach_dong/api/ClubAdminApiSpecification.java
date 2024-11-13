@@ -111,6 +111,19 @@ public interface ClubAdminApiSpecification {
     );
 
     @Operation(
+            summary = "모집 공고 ID를 가지고 특정 동아리에 대한 권한이 있는지 확인",
+            description = "모집 공고 ID를 통해 특정 동아리에 대한 권한이 있는지 확인합니다.",
+            security = @SecurityRequirement(name = "Authorization")
+    )
+    @GetMapping("/{recruitmentId}/has-authority")
+    Boolean hasAuthorityByRecruitmentId(
+            @RequestUserReferenceId
+            String userReferenceId,
+            @PathParam("recruitmentId")
+            Long recruitmentId
+    );
+
+    @Operation(
             summary = "유효한 동아리 모집 공고인지 확인",
             description = "유효한 동아리 모집 공고인지 확인합니다.",
             security = @SecurityRequirement(name = "Authorization")

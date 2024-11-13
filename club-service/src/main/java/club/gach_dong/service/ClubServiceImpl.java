@@ -255,4 +255,13 @@ public class ClubServiceImpl implements ClubService {
                 .map(recruitment -> recruitment.isRecruiting(currentDateTime))
                 .orElse(false); // 모집 정보가 없으면 false 반환
     }
+
+    @Override
+    public Boolean hasAuthorityByRecruitmentId(String userReferenceId, Long recruitmentId) {
+        return recruitmentRepository.findById(recruitmentId)
+                .map(Recruitment::getClub)
+                .map(club -> club.getAdmins().stream()
+                        .anyMatch(admin -> admin.getUserReferenceId().equals(userReferenceId)))
+                .orElse(false);
+    }
 }

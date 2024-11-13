@@ -81,6 +81,11 @@ public class ClubAdminController implements ClubAdminApiSpecification {
     }
 
     @Override
+    public Boolean hasAuthorityByRecruitmentId(String userReferenceId, Long recruitmentId) {
+        return clubService.hasAuthorityByRecruitmentId(userReferenceId, recruitmentId);
+    }
+
+    @Override
     public Boolean isValidRecruitment(Long recruitmentId) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         return clubService.isValidRecruitment(recruitmentId, currentDateTime);
