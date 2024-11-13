@@ -21,12 +21,6 @@ public class AuthorizationService {
     @Value("${msa.url.club}")
     private String clubUrl;
 
-    @Value("${msa.url.auth}")
-    private String authUrl;
-
-    @Value("${msa.url.apply}")
-    private String applyUrl;
-
     private final static String REFERENCE_ID_HEADER_KEY = "X-USER-REFERENCE-ID";
 
     public final RestClient restClient;
@@ -43,18 +37,18 @@ public class AuthorizationService {
 //        return null;
     }
 
-    public void getAuthByUserIdAndApplyId(String userId, Long applyId) {
+    public void getAuthByUserIdAndApplyId(String userId, Long recruitmentId) {
 
         String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
-                .path("/" + authUrl)
-                .queryParam("userId", userId)
-                .queryParam("applyId", applyId)
+                .path("/{recruitmentId}/has-authority")
+                .buildAndExpand(recruitmentId)
                 .toUriString();
 
         try {
             Boolean result = restClient.get()
                     .uri(uri)
                     .accept(MediaType.APPLICATION_JSON)
+                    .header(REFERENCE_ID_HEADER_KEY, userId)
                     .retrieve()
                     .body(Boolean.class);
 
@@ -74,11 +68,11 @@ public class AuthorizationService {
         }
     }
 
-    public void getApplyIsValid(Long applyId) {
+    public void getApplyIsValid(Long recruitmentId) {
 
         String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
-                .path("/" + applyUrl + "/{applyId}")
-                .buildAndExpand(applyId)
+                .path("/recruitment/{recruitmentId}/is-valid")
+                .buildAndExpand(recruitmentId)
                 .toUriString();
 
         try {

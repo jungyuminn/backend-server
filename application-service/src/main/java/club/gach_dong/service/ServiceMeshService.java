@@ -24,7 +24,7 @@ public class ServiceMeshService {
 
     public List<AuthResponseDTO.getUserProfile> getUserProfiles(List<String> userIds) {
         String uri = UriComponentsBuilder.fromHttpUrl(userDetailUrl)
-                .path("/profile")
+                .path("/profiles")
                 .toUriString();
 
         Map<String, List<String>> requestBody = new HashMap<>();
