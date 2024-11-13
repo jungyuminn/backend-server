@@ -15,34 +15,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 public class MockUpController {
 
-    @GetMapping("/authTest")
-    public Boolean testAuth(@RequestParam int applyId, HttpServletRequest httpServletRequest,
+    @GetMapping("/{recruitmentId}/has-authority")
+    public Boolean testAuth(@PathVariable Long recruitmentId, HttpServletRequest httpServletRequest,
                             @RequestUserReferenceId String userReferenceId) {
         System.out.println("통신 체결");
         String headerValue = httpServletRequest.getHeader("reqq-id");
         System.out.println("reqq-id: " + headerValue);
         System.out.println("UserID: " + userReferenceId);
-        System.out.println("applyId: " + applyId);
+        System.out.println("applyId: " + recruitmentId);
         return true;
     }
 
-    @GetMapping("/validApplyTest/{applyId}")
-    public Boolean testAuth(@PathVariable Long applyId, HttpServletRequest httpServletRequest) {
+    @GetMapping("/recruitment/{recruitmentId}/is-valid")
+    public Boolean testAuth(@PathVariable Long recruitmentId, HttpServletRequest httpServletRequest) {
         System.out.println("통신 체결 apply is valid");
         String headerValue = httpServletRequest.getHeader("reqq-id");
         System.out.println("reqq-id: " + headerValue);
-        System.out.println("applyId: " + applyId);
+        System.out.println("applyId: " + recruitmentId);
         return true;
     }
 
-    @PostMapping("/profile")
+    @PostMapping("/profiles")
     public List<AuthResponseDTO.getUserProfile> getUserProfiles(@RequestBody Map<String, List<String>> request) {
         System.out.println("통신 체결 apply is valid");
 
