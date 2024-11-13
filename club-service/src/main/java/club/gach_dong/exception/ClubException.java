@@ -18,4 +18,10 @@ public class ClubException {
             super(ErrorCode.CONTACT_INFO_NOT_FOUND);
         }
     }
+
+    public static class ActivityNotFoundException extends DomainException {
+        public ActivityNotFoundException() {
+            super(ErrorCode.ACTIVITY_NOT_FOUND);
+        }
+    }
 }

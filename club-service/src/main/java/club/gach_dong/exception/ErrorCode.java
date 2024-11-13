@@ -25,7 +25,9 @@ public enum ErrorCode {
 
     RECRUITMENT_NOT_FOUND("RECRUITMENT001", "모집 공고를 찾을 수 없습니다."),
 
-    CONTACT_INFO_NOT_FOUND("CONTACT001", "연락처 정보를 찾을 수 없습니다.");
+    CONTACT_INFO_NOT_FOUND("CONTACT001", "연락처 정보를 찾을 수 없습니다."),
+
+    ACTIVITY_NOT_FOUND("ACTIVITY001", "활동을 찾을 수 없습니다.");
 
     private final String code;
     private final String message;

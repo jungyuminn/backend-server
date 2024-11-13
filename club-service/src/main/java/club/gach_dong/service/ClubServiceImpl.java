@@ -154,12 +154,16 @@ public class ClubServiceImpl implements ClubService {
         );
 
         club.addActivity(activity);
-
         clubRepository.save(club);
+
+        Activity savedActivity = club.getActivities().stream()
+                .filter(a -> a.getTitle().equals(createClubActivityRequest.title()))
+                .findFirst()
+                .orElseThrow(ClubException.ActivityNotFoundException::new);
 
         return CreateClubActivityResponse.of(
                 club.getId(),
-                activity.getId()
+                savedActivity.getId()
         );
     }
 
