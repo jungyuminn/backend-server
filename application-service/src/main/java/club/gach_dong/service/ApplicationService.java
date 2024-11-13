@@ -14,12 +14,14 @@ import club.gach_dong.exception.ApplicationException.ApplicationFormInUseExcepti
 import club.gach_dong.exception.ApplicationException.ApplicationNotChangeableException;
 import club.gach_dong.exception.ApplicationException.ApplicationUnauthorizedException;
 import club.gach_dong.exception.FileException.FileTooManyException;
+import club.gach_dong.exception.UserException;
 import club.gach_dong.gcp.ObjectStorageService;
 import club.gach_dong.gcp.ObjectStorageServiceConfig;
 import club.gach_dong.repository.ApplicationDocsRepository;
 import club.gach_dong.repository.ApplicationFormRepository;
 import club.gach_dong.repository.ApplicationRepository;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -328,6 +330,34 @@ public class ApplicationService {
         return ApplicationResponseDTO.ToGetApplicationTempDTO.builder()
                 .applicationId(application.getId())
                 .applicationBody(application.getApplicationBody())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public ApplicationResponseDTO.ToGetApplicationDTO getApplicationAdmin(String userId, Long applicationId) {
+
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(ApplicationException.ApplicationNotFoundException::new);
+
+        //Verify Club Admin Auth with Apply_Id, User_Id
+        authorizationService.getAuthByUserIdAndApplyId(userId, application.getApplyId());
+
+        List<AuthResponseDTO.getUserProfile> userProfiles = serviceMeshService.getUserProfiles(
+                Collections.singletonList(userId));
+
+        AuthResponseDTO.getUserProfile userProfile = userProfiles.stream()
+                .findFirst()
+                .orElseThrow(UserException.UserNotFound::new);
+
+        return ApplicationResponseDTO.ToGetApplicationDTO.builder()
+                .applicationId(application.getId())
+                .userReferenceId(userId)
+                .userProfileUrl(userProfile.getProfileImageUrl())
+                .userEmail(userProfile.getEmail())
+                .userName(userProfile.getName())
+                .applicationBody(application.getApplicationBody())
+                .status(application.getApplicationStatus())
+                .submitDate(application.getSubmitDate())
                 .build();
     }
 }

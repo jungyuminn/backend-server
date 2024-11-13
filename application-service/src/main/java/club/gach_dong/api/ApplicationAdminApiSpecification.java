@@ -53,8 +53,13 @@ public interface ApplicationAdminApiSpecification {
             @Valid @RequestBody ApplicationRequestDTO.ToChangeApplicationStatus toChangeApplicationStatus,
             @RequestUserReferenceId String userReferenceId);
 
-    @Operation(summary = "지원 목록 조회 API", description = "지원 ID를 이용해 지원 목록을 조회합니다.", security = @SecurityRequirement(name = "Authorization"))
+    @Operation(summary = "지원 목록 조회 API", description = "지원 ID를(recruitmentId) 이용해 지원 목록을 조회합니다.", security = @SecurityRequirement(name = "Authorization"))
     @GetMapping("/{applyId}")
     ResForm<?> getClubApplicationList(@PathVariable("applyId") Long applyId,
                                       @RequestUserReferenceId String userReferenceId);
+
+    @Operation(summary = "지원 내역 단건 조회 API", description = "applicationId를 이용해 지원 내역 단건을 조회합니다.", security = @SecurityRequirement(name = "Authorization"))
+    @GetMapping("application/{applicationId}")
+    ResForm<?> getClubApplication(@PathVariable("applicationId") Long applicationId,
+                                  @RequestUserReferenceId String userReferenceId);
 }
