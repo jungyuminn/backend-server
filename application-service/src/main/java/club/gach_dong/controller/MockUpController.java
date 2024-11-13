@@ -1,6 +1,7 @@
 package club.gach_dong.controller;
 
 
+import club.gach_dong.annotation.RequestUserReferenceId;
 import club.gach_dong.dto.response.AuthResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,11 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class MockUpController {
 
     @GetMapping("/authTest")
-    public Boolean testAuth(@RequestParam String userId, int applyId, HttpServletRequest httpServletRequest) {
+    public Boolean testAuth(@RequestParam int applyId, HttpServletRequest httpServletRequest,
+                            @RequestUserReferenceId String userReferenceId) {
         System.out.println("통신 체결");
         String headerValue = httpServletRequest.getHeader("reqq-id");
         System.out.println("reqq-id: " + headerValue);
-        System.out.println("UserID: " + userId);
+        System.out.println("UserID: " + userReferenceId);
         System.out.println("applyId: " + applyId);
         return true;
     }
@@ -48,7 +50,7 @@ public class MockUpController {
         if (userReferenceIds == null || userReferenceIds.isEmpty()) {
             throw new IllegalArgumentException("userReferenceId list is required");
         }
-        
+
         return userReferenceIds.stream()
                 .map(id -> AuthResponseDTO.getUserProfile.builder()
                         .userReferenceId(id)

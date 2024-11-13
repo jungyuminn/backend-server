@@ -47,7 +47,6 @@ public class AuthorizationService {
 
         String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
                 .path("/" + authUrl)
-                .queryParam("userId", userId)
                 .queryParam("applyId", applyId)
                 .toUriString();
 
@@ -55,6 +54,7 @@ public class AuthorizationService {
             Boolean result = restClient.get()
                     .uri(uri)
                     .accept(MediaType.APPLICATION_JSON)
+                    .header(REFERENCE_ID_HEADER_KEY, userId)
                     .retrieve()
                     .body(Boolean.class);
 
