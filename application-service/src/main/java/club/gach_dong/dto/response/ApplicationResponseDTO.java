@@ -97,6 +97,18 @@ public class ApplicationResponseDTO {
         @Schema(description = "지원 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
         private Long applicationId;
 
+        @Schema(description = "지원자 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private String userReferenceId;
+
+        @Schema(description = "지원자 email", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private String userEmail;
+
+        @Schema(description = "지원자 이름", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private String userName;
+
+        @Schema(description = "지원자 프로필 이미지", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private String userProfileUrl;
+
         @Schema(description = "지원 상태(합격, 불합격, 서류 합격 등)", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
         private String status;
 

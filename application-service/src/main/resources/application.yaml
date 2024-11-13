@@ -46,4 +46,5 @@ msa:
     club: ${CLUB_URL}
     auth: ${CLUB_AUTH}
     apply: ${CLUB_APPLY}
+    userDetail: ${USER_DETAIL_URL}
 
