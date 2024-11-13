@@ -2,7 +2,6 @@ package club.gach_dong.service;
 
 import club.gach_dong.domain.Activity;
 import club.gach_dong.domain.Club;
-import club.gach_dong.domain.ClubAdmin;
 import club.gach_dong.domain.ContactInfo;
 import club.gach_dong.domain.Recruitment;
 import club.gach_dong.dto.request.CreateClubActivityRequest;
@@ -25,7 +24,6 @@ import club.gach_dong.repository.ClubRepository;
 import club.gach_dong.repository.RecruitmentRepository;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -184,7 +182,7 @@ public class ClubServiceImpl implements ClubService {
 
         clubRepository.save(club);
 
-        return CreateClubContactInfoResponse.of(
+        return CreateClubContactInfoResponse.from(
                 club.getId(),
                 contactInfo.getId()
         );
@@ -213,7 +211,10 @@ public class ClubServiceImpl implements ClubService {
 
         clubRepository.save(club);
 
-        return new CreateClubRecruitmentResponse();
+        return CreateClubRecruitmentResponse.from(
+                club.getId(),
+                recruitment.getId()
+        );
     }
 
     @Override

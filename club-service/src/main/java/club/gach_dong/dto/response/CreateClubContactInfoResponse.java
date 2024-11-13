@@ -12,7 +12,7 @@ public record CreateClubContactInfoResponse(
         @NotNull
         Long ContactId
 ) {
-    public static CreateClubContactInfoResponse of(Long clubId, Long contactId) {
+    public static CreateClubContactInfoResponse from(Long clubId, Long contactId) {
         return new CreateClubContactInfoResponse(clubId, contactId);
     }
 }
