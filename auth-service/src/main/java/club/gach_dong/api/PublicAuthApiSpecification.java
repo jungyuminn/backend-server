@@ -8,7 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import club.gach_dong.dto.request.LoginRequest;
 import club.gach_dong.dto.request.RegistrationRequest;
+import club.gach_dong.dto.request.ProfilesRequest;
 import club.gach_dong.dto.response.AuthResponse;
+import club.gach_dong.dto.response.UserProfileResponse;
+
+import java.util.List;
 
 @Tag(name = "Public 사용자 인증/인가 API", description = "Public한 사용자 인증 및 인가 관련 API")
 @RestController
@@ -50,4 +54,9 @@ public interface PublicAuthApiSpecification {
     ResponseEntity<String> verifyCode(
             @Parameter(description = "사용자의 이메일 주소") @RequestParam String email,
             @Parameter(description = "인증 코드") @RequestParam String code);
+
+    @Operation(summary = "사용자 및 관리자 프로필 조회", description = "주어진 userReferenceId 목록에 대한 사용자 및 관리자 프로필을 조회합니다.")
+    @PostMapping("/profiles")
+    ResponseEntity<List<UserProfileResponse>> getProfiles(
+            @Parameter(description = "사용자 및 관리자의 userReferenceId 목록") @Valid @RequestBody ProfilesRequest profilesRequest);
 }
