@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class PublicAuthController implements PublicAuthApiSpecification {
 
@@ -31,7 +30,6 @@ public class PublicAuthController implements PublicAuthApiSpecification {
     private final AdminService adminService;
 
     @Override
-    @PostMapping("/send_verification_code")
     public ResponseEntity<String> sendVerificationCode(@RequestParam String email) {
         try {
             userService.sendVerificationCode(email);
@@ -42,7 +40,6 @@ public class PublicAuthController implements PublicAuthApiSpecification {
     }
 
     @Override
-    @PostMapping("/send_registration_verification_code")
     public ResponseEntity<String> sendRegistrationVerificationCode(@RequestParam String email) {
         try {
             userService.sendRegistrationVerificationCode(email);
@@ -53,7 +50,6 @@ public class PublicAuthController implements PublicAuthApiSpecification {
     }
 
     @Override
-    @PostMapping("/register")
     public ResponseEntity<String> completeRegistration(@Valid @RequestBody RegistrationRequest registrationRequest) {
         try {
             userService.completeRegistration(registrationRequest);
@@ -64,7 +60,6 @@ public class PublicAuthController implements PublicAuthApiSpecification {
     }
 
     @Override
-    @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         User user = userService.findByEmail(loginRequest.email());
 
@@ -83,7 +78,6 @@ public class PublicAuthController implements PublicAuthApiSpecification {
     }
 
     @Override
-    @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestParam String email, @RequestParam String code) {
         try {
             userService.verifyCode(email, code);
@@ -97,7 +91,6 @@ public class PublicAuthController implements PublicAuthApiSpecification {
     }
 
     @Override
-    @PostMapping("/verify-code")
     public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String code) {
         try {
             userService.verifyCode(email, code);
@@ -108,7 +101,6 @@ public class PublicAuthController implements PublicAuthApiSpecification {
     }
 
     @Override
-    @PostMapping("/profiles")
     public ResponseEntity<List<UserProfileResponse>> getProfiles(
             @Valid @RequestBody ProfilesRequest profilesRequest) {
 
