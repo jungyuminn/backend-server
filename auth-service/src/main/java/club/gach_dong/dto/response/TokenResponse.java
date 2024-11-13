@@ -1,4 +1,4 @@
-package test.login.dto.response;
+package club.gach_dong.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
