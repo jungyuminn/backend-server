@@ -73,9 +73,12 @@ public class PublicAuthController implements PublicAuthApiSpecification {
                     .body(AuthResponse.withMessage("계정이 활성화되지 않았습니다."));
         }
 
-        String token = jwtUtil.generateUserToken(user);
-        return ResponseEntity.ok(AuthResponse.of(token));
+        String accessToken = jwtUtil.generateUserToken(user);
+        String refreshToken = jwtUtil.generateUserRefreshToken(user);
+
+        return ResponseEntity.ok(AuthResponse.of(accessToken, refreshToken));
     }
+
 
     @Override
     public ResponseEntity<String> resetPassword(@RequestParam String email, @RequestParam String code) {

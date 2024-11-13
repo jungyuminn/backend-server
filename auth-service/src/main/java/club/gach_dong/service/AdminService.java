@@ -155,9 +155,12 @@ public class AdminService {
         jwtUtil.blacklistAdminToken(token);
     }
 
+    public void blacklistAdminRefreshToken(String refreshToken) {
+        jwtUtil.blacklistAdminRefreshToken(refreshToken);
+    }
+
     public String getProfileImageUrl(String userReferenceId) {
         String url = userServiceUrl + userReferenceId;
-
 
         try {
             String profileImageUrl = restTemplate.getForObject(url, String.class);

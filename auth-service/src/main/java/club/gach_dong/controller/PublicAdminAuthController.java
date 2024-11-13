@@ -54,8 +54,10 @@ public class PublicAdminAuthController implements PublicAdminAuthApiSpecificatio
                     .body(AuthResponse.withMessage("계정이 활성화되지 않았습니다."));
         }
 
-        String token = jwtUtil.generateAdminToken(admin);
-        return ResponseEntity.ok(AuthResponse.of(token));
+        String accessToken = jwtUtil.generateAdminToken(admin);
+        String refreshToken = jwtUtil.generateAdminRefreshToken(admin);
+
+        return ResponseEntity.ok(AuthResponse.of(accessToken, refreshToken));
     }
 
 

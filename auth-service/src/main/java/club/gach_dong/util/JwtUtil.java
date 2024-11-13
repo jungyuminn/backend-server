@@ -48,6 +48,24 @@ public class JwtUtil {
                 .compact();
     }
 
+    public String generateUserRefreshToken(User user) {
+        return Jwts.builder()
+                .setSubject(user.getEmail())
+                .claim("user_reference_id", user.getUserReferenceId())
+                .setExpiration(new Date(System.currentTimeMillis() + 604800000)) // 7일 후 만료
+                .signWith(userJwtKey, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    public String generateAdminRefreshToken(Admin admin) {
+        return Jwts.builder()
+                .setSubject(admin.getEmail())
+                .claim("user_reference_id", admin.getUserReferenceId())
+                .setExpiration(new Date(System.currentTimeMillis() + 604800000)) // 7일 후 만료
+                .signWith(adminJwtKey, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
     public String getUserEmailFromToken(String token) {
         try {
             return Jwts.parser()
@@ -151,6 +169,64 @@ public class JwtUtil {
 
         if (remainingValidity > 0) {
             redisTemplate.opsForValue().set(token, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    public void blacklistUserRefreshToken(String refreshToken) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(userJwtKey)
+                .parseClaimsJws(refreshToken.replace("Bearer ", ""))
+                .getBody();
+
+        Date expirationDate = claims.getExpiration();
+        Date currentDate = new Date();
+
+        long remainingValidity = expirationDate.getTime() - currentDate.getTime();
+
+        if (remainingValidity > 0) {
+            redisTemplate.opsForValue().set(refreshToken, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    public void blacklistAdminRefreshToken(String adminRefreshToken) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(adminJwtKey)
+                .parseClaimsJws(adminRefreshToken.replace("Bearer ", ""))
+                .getBody();
+
+        Date expirationDate = claims.getExpiration();
+        Date currentDate = new Date();
+
+        long remainingValidity = expirationDate.getTime() - currentDate.getTime();
+
+        if (remainingValidity > 0) {
+            redisTemplate.opsForValue().set(adminRefreshToken, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    public boolean validateUserRefreshToken(String refreshToken) {
+        if (isTokenBlacklisted(refreshToken.replace("Bearer ", ""))) {
+            return false;
+        }
+
+        try {
+            Jwts.parser().setSigningKey(userJwtKey).parseClaimsJws(refreshToken.replace("Bearer ", ""));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean validateAdminRefreshToken(String adminRefreshToken) {
+        if (isTokenBlacklisted(adminRefreshToken.replace("Bearer ", ""))) {
+            return false;
+        }
+
+        try {
+            Jwts.parser().setSigningKey(adminJwtKey).parseClaimsJws(adminRefreshToken.replace("Bearer ", ""));
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 
