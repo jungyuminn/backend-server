@@ -2,6 +2,7 @@ package club.gach_dong.service;
 
 import club.gach_dong.domain.Activity;
 import club.gach_dong.domain.Club;
+import club.gach_dong.domain.ClubAdmin;
 import club.gach_dong.domain.ContactInfo;
 import club.gach_dong.domain.Recruitment;
 import club.gach_dong.dto.request.CreateClubActivityRequest;
@@ -275,5 +276,16 @@ public class ClubServiceImpl implements ClubService {
                 .map(club -> club.getAdmins().stream()
                         .anyMatch(admin -> admin.getUserReferenceId().equals(userReferenceId)))
                 .orElse(false);
+    }
+
+    @Override
+    public void authorizeAdmin(String userReferenceId, Long clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(ClubNotFoundException::new);
+
+        ClubAdmin clubAdmin = ClubAdmin.createMember(userReferenceId, club);
+
+        club.addAdminMember(clubAdmin);
+        clubRepository.save(club);
     }
 }

@@ -7,6 +7,7 @@ import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
 import club.gach_dong.dto.response.AdminAuthorizedClubResponse;
 import club.gach_dong.dto.response.ArrayResponse;
+import club.gach_dong.dto.response.AutorizeAdminResponse;
 import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
@@ -91,5 +92,10 @@ public class ClubAdminController implements ClubAdminApiSpecification {
         return clubService.isValidRecruitment(recruitmentId, currentDateTime);
     }
 
+    @Override
+    public ResponseEntity<AutorizeAdminResponse> authorizeAdmin(String userReferenceId, Long clubId) {
+        clubService.authorizeAdmin(userReferenceId, clubId);
+        return new ResponseEntity<>(new AutorizeAdminResponse(), HttpStatus.OK);
+    }
 
 }

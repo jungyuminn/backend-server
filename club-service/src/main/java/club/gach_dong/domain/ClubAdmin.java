@@ -47,4 +47,14 @@ public class ClubAdmin extends BaseEntity {
         admin.authorizedAt = LocalDateTime.now();
         return admin;
     }
+
+    public static ClubAdmin createMember(String userReferenceId, Club club) {
+        ClubAdmin admin = new ClubAdmin();
+        admin.club = club;
+        admin.userReferenceId = userReferenceId;
+        admin.clubAdminRole = ClubAdminRole.MEMBER;
+        admin.authorizedAt = LocalDateTime.now();
+        return admin;
+
+    }
 }

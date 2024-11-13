@@ -7,6 +7,7 @@ import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
 import club.gach_dong.dto.response.AdminAuthorizedClubResponse;
 import club.gach_dong.dto.response.ArrayResponse;
+import club.gach_dong.dto.response.AutorizeAdminResponse;
 import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
@@ -132,5 +133,18 @@ public interface ClubAdminApiSpecification {
     Boolean isValidRecruitment(
             @RequestParam("recruitmentId")
             Long recruitmentId
+    );
+
+    @Operation(
+            summary = "초대 코드 인증된 동아리 관리자 권한 부여",
+            description = "초대 코드를 이용하여 동아리 관리자 권한을 부여합니다.",
+            security = @SecurityRequirement(name = "Authorization"),
+            hidden = true
+    )
+    @PostMapping("/authorize-admin")
+    ResponseEntity<AutorizeAdminResponse> authorizeAdmin(
+            @RequestUserReferenceId
+            String userReferenceId,
+            @RequestBody Long clubId
     );
 }

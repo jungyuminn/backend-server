@@ -36,4 +36,5 @@ public interface ClubService {
     Boolean hasAuthority(String userReferenceId, Long clubId);
     Boolean isValidRecruitment(Long recruitmentId, LocalDateTime currentDateTime);
     Boolean hasAuthorityByRecruitmentId(String userReferenceId, Long recruitmentId);
+    void authorizeAdmin(String userReferenceId, Long clubId);
 }
