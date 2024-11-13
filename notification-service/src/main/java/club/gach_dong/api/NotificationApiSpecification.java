@@ -39,8 +39,6 @@ public interface NotificationApiSpecification {
     )
     @PostMapping()
     public ResponseEntity<NotificationResponse> createNotification(
-            @RequestUserReferenceId
-            String userReferenceId,
             @RequestBody CreateNotificationRequest request
     );
 

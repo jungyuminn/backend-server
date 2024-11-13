@@ -38,16 +38,13 @@ public class NotificationService {
                 .toList();
     }
 
-    public NotificationResponse createAndPublishNotification(String userReferenceId, CreateNotificationRequest request) {
-        UserProfileResponse userProfile = getUserProfileResponse();
-
-        NotificationTemplate template = templateRepository.findByType(request.type());
-        Notification notification = Notification.from(userReferenceId, request.publishType(), template);
+    public NotificationResponse createAndPublishNotification(CreateNotificationRequest request) {
+        Notification notification = Notification.from(request.userEmail(), request.clubId(), request.title(), request.content(), request.publishType());
         notificationRepository.save(notification);
 
         switch (request.publishType()) {
             case "EMAIL":
-                emailService.sendEmailNotice(userProfile.email(), notification.getTitle(), notification.getMessage());
+                emailService.sendEmailNotice(notification.getUserEmail(), notification.getTitle(), notification.getMessage());
                 break;
             case "WEB":
                 // TODO : 추후에 Web Push Notification을 전송하도록 수정

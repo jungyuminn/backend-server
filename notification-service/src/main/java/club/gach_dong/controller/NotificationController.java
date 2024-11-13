@@ -25,8 +25,8 @@ public class NotificationController implements NotificationApiSpecification {
     }
 
     @Override
-    public ResponseEntity<NotificationResponse> createNotification(String userReferenceId, CreateNotificationRequest request) {
-        NotificationResponse response = notificationService.createAndPublishNotification(userReferenceId, request);
+    public ResponseEntity<NotificationResponse> createNotification(CreateNotificationRequest request) {
+        NotificationResponse response = notificationService.createAndPublishNotification(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

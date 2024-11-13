@@ -24,16 +24,16 @@ public class Notification {
     private Long id;
 
     @Column(nullable = false)
-    private String userReferenceId;
+    private String userEmail;
+
+    @Column(nullable = false)
+    private Long clubId;
 
     @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
     private String message;
-
-    @Column(nullable = false)
-    private String type;
 
     @Column(nullable = false)
     private String publishType;
@@ -44,24 +44,26 @@ public class Notification {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     private Notification(
-        String userReferenceId,
+        String userEmail,
+        Long clubId,
         String title,
         String message,
-        String type,
         String publishType
     ) {
-        this.userReferenceId = userReferenceId;
+        this.userEmail = userEmail;
+        this.clubId = clubId;
         this.title = title;
         this.message = message;
-        this.type = type;
         this.publishType = publishType;
     }
 
     public static Notification from(
-      String userReferenceId,
-      String publishType,
-      NotificationTemplate template
+      String userEmail,
+      Long clubId,
+      String title,
+      String message,
+      String publishType
     )  {
-        return new Notification(userReferenceId, template.getTitle(), template.getContent(), template.getType(), publishType);
+        return new Notification(userEmail, clubId, title, message, publishType);
     }
 }
