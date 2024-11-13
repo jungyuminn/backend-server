@@ -102,7 +102,7 @@ public interface ClubAdminApiSpecification {
             description = "특정 동아리에 대한 권한이 있는지 확인합니다.",
             security = @SecurityRequirement(name = "Authorization")
     )
-    @GetMapping("/{clubId}/has-authority")
+    @GetMapping("/has-authority/{clubId}")
     Boolean hasAuthority(
             @RequestUserReferenceId
             String userReferenceId,
