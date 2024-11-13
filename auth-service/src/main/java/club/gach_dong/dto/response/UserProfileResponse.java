@@ -1,8 +1,8 @@
 package club.gach_dong.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import test.login.entity.Admin;
-import test.login.entity.User;
+import club.gach_dong.entity.Admin;
+import club.gach_dong.entity.User;
 
 public record UserProfileResponse(
         @Schema(description = "사용자 고유 식별자", example = "uuid-1234-5678")
