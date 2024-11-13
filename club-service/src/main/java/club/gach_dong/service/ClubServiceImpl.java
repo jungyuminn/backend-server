@@ -24,6 +24,7 @@ import club.gach_dong.exception.ClubException.ClubNotFoundException;
 import club.gach_dong.repository.ClubRepository;
 import club.gach_dong.repository.RecruitmentRepository;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -225,17 +226,16 @@ public class ClubServiceImpl implements ClubService {
                 .collect(Collectors.toList());
 
         if (clubByAdmin.isEmpty()) {
-            throw new ClubNotFoundException();
+            return List.of();
         }
 
         return clubByAdmin.stream()
-                .map(club -> {
-                    ClubAdmin admin = club.getAdmins().stream()
-                            .filter(a -> a.getUserReferenceId().equals(userReferenceId))
-                            .findFirst()
-                            .orElseThrow(ClubNotFoundException::new);
-                    return AdminAuthorizedClubResponse.from(club, admin);
-                })
+                .map(club -> club.getAdmins().stream()
+                        .filter(a -> a.getUserReferenceId().equals(userReferenceId))
+                        .findFirst()
+                        .map(admin -> AdminAuthorizedClubResponse.from(club, admin))
+                        .orElse(null))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
