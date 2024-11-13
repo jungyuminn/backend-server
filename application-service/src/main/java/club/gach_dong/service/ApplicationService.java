@@ -6,6 +6,8 @@ import club.gach_dong.domain.ApplicationForm;
 import club.gach_dong.domain.ApplicationFormStatus;
 import club.gach_dong.dto.request.ApplicationRequestDTO;
 import club.gach_dong.dto.response.ApplicationResponseDTO;
+import club.gach_dong.dto.response.AuthResponseDTO;
+import club.gach_dong.dto.response.AuthResponseDTO.getUserProfile;
 import club.gach_dong.exception.ApplicationException;
 import club.gach_dong.exception.ApplicationException.ApplicationDuplicatedException;
 import club.gach_dong.exception.ApplicationException.ApplicationFormInUseException;
@@ -19,6 +21,7 @@ import club.gach_dong.repository.ApplicationFormRepository;
 import club.gach_dong.repository.ApplicationRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,6 +42,7 @@ public class ApplicationService {
     private final ObjectStorageServiceConfig objectStorageServiceConfig;
     private final ApplicationDocsRepository applicationDocsRepository;
     private final AuthorizationService authorizationService;
+    private final ServiceMeshService serviceMeshService;
 
     @Transactional
     public ApplicationResponseDTO.ToCreateApplicationFormDTO createApplicationForm(
@@ -274,13 +278,29 @@ public class ApplicationService {
 //            throw new CustomException(ErrorCode.APPLICATION_NOT_PRESENT);
 //        }
 
+        List<String> userIds = applicationList.stream()
+                .map(Application::getUserId)
+                .collect(Collectors.toList());
+
+        List<AuthResponseDTO.getUserProfile> userProfiles = serviceMeshService.getUserProfiles(userIds);
+
+        Map<String, getUserProfile> userProfileMap = userProfiles.stream()
+                .collect(Collectors.toMap(getUserProfile::getUserReferenceId, profile -> profile));
+
         List<ApplicationResponseDTO.ToGetApplicationDTO> toGetApplicationDTOs = applicationList.stream()
-                .map(application -> ApplicationResponseDTO.ToGetApplicationDTO.builder()
-                        .applicationId(application.getId())
-                        .status(application.getApplicationStatus())
-                        .submitDate(application.getSubmitDate())
-                        .applicationBody(application.getApplicationBody())
-                        .build())
+                .map(application -> {
+                    AuthResponseDTO.getUserProfile userProfile = userProfileMap.get(application.getUserId());
+                    return ApplicationResponseDTO.ToGetApplicationDTO.builder()
+                            .applicationId(application.getId())
+                            .userReferenceId(application.getUserId())
+                            .userName(userProfile != null ? userProfile.getName() : null)
+                            .userEmail(userProfile != null ? userProfile.getEmail() : null)
+                            .userProfileUrl(userProfile != null ? userProfile.getProfileImageUrl() : null)
+                            .status(application.getApplicationStatus())
+                            .submitDate(application.getSubmitDate())
+                            .applicationBody(application.getApplicationBody())
+                            .build();
+                })
                 .collect(Collectors.toList());
 
         return ApplicationResponseDTO.ToGetApplicationListAdminDTO.builder()

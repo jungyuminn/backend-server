@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -101,6 +102,15 @@ public class AuthorizationService {
             throw new ClubException.ClubAdminCommunicateFailedException();
 //            return false;
         }
+    }
+
+    @Deprecated
+    public String getToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
+            return bearerToken.substring(7);
+        }
+        throw new UserException.UserNotFound();
     }
 
 
