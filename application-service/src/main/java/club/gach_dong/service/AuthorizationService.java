@@ -41,6 +41,7 @@ public class AuthorizationService {
 
         String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
                 .path("/{recruitmentId}/has-authority")
+                .queryParam("recruitmentId", recruitmentId)
                 .buildAndExpand(recruitmentId)
                 .toUriString();
 
@@ -72,6 +73,7 @@ public class AuthorizationService {
 
         String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
                 .path("/recruitment/{recruitmentId}/is-valid")
+                .queryParam("recruitmentId", recruitmentId)
                 .buildAndExpand(recruitmentId)
                 .toUriString();
 

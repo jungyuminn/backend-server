@@ -5,6 +5,7 @@ import club.gach_dong.annotation.RequestUserReferenceId;
 import club.gach_dong.dto.response.AuthResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.websocket.server.PathParam;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,7 +13,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MockUpController {
 
     @GetMapping("/{recruitmentId}/has-authority")
-    public Boolean testAuth(@PathVariable Long recruitmentId, HttpServletRequest httpServletRequest,
+    public Boolean testAuth(@PathParam("recruitmentId") Long recruitmentId, HttpServletRequest httpServletRequest,
                             @RequestUserReferenceId String userReferenceId) {
         System.out.println("통신 체결");
         String headerValue = httpServletRequest.getHeader("reqq-id");
@@ -33,7 +33,7 @@ public class MockUpController {
     }
 
     @GetMapping("/recruitment/{recruitmentId}/is-valid")
-    public Boolean testAuth(@PathVariable Long recruitmentId, HttpServletRequest httpServletRequest) {
+    public Boolean testAuth(@PathParam("recruitmentId") Long recruitmentId, HttpServletRequest httpServletRequest) {
         System.out.println("통신 체결 apply is valid");
         String headerValue = httpServletRequest.getHeader("reqq-id");
         System.out.println("reqq-id: " + headerValue);
