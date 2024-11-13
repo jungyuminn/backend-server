@@ -208,12 +208,16 @@ public class ClubServiceImpl implements ClubService {
         );
 
         club.addRecruitment(recruitment);
-
         clubRepository.save(club);
+
+        Recruitment savedRecruitment = club.getRecruitment().stream()
+                .filter(r -> r.getTitle().equals(createClubRecruitmentRequest.title()))
+                .findFirst()
+                .orElseThrow(ClubException.RecruitmentNotFoundException::new);
 
         return CreateClubRecruitmentResponse.from(
                 club.getId(),
-                recruitment.getId()
+                savedRecruitment.getId()
         );
     }
 

@@ -3,7 +3,6 @@ package club.gach_dong.domain;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,7 +18,7 @@ import org.hibernate.type.SqlTypes;
 public class Recruitment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Schema(description = "모집 ID", example = "1")
     private Long id;
 
