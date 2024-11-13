@@ -31,7 +31,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final NotificationTemplateRepository templateRepository;
 
-    public List<NotificationResponse> getUserNotifications(String userReferenceId) {
+    public List<NotificationResponse> getUserNotifications() {
         UserProfileResponse userProfile = restClient.get()
                 .uri(gatewayEndpoint + "/auth/api/v1/profile")
                 .accept(MediaType.APPLICATION_JSON)

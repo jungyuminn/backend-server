@@ -19,8 +19,8 @@ public class NotificationController implements NotificationApiSpecification {
     private final NotificationService notificationService;
 
     @Override
-    public ArrayResponse<NotificationResponse> getUserNotifications(String userReferenceId, HttpServletRequest request) {
-        List<NotificationResponse> notifications = notificationService.getUserNotifications(userReferenceId);
+    public ArrayResponse<NotificationResponse> getUserNotifications(HttpServletRequest request) {
+        List<NotificationResponse> notifications = notificationService.getUserNotifications();
         return ArrayResponse.of(notifications);
     }
 

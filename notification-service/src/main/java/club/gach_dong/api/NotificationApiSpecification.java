@@ -27,8 +27,6 @@ public interface NotificationApiSpecification {
     )
     @GetMapping()
     public ArrayResponse<NotificationResponse> getUserNotifications(
-            @RequestUserReferenceId
-            String userReferenceId,
             HttpServletRequest request
     );
 
