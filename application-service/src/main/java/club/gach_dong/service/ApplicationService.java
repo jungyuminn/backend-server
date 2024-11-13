@@ -271,6 +271,12 @@ public class ApplicationService {
         List<Application> applicationList = applicationRepository.findAllByApplyIdAndApplicationStatus(applyId,
                 "SAVED");
 
+        if (applicationList.isEmpty()) {
+            return ApplicationResponseDTO.ToGetApplicationListAdminDTO.builder()
+                    .toGetApplicationDTO(null)
+                    .build();
+        }
+
 //        if (applicationList.isEmpty()) {
 //            throw new CustomException(ErrorCode.APPLICATION_NOT_PRESENT);
 //        }
