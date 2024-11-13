@@ -34,6 +34,7 @@ public class ContactInfo {
     private ContactInfo(String contactMethod, String contactValue, Club club) {
         this.contactMethod = contactMethod;
         this.contactValue = contactValue;
+        this.club = club;
     }
 
     public static ContactInfo of(String contactMethod, String contactValue, Club club) {
