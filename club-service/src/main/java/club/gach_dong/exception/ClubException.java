@@ -12,4 +12,10 @@ public class ClubException {
             super(ErrorCode.CLUB_NOT_FOUND);
         }
     }
+
+    public static class ContactInfoNotFoundException extends DomainException {
+        public ContactInfoNotFoundException() {
+            super(ErrorCode.CONTACT_INFO_NOT_FOUND);
+        }
+    }
 }

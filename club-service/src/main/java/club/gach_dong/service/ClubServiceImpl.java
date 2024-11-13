@@ -179,12 +179,16 @@ public class ClubServiceImpl implements ClubService {
         );
 
         club.addContactInfo(contactInfo);
-
         clubRepository.save(club);
+
+        ContactInfo savedContactInfo = club.getContactInfo().stream()
+                .filter(c -> c.getContactValue().equals(createClubContactInfoRequest.contact()))
+                .findFirst()
+                .orElseThrow(ClubException.ContactInfoNotFoundException::new);
 
         return CreateClubContactInfoResponse.from(
                 club.getId(),
-                contactInfo.getId()
+                savedContactInfo.getId()
         );
     }
 
