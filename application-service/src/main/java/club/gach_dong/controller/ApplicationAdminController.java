@@ -71,4 +71,12 @@ public class ApplicationAdminController implements ApplicationAdminApiSpecificat
 
         return ResForm.onSuccess(InSuccess._OK, toGetApplicationListAdminDTO);
     }
+
+    @Override
+    public ResForm<ApplicationResponseDTO.ToGetApplicationDTO> getClubApplication(Long applicationId,
+                                                                                  String userReferenceId) {
+        ApplicationResponseDTO.ToGetApplicationDTO toGetApplicationDTO = applicationService.getApplicationAdmin(
+                userReferenceId, applicationId);
+        return ResForm.onSuccess(InSuccess.APPLICATION_GET_SUCCESS, toGetApplicationDTO);
+    }
 }
