@@ -1,6 +1,6 @@
 package club.gach_dong.config;
 
-import test.admin.annotation.RequestUserReferenceId;
+import club.gach_dong.annotation.RequestUserReferenceId;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

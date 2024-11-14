@@ -1,6 +1,6 @@
 package club.gach_dong.response;
 
-import test.admin.response.status.ErrorCode;
+import club.gach_dong.response.status.ErrorCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "에러 응답")
