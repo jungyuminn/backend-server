@@ -62,4 +62,10 @@ public interface ApplicationAdminApiSpecification {
     @GetMapping("application/{applicationId}")
     ResForm<?> getClubApplication(@PathVariable("applicationId") Long applicationId,
                                   @RequestUserReferenceId String userReferenceId);
+
+    @Operation(summary = "club이 가지고 있는 지원서 양식 목록 조회 API", description = "clubId를 이용해 지원서 목록을 조회합니다.", security = @SecurityRequirement(name = "Authorization"))
+    @GetMapping("form/list/{clubId}")
+    ResForm<?> getClubApplicationFormList(@PathVariable("clubId") Long clubId,
+                                          @RequestUserReferenceId String userReferenceId);
+
 }

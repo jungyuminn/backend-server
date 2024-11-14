@@ -37,6 +37,9 @@ public class ApplicationForm {
     @Column(name = "form_name", nullable = false, length = 50)
     private String formName;
 
+    @Column(name = "club_Id", nullable = false)
+    private Long clubId;
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "application_form_body", nullable = false, columnDefinition = "json", length = 2000)
     private Map<String, Object> body;

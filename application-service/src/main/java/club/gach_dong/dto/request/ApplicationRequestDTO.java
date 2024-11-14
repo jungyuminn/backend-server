@@ -22,10 +22,14 @@ public class ApplicationRequestDTO {
         @Pattern(regexp = "TEMPORARY_SAVED|SAVED", message = "지원 양식 상태는 TEMPORARY_SAVED 또는 SAVED 이어야 합니다.")
         private String status;
 
-        @Schema(description = "지원서 양식 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false, example = "가츠동 지원서 양식")
+        @Schema(description = "지원서 이름", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false, example = "가츠동 지원서 이름")
         @NotNull(message = "지원서 이름이 누락되었습니다.")
         @Size(max = 50, message = "지원서 이름은 50자 이내여야 합니다.")
         private String formName;
+
+        @Schema(description = "동아리 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false, example = "21")
+        @NotNull(message = "동아리 ID가 누락되었습니다.")
+        private Long clubId;
 
         @Schema(
                 description = "지원서 양식 본문, Json 형식으로 넣어주세요.",
