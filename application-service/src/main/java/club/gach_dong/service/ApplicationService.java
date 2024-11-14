@@ -57,6 +57,7 @@ public class ApplicationService {
                 .applicationFormStatus(ApplicationFormStatus.valueOf(toCreateApplicationFormDTO.getStatus()))
                 .formName(toCreateApplicationFormDTO.getFormName())
                 .applyId(toCreateApplicationFormDTO.getApplyId())
+                .clubId(toCreateApplicationFormDTO.getClubId())
                 .body(toCreateApplicationFormDTO.getFormBody())
                 .build();
 
@@ -81,6 +82,8 @@ public class ApplicationService {
                 .formName(applicationForm.getFormName())
                 .formBody(applicationForm.getBody())
                 .formStatus(String.valueOf(applicationForm.getApplicationFormStatus()))
+                .clubId(applicationForm.getClubId())
+                .applyId(applicationForm.getApplyId())
                 .build();
     }
 
@@ -360,4 +363,28 @@ public class ApplicationService {
                 .submitDate(application.getSubmitDate())
                 .build();
     }
+
+    @Transactional(readOnly = true)
+    public List<ApplicationResponseDTO.ToGetFormInfoAdminDTO> toGetFormInfoListAdmin(String userId, Long clubId) {
+        List<ApplicationForm> applicationFormList = applicationFormRepository.findAllByClubId(clubId);
+
+        if (applicationFormList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        ApplicationForm firstForm = applicationFormList.get(0);
+        authorizationService.getAuthByUserIdAndApplyId(userId, firstForm.getApplyId());
+
+        return applicationFormList.stream()
+                .map(applicationForm -> ApplicationResponseDTO.ToGetFormInfoAdminDTO.builder()
+                        .formId(applicationForm.getId())
+                        .formName(applicationForm.getFormName())
+                        .formBody(applicationForm.getBody())
+                        .formStatus(String.valueOf(applicationForm.getApplicationFormStatus()))
+                        .clubId(applicationForm.getClubId())
+                        .applyId(applicationForm.getApplyId())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 }

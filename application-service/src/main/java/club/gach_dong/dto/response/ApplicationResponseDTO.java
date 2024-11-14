@@ -23,6 +23,12 @@ public class ApplicationResponseDTO {
 
         @Schema(description = "지원서 양식 상태 (임시 저장인지, 삭제 가능한지 등)", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
         private String formStatus;
+
+        @Schema(description = "동아리 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private Long clubId;
+
+        @Schema(description = "지원 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private Long applyId;
     }
 
     @Getter

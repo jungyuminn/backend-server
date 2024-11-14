@@ -3,10 +3,12 @@ package club.gach_dong.controller;
 import club.gach_dong.api.ApplicationAdminApiSpecification;
 import club.gach_dong.dto.request.ApplicationRequestDTO;
 import club.gach_dong.dto.response.ApplicationResponseDTO;
+import club.gach_dong.dto.response.ApplicationResponseDTO.ToGetFormInfoAdminDTO;
 import club.gach_dong.response.ResForm;
 import club.gach_dong.response.status.InSuccess;
 import club.gach_dong.service.ApplicationService;
 import club.gach_dong.service.AuthorizationService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -78,5 +80,13 @@ public class ApplicationAdminController implements ApplicationAdminApiSpecificat
         ApplicationResponseDTO.ToGetApplicationDTO toGetApplicationDTO = applicationService.getApplicationAdmin(
                 userReferenceId, applicationId);
         return ResForm.onSuccess(InSuccess.APPLICATION_GET_SUCCESS, toGetApplicationDTO);
+    }
+
+    @Override
+    public ResForm<List<ToGetFormInfoAdminDTO>> getClubApplicationFormList(Long clubId, String userReferenceId) {
+        List<ApplicationResponseDTO.ToGetFormInfoAdminDTO> toGetFormInfoAdminDTOList = applicationService.toGetFormInfoListAdmin(
+                userReferenceId, clubId);
+
+        return ResForm.onSuccess(InSuccess._OK, toGetFormInfoAdminDTOList);
     }
 }
