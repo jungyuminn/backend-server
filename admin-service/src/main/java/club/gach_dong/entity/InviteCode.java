@@ -24,13 +24,17 @@ public class InviteCode {
     @Column(nullable = false)
     private LocalDateTime expiryDate;
 
-    public InviteCode(String userReferenceId, String inviteCode, LocalDateTime expiryDate) {
+    @Column(nullable = false)
+    private Long clubId;
+
+    public InviteCode(String userReferenceId, String inviteCode, LocalDateTime expiryDate, Long clubId) {
         this.userReferenceId = userReferenceId;
         this.inviteCode = inviteCode;
         this.expiryDate = expiryDate;
+        this.clubId = clubId;
     }
 
-    public static InviteCode of(String userReferenceId, String inviteCode, LocalDateTime expiryDate) {
-        return new InviteCode(userReferenceId, inviteCode, expiryDate);
+    public static InviteCode of(String userReferenceId, String inviteCode, LocalDateTime expiryDate, Long clubId) {
+        return new InviteCode(userReferenceId, inviteCode, expiryDate, clubId);
     }
 }

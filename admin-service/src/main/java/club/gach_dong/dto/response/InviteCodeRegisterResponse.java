@@ -14,14 +14,18 @@ public record InviteCodeRegisterResponse(
         String inviteCode,
 
         @Schema(description = "만료 날짜", example = "2024-11-20T10:15:30")
-        String expiryDate
+        String expiryDate,
+
+        @Schema(description = "클럽 ID", example = "123")
+        Long clubId
 ) {
     public static InviteCodeRegisterResponse from(InviteCode inviteCode, String registeredBy) {
         return new InviteCodeRegisterResponse(
                 inviteCode.getUserReferenceId(),
                 registeredBy,
                 inviteCode.getInviteCode(),
-                inviteCode.getExpiryDate().toString()
+                inviteCode.getExpiryDate().toString(),
+                inviteCode.getClubId()
         );
     }
 }

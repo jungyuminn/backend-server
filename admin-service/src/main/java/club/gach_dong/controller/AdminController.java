@@ -17,17 +17,19 @@ public class AdminController implements AdminApiSpecification {
     private final AdminService adminService;
 
     @Override
-    public ResponseEntity<InviteCodeResponse> createInviteCode(@RequestUserReferenceId String userReferenceId) {
-
+    public ResponseEntity<InviteCodeResponse> createInviteCode(
+            @RequestUserReferenceId String userReferenceId,
+            @RequestParam Long clubId) {
         if (userReferenceId.isEmpty()) {
             throw new UserException.UserNotFound();
         }
 
-        InviteCode inviteCode = adminService.generateInviteCode(userReferenceId);
+        InviteCode inviteCode = adminService.generateInviteCode(userReferenceId, clubId);
         InviteCodeResponse response = InviteCodeResponse.from(inviteCode);
         return ResponseEntity.ok(response);
     }
 
+    @Override
     public ResponseEntity<InviteCodeRegisterResponse> registerInviteCode(
             @RequestParam String inviteCode,
             @RequestUserReferenceId String userReferenceId) {
@@ -41,5 +43,4 @@ public class AdminController implements AdminApiSpecification {
 
         return ResponseEntity.ok(response);
     }
-
 }

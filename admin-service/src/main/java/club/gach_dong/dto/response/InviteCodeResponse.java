@@ -11,13 +11,17 @@ public record InviteCodeResponse(
         String inviteCode,
 
         @Schema(description = "만료 날짜", example = "2024-11-20T10:15:30")
-        String expiryDate
+        String expiryDate,
+
+        @Schema(description = "클럽 ID", example = "123")
+        Long clubId
 ) {
     public static InviteCodeResponse from(InviteCode inviteCode) {
         return new InviteCodeResponse(
                 inviteCode.getUserReferenceId(),
                 inviteCode.getInviteCode(),
-                inviteCode.getExpiryDate().toString()
+                inviteCode.getExpiryDate().toString(),
+                inviteCode.getClubId()
         );
     }
 }
