@@ -8,7 +8,7 @@ import club.gach_dong.dto.request.CreateNotificationRequest;
 import club.gach_dong.dto.response.NotificationResponse;
 import club.gach_dong.dto.response.UserProfileResponse;
 import club.gach_dong.repository.NotificationRepository;
-import club.gach_dong.repository.NotificationTemplateRepository;
+//import club.gach_dong.repository.NotificationTemplateRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
