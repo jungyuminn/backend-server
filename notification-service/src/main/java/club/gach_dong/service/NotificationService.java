@@ -3,7 +3,7 @@ package club.gach_dong.service;
 import static club.gach_dong.exception.NotificationException.*;
 
 import club.gach_dong.domain.Notification;
-import club.gach_dong.domain.NotificationTemplate;
+//import club.gach_dong.domain.NotificationTemplate;
 import club.gach_dong.dto.request.CreateNotificationRequest;
 import club.gach_dong.dto.response.NotificationResponse;
 import club.gach_dong.dto.response.UserProfileResponse;
@@ -29,7 +29,7 @@ public class NotificationService {
     private final EmailService emailService;
     private final RestClient restClient;
     private final NotificationRepository notificationRepository;
-    private final NotificationTemplateRepository templateRepository;
+//    private final NotificationTemplateRepository templateRepository;
 
     public List<NotificationResponse> getUserNotifications() {
         UserProfileResponse userProfile = getUserProfileResponse();
