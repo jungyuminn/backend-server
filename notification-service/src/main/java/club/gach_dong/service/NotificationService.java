@@ -32,14 +32,9 @@ public class NotificationService {
     private final NotificationTemplateRepository templateRepository;
 
     public List<NotificationResponse> getUserNotifications() {
-        UserProfileResponse userProfile = restClient.get()
-                .uri(gatewayEndpoint + "/auth/api/v1/profile")
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .onStatus(httpStatusCode -> !httpStatusCode.is2xxSuccessful(), (request, response) -> new AuthAPIFailedException())
-                .body(UserProfileResponse.class);
+        UserProfileResponse userProfile = getUserProfileResponse();
 
-        List<Notification> notifications = notificationRepository.findByUserReferenceIdAndPublishType(userProfile.email(), "EMAIL");
+        List<Notification> notifications = notificationRepository.findByUserEmailAndPublishType(userProfile.email(), "EMAIL");
         return notifications.stream()
                 .map(NotificationResponse::from)
                 .toList();
