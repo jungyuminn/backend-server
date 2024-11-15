@@ -293,10 +293,6 @@ public class ApplicationService {
                     .build();
         }
 
-//        if (applicationList.isEmpty()) {
-//            throw new CustomException(ErrorCode.APPLICATION_NOT_PRESENT);
-//        }
-
         List<String> userIds = applicationList.stream()
                 .map(Application::getUserId)
                 .collect(Collectors.toList());
