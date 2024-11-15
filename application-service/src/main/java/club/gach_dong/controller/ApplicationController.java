@@ -38,31 +38,31 @@ public class ApplicationController implements ApplicationApiSpecification {
     }
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> createApplication(Long applyId,
+    public ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> createApplication(Long recruitmentId,
                                                                                     List<MultipartFile> files,
                                                                                     ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
                                                                                     String userReferenceId) {
 
         ApplicationResponseDTO.ToCreateApplicationDTO toCreateApplicationDTO = applicationService.createApplication(
-                applyId, files, toApplyClub, userReferenceId);
+                recruitmentId, files, toApplyClub, userReferenceId);
         return ResForm.onSuccess(InSuccess.APPLICATION_SUCCESS, toCreateApplicationDTO);
     }
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> changeApplication(Long applyId,
+    public ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> changeApplication(Long recruitmentId,
                                                                                     List<MultipartFile> certificateDocs,
                                                                                     ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
                                                                                     String userReferenceId) {
 
         ApplicationResponseDTO.ToCreateApplicationDTO toChangeApplicationDTO = applicationService.changeApplication(
-                applyId, certificateDocs, toApplyClub, userReferenceId);
+                recruitmentId, certificateDocs, toApplyClub, userReferenceId);
         return ResForm.onSuccess(InSuccess.APPLICATION_CHANGED, toChangeApplicationDTO);
     }
 
     @Override
-    public ResForm<?> deleteApplication(Long applyId, String userReferenceId) {
+    public ResForm<?> deleteApplication(Long recruitmentId, String userReferenceId) {
 
-        applicationService.deleteApplication(applyId, userReferenceId);
+        applicationService.deleteApplication(recruitmentId, userReferenceId);
         return ResForm.onSuccess(InSuccess.APPLICATION_DELETED, null);
     }
 

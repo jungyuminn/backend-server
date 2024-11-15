@@ -27,8 +27,8 @@ public class ApplicationForm {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "apply_id", nullable = false)
-    private Long applyId;
+    @Column(name = "recruitment_id", nullable = false)
+    private Long recruitmentId;
 
     @Column(name = "application_form_status", nullable = false)
     @Enumerated(value = EnumType.STRING)

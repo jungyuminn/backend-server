@@ -39,25 +39,26 @@ public interface ApplicationApiSpecification {
             @RequestUserReferenceId String userReferenceId);
 
     @Operation(summary = "동아리 지원 API", description = "동아리에 지원합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @PostMapping(value = "/{apply_id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{recruitmentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> createApplication(
-            @PathVariable("apply_id") Long applyId,
+            @PathVariable("recruitmentId") Long recruitmentId,
             @RequestPart(value = "files", required = false) @Parameter(description = "업로드할 문서 리스트") List<MultipartFile> files,
             @RequestPart(value = "toApplyClub") @Parameter(description = "동아리 지원에 필요한 요청 데이터") @Valid ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
             @RequestUserReferenceId String userReferenceId
     );
 
     @Operation(summary = "동아리 지원 수정 API", description = "동아리에 지원을 수정합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @PutMapping(value = "/{apply_id} ", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/{recruitmentId} ", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResForm<ApplicationResponseDTO.ToCreateApplicationDTO> changeApplication(
-            @PathVariable("apply_id") Long applyId,
+            @PathVariable("recruitmentId") Long recruitmentId,
             @RequestPart(value = "certificateDocs", required = true) @Parameter(description = "업로드할 문서 리스트") List<MultipartFile> certificateDocs,
             @RequestPart(value = "toApplyClub", required = true) @Parameter(description = "동아리 지원에 필요한 요청 데이터") @Valid ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
             @RequestUserReferenceId String userReferenceId);
 
     @Operation(summary = "사용자 지원 취소 API", description = "지원 ID를 이용해 지원을 취소합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @DeleteMapping("/apply/{applyId}")
-    ResForm<?> deleteApplication(@PathVariable("applyId") Long applyId, @RequestUserReferenceId String userReferenceId);
+    @DeleteMapping("/apply/{recruitmentId}")
+    ResForm<?> deleteApplication(@PathVariable("recruitmentId") Long recruitmentId,
+                                 @RequestUserReferenceId String userReferenceId);
 
     @Operation(summary = "사용자 임시저장 여부 및 내용 반환 API", description = "지원 ID를 이용해 해당 사용자가 해당 임시적으로 저장한 지원이 있는지 확인 및 내용을 반환합니다.", security = @SecurityRequirement(name = "Authorization"))
     @GetMapping("/apply/{applyId}")
