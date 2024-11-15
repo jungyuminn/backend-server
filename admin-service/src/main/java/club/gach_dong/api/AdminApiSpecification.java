@@ -1,7 +1,6 @@
 package club.gach_dong.api;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,6 @@ public interface AdminApiSpecification {
             security = @SecurityRequirement(name = "Authorization"))
     @PostMapping("/create/invite-code")
     ResponseEntity<InviteCodeResponse> createInviteCode(
-            @Parameter(hidden = true)
             @RequestUserReferenceId String userReferenceId,
             @RequestParam Long clubId
     );
@@ -31,7 +29,6 @@ public interface AdminApiSpecification {
     @PostMapping("/register/invite-code")
     ResponseEntity<InviteCodeRegisterResponse> registerInviteCode(
             @RequestParam String inviteCode,
-            @Parameter(hidden = true)
             @RequestUserReferenceId String userReferenceId
     );
 }
