@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import club.gach_dong.dto.request.AuthorizeAdminRequest;
 import club.gach_dong.entity.InviteCode;
 import club.gach_dong.repository.InviteCodeRepository;
 
@@ -39,17 +40,17 @@ public class AdminService {
         }
 
         Long clubId = existingCode.getClubId();
+        String url = clubServiceUrl + "/api/v1/authorize-admin";
 
-        String url = clubServiceUrl;
+        AuthorizeAdminRequest request = new AuthorizeAdminRequest(clubId, userReferenceId);
 
         try {
-            ResponseEntity<Boolean> response = restTemplate.postForEntity(url, clubId, Boolean.class);
+            ResponseEntity<Boolean> response = restTemplate.postForEntity(url, request, Boolean.class);
 
-            if (!response.getStatusCode().is2xxSuccessful() || !response.getBody()) {
+            if (!response.getStatusCode().is2xxSuccessful() || Boolean.FALSE.equals(response.getBody())) {
                 throw new IllegalArgumentException("동아리 관리자 권한 부여 실패");
-            } else {
-                System.out.println("동아리 관리자 권한 부여 성공: " + clubId);
             }
+
         } catch (HttpClientErrorException e) {
             throw new IllegalArgumentException("동아리 관리자 권한 부여 요청 실패: " + e.getMessage(), e);
         } catch (Exception e) {
