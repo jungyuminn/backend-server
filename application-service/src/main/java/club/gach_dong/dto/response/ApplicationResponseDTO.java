@@ -28,7 +28,7 @@ public class ApplicationResponseDTO {
         private Long clubId;
 
         @Schema(description = "지원 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
-        private Long applyId;
+        private Long recruitmentId;
     }
 
     @Getter
@@ -85,7 +85,7 @@ public class ApplicationResponseDTO {
     @Schema(description = "동아리 지원 결과 반환 DTO")
     public static class ToCreateApplicationDTO {
         @Schema(description = "접수된 지원 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
-        private Long applyId;
+        private Long applicationId;
     }
 
     @Getter

@@ -30,8 +30,8 @@ public class Application {
     @Column(name = "user_id", nullable = false)
     private String userId;
 
-    @Column(name = "apply_id", nullable = false)
-    private Long applyId;
+    @Column(name = "recruitment_id", nullable = false)
+    private Long recruitmentId;
 
     @Column(name = "application_form_id", nullable = false)
     private Long applicationFormId;

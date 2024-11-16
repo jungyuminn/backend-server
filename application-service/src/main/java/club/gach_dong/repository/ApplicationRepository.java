@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 
-    Optional<Application> findByUserIdAndApplyId(String userId, Long applyId);
+    Optional<Application> findByUserIdAndRecruitmentId(String userId, Long recruitmentId);
 
     List<Application> findAllByUserId(String userId);
 
@@ -20,7 +20,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Query("UPDATE application a SET a.applicationStatus = :status WHERE a = :application")
     void updateApplicationStatus(@Param("status") String status, @Param("application") Application application);
 
-    List<Application> findAllByApplyIdAndApplicationStatus(Long applyId, String status);
+    List<Application> findAllByRecruitmentIdAndApplicationStatus(Long recruitmentId, String status);
 
-    Optional<Application> findByApplyIdAndApplicationStatusAndUserId(Long applyId, String status, String userId);
+    Optional<Application> findByRecruitmentIdAndApplicationStatusAndUserId(Long recruitmentId, String status,
+                                                                           String userId);
 }

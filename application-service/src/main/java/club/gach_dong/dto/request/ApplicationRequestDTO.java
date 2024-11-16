@@ -14,8 +14,8 @@ public class ApplicationRequestDTO {
     @Getter
     public static class ToCreateApplicationFormDTO {
         @Schema(description = "지원 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false, example = "3")
-        @NotNull(message = "ApplyId가 누락되었습니다.")
-        private Long applyId;
+        @NotNull(message = "RecruitmentId가 누락되었습니다.")
+        private Long recruitmentId;
 
         @Schema(description = "지원서 양식 상태(임시저장/저장)", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false, example = "SAVED")
         @NotNull(message = "지원 양식 상태가 누락되었습니다.")

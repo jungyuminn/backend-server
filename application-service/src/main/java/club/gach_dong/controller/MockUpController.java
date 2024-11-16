@@ -77,9 +77,4 @@ public class MockUpController {
         String profileImageUrl;
 
     }
-
-//    @DeleteMapping("/test")
-//    public void deleteApply() {
-//        objectStorageService.deleteObject("ApplicationDocs", "testImg");
-//    }
 }

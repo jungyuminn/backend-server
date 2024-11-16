@@ -51,12 +51,12 @@ public class ApplicationService {
             ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, String userId) {
 
         //Verify Club Admin Auth with Apply_Id, User_Id
-        authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getApplyId());
+        authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getRecruitmentId());
 
         ApplicationForm applicationForm = ApplicationForm.builder()
                 .applicationFormStatus(ApplicationFormStatus.valueOf(toCreateApplicationFormDTO.getStatus()))
                 .formName(toCreateApplicationFormDTO.getFormName())
-                .applyId(toCreateApplicationFormDTO.getApplyId())
+                .recruitmentId(toCreateApplicationFormDTO.getRecruitmentId())
                 .clubId(toCreateApplicationFormDTO.getClubId())
                 .body(toCreateApplicationFormDTO.getFormBody())
                 .build();
@@ -75,7 +75,7 @@ public class ApplicationService {
                 .orElseThrow(ApplicationException.ApplicationFormNotFoundException::new);
 
         //Verify Club Admin Auth with Apply_Id, User_Id
-        authorizationService.getAuthByUserIdAndApplyId(userId, applicationForm.getApplyId());
+        authorizationService.getAuthByUserIdAndApplyId(userId, applicationForm.getRecruitmentId());
 
         return ApplicationResponseDTO.ToGetFormInfoAdminDTO.builder()
                 .formId(applicationForm.getId())
@@ -83,7 +83,7 @@ public class ApplicationService {
                 .formBody(applicationForm.getBody())
                 .formStatus(String.valueOf(applicationForm.getApplicationFormStatus()))
                 .clubId(applicationForm.getClubId())
-                .applyId(applicationForm.getApplyId())
+                .recruitmentId(applicationForm.getRecruitmentId())
                 .build();
     }
 
@@ -107,7 +107,7 @@ public class ApplicationService {
                 .orElseThrow(ApplicationException.ApplicationFormNotFoundException::new);
 
         //Verify Club Admin Auth with Apply_Id, User_Id
-        authorizationService.getAuthByUserIdAndApplyId(userId, applicationForm.getApplyId());
+        authorizationService.getAuthByUserIdAndApplyId(userId, applicationForm.getRecruitmentId());
 
         if (applicationForm.getApplicationFormStatus() == ApplicationFormStatus.IN_USE) {
             throw new ApplicationFormInUseException();
@@ -123,10 +123,10 @@ public class ApplicationService {
                                                                                    String userId) {
 
         //Verify it is valid apply
-        authorizationService.getApplyIsValid(toCreateApplicationFormDTO.getApplyId());
+        authorizationService.getApplyIsValid(toCreateApplicationFormDTO.getRecruitmentId());
 
         //Verify Club Admin Auth with Apply_Id, User_Id
-        authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getApplyId());
+        authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getRecruitmentId());
 
         ApplicationForm applicationForm = applicationFormRepository.findById(formId)
                 .orElseThrow(ApplicationException.ApplicationFormNotFoundException::new);
@@ -137,15 +137,17 @@ public class ApplicationService {
     }
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationDTO createApplication(Long applyId, List<MultipartFile> files,
+    public ApplicationResponseDTO.ToCreateApplicationDTO createApplication(Long recruitmentId,
+                                                                           List<MultipartFile> files,
                                                                            ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
                                                                            String userId) {
 
         //Verify it is valid apply
-        authorizationService.getApplyIsValid(applyId);
+        authorizationService.getApplyIsValid(recruitmentId);
 
         //Check it is duplicated
-        Optional<Application> applicationOptional = applicationRepository.findByUserIdAndApplyId(userId, applyId);
+        Optional<Application> applicationOptional = applicationRepository.findByUserIdAndRecruitmentId(userId,
+                recruitmentId);
         if (applicationOptional.isPresent()) {
             Application application = applicationOptional.get();
 
@@ -153,7 +155,7 @@ public class ApplicationService {
                 throw new ApplicationDuplicatedException();
             }
 
-            deleteApplication(applyId, userId);
+            deleteApplication(recruitmentId, userId);
 
         }
 
@@ -167,26 +169,11 @@ public class ApplicationService {
             if (files.size() > 5) {
                 throw new FileTooManyException();
             }
-
-            //uploadFiles
-            for (MultipartFile file : files) {
-                String fileName = file.getOriginalFilename();
-                String uuid = UUID.randomUUID().toString();
-                String fileUrl = objectStorageService.uploadObject(objectStorageServiceConfig.getApplicationDocsDir(),
-                        uuid, file);
-
-                ApplicationDocs applicationDocs = ApplicationDocs.builder()
-                        .applicationId(applyId)
-                        .fileName(fileName)
-                        .fileUrl(fileUrl)
-                        .build();
-                applicationDocsRepository.save(applicationDocs);
-            }
         }
 
         Application application = Application.builder()
                 .userId(userId)
-                .applyId(applyId)
+                .recruitmentId(recruitmentId)
                 .applicationFormId(toApplyClub.getApplicationFormId())
                 .applicationBody(toApplyClub.getFormBody())
                 .applicationStatus(toApplyClub.getStatus())
@@ -196,15 +183,32 @@ public class ApplicationService {
 
         Application applicationId = applicationRepository.save(application);
 
+        if (files != null) {
+            //uploadFiles
+            for (MultipartFile file : files) {
+                String fileName = file.getOriginalFilename();
+                String uuid = UUID.randomUUID().toString();
+                String fileUrl = objectStorageService.uploadObject(objectStorageServiceConfig.getApplicationDocsDir(),
+                        uuid, file);
+
+                ApplicationDocs applicationDocs = ApplicationDocs.builder()
+                        .applicationId(applicationId.getId())
+                        .fileName(fileName)
+                        .fileUrl(fileUrl)
+                        .build();
+                applicationDocsRepository.save(applicationDocs);
+            }
+        }
+
         return ApplicationResponseDTO.ToCreateApplicationDTO.builder()
-                .applyId(applicationId.getId())
+                .applicationId(applicationId.getId())
                 .build();
     }
 
     @Transactional
-    public void deleteApplication(Long applyId, String userId) {
+    public void deleteApplication(Long recruitmentId, String userId) {
 
-        Application application = applicationRepository.findByUserIdAndApplyId(userId, applyId)
+        Application application = applicationRepository.findByUserIdAndRecruitmentId(userId, recruitmentId)
                 .orElseThrow(ApplicationException.ApplicationNotFoundException::new);
 
         //If application is not owner of user
@@ -217,7 +221,7 @@ public class ApplicationService {
             throw new ApplicationNotChangeableException();
         }
 
-        List<ApplicationDocs> applicationDocsList = applicationDocsRepository.findAllByApplicationId(applyId);
+        List<ApplicationDocs> applicationDocsList = applicationDocsRepository.findAllByApplicationId(recruitmentId);
 
         if (!applicationDocsList.isEmpty()) {
             for (ApplicationDocs applicationDocs : applicationDocsList) {
@@ -230,11 +234,12 @@ public class ApplicationService {
     }
 
     @Transactional
-    public ApplicationResponseDTO.ToCreateApplicationDTO changeApplication(Long applyId, List<MultipartFile> files,
+    public ApplicationResponseDTO.ToCreateApplicationDTO changeApplication(Long recruitmentId,
+                                                                           List<MultipartFile> files,
                                                                            ApplicationRequestDTO.ToApplyClubDTO toApplyClub,
                                                                            String userId) {
-        deleteApplication(applyId, userId);
-        return createApplication(applyId, files, toApplyClub, userId);
+        deleteApplication(recruitmentId, userId);
+        return createApplication(recruitmentId, files, toApplyClub, userId);
     }
 
     @Transactional(readOnly = true)
@@ -266,18 +271,20 @@ public class ApplicationService {
                 .orElseThrow(ApplicationException.ApplicationNotFoundException::new);
 
         //Verify Club Admin Auth with Apply_Id, User_Id
-        authorizationService.getAuthByUserIdAndApplyId(userId, application.getApplyId());
+        authorizationService.getAuthByUserIdAndApplyId(userId, application.getRecruitmentId());
 
         applicationRepository.updateApplicationStatus(toChangeApplicationStatus.getStatus(), application);
     }
 
     @Transactional(readOnly = true)
-    public ApplicationResponseDTO.ToGetApplicationListAdminDTO getApplicationListAdmin(String userId, Long applyId) {
+    public ApplicationResponseDTO.ToGetApplicationListAdminDTO getApplicationListAdmin(String userId,
+                                                                                       Long recruitmentId) {
 
         //Verify Club Admin Auth with Apply_Id, User_Id
-        authorizationService.getAuthByUserIdAndApplyId(userId, applyId);
+        authorizationService.getAuthByUserIdAndApplyId(userId, recruitmentId);
 
-        List<Application> applicationList = applicationRepository.findAllByApplyIdAndApplicationStatus(applyId,
+        List<Application> applicationList = applicationRepository.findAllByRecruitmentIdAndApplicationStatus(
+                recruitmentId,
                 "SAVED");
 
         if (applicationList.isEmpty()) {
@@ -285,10 +292,6 @@ public class ApplicationService {
                     .toGetApplicationDTO(null)
                     .build();
         }
-
-//        if (applicationList.isEmpty()) {
-//            throw new CustomException(ErrorCode.APPLICATION_NOT_PRESENT);
-//        }
 
         List<String> userIds = applicationList.stream()
                 .map(Application::getUserId)
@@ -323,7 +326,7 @@ public class ApplicationService {
     @Transactional(readOnly = true)
     public ApplicationResponseDTO.ToGetApplicationTempDTO getApplicationTemp(Long recruitmentId, String userId) {
 
-        Application application = applicationRepository.findByApplyIdAndApplicationStatusAndUserId(recruitmentId,
+        Application application = applicationRepository.findByRecruitmentIdAndApplicationStatusAndUserId(recruitmentId,
                 "TEMPORARY_SAVED", userId).orElse(null);
 
         if (application == null) {
@@ -343,7 +346,7 @@ public class ApplicationService {
                 .orElseThrow(ApplicationException.ApplicationNotFoundException::new);
 
         //Verify Club Admin Auth with Apply_Id, User_Id
-        authorizationService.getAuthByUserIdAndApplyId(userId, application.getApplyId());
+        authorizationService.getAuthByUserIdAndApplyId(userId, application.getRecruitmentId());
 
         List<AuthResponseDTO.getUserProfile> userProfiles = serviceMeshService.getUserProfiles(
                 Collections.singletonList(userId));
@@ -373,7 +376,7 @@ public class ApplicationService {
         }
 
         ApplicationForm firstForm = applicationFormList.get(0);
-        authorizationService.getAuthByUserIdAndApplyId(userId, firstForm.getApplyId());
+        authorizationService.getAuthByUserIdAndApplyId(userId, firstForm.getRecruitmentId());
 
         return applicationFormList.stream()
                 .map(applicationForm -> ApplicationResponseDTO.ToGetFormInfoAdminDTO.builder()
@@ -382,7 +385,7 @@ public class ApplicationService {
                         .formBody(applicationForm.getBody())
                         .formStatus(String.valueOf(applicationForm.getApplicationFormStatus()))
                         .clubId(applicationForm.getClubId())
-                        .applyId(applicationForm.getApplyId())
+                        .recruitmentId(applicationForm.getRecruitmentId())
                         .build())
                 .collect(Collectors.toList());
     }

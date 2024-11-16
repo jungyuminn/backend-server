@@ -65,11 +65,11 @@ public class ApplicationAdminController implements ApplicationAdminApiSpecificat
     }
 
     @Override
-    public ResForm<ApplicationResponseDTO.ToGetApplicationListAdminDTO> getClubApplicationList(Long applyId,
+    public ResForm<ApplicationResponseDTO.ToGetApplicationListAdminDTO> getClubApplicationList(Long recruitmentId,
                                                                                                String userReferenceId) {
 
         ApplicationResponseDTO.ToGetApplicationListAdminDTO toGetApplicationListAdminDTO = applicationService.getApplicationListAdmin(
-                userReferenceId, applyId);
+                userReferenceId, recruitmentId);
 
         return ResForm.onSuccess(InSuccess._OK, toGetApplicationListAdminDTO);
     }
