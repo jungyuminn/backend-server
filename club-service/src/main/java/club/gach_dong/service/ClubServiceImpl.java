@@ -1,5 +1,7 @@
 package club.gach_dong.service;
 
+import static club.gach_dong.exception.ClubException.*;
+
 import club.gach_dong.domain.Activity;
 import club.gach_dong.domain.Club;
 import club.gach_dong.domain.ClubAdmin;
@@ -19,7 +21,6 @@ import club.gach_dong.dto.response.CreateClubContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
-import club.gach_dong.exception.ClubException;
 import club.gach_dong.exception.ClubException.ClubNotFoundException;
 import club.gach_dong.repository.ClubRepository;
 import club.gach_dong.repository.RecruitmentRepository;
@@ -114,7 +115,7 @@ public class ClubServiceImpl implements ClubService {
         Recruitment recruitment = club.getRecruitment().stream()
                 .filter(r -> r.getId().equals(recruitmentId))
                 .findFirst()
-                .orElseThrow(ClubException.RecruitmentNotFoundException::new);
+                .orElseThrow(RecruitmentNotFoundException::new);
 
         return ClubRecruitmentDetailResponse.from(club, recruitment);
     }
@@ -148,7 +149,7 @@ public class ClubServiceImpl implements ClubService {
         Activity savedActivity = club.getActivities().stream()
                 .filter(a -> a.getTitle().equals(createClubActivityRequest.title()))
                 .findFirst()
-                .orElseThrow(ClubException.ActivityNotFoundException::new);
+                .orElseThrow(ActivityNotFoundException::new);
 
         return CreateClubActivityResponse.of(savedActivity);
     }
@@ -170,7 +171,7 @@ public class ClubServiceImpl implements ClubService {
         ContactInfo savedContactInfo = club.getContactInfo().stream()
                 .filter(c -> c.getContactValue().equals(createClubContactInfoRequest.contact()))
                 .findFirst()
-                .orElseThrow(ClubException.ContactInfoNotFoundException::new);
+                .orElseThrow(ContactInfoNotFoundException::new);
 
         return CreateClubContactInfoResponse.of(savedContactInfo);
     }
@@ -193,7 +194,7 @@ public class ClubServiceImpl implements ClubService {
         Recruitment savedRecruitment = club.getRecruitment().stream()
                 .filter(r -> r.getTitle().equals(createClubRecruitmentRequest.title()))
                 .findFirst()
-                .orElseThrow(ClubException.RecruitmentNotFoundException::new);
+                .orElseThrow(RecruitmentNotFoundException::new);
 
         return CreateClubRecruitmentResponse.of(savedRecruitment);
     }
