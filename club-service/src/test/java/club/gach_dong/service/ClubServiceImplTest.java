@@ -1,6 +1,7 @@
 package club.gach_dong.service;
 
 import static club.gach_dong.domain.ClubCategory.ACADEMIC;
+import static club.gach_dong.domain.ClubCategory.SPORTS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import net.minidev.json.JSONObject;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
+@Transactional
 class ClubServiceImplTest {
 
     @Autowired
@@ -44,16 +47,17 @@ class ClubServiceImplTest {
     @Test
     void createClubRecruitment() {
         // given
-        Club club = Club.of("동아리 이름", ACADEMIC, "동아리 소개", "동아리 소개", "이미지 URL", "회장 UUID", LocalDateTime.now());
+        Club club = createClub("동아리 1", ACADEMIC, "회장 UUID");
         clubRepository.save(club);
 
         // when
         JSONObject data = new JSONObject();
-        CreateClubRecruitmentRequest createClubRecruitmentRequest = new CreateClubRecruitmentRequest(1L, "모집공고 제목","모집공고 내용", 10L,  LocalDateTime.now(), LocalDateTime.now(), data);
+        CreateClubRecruitmentRequest createClubRecruitmentRequest = new CreateClubRecruitmentRequest(club.getId(), "모집공고 제목","모집공고 내용", 10L,  LocalDateTime.now(), LocalDateTime.now(), data);
         CreateClubRecruitmentResponse createClubRecruitmentResponse = clubService.createClubRecruitment("회장 UUID", createClubRecruitmentRequest);
 
         // then
-        assertThat(createClubRecruitmentResponse).extracting("clubId", "clubRecruitmentId").containsExactly(1L, 1L);
+        assertThat(createClubRecruitmentResponse.clubId()).isEqualTo(club.getId());
+        assertThat(createClubRecruitmentResponse.clubRecruitmentId()).isNotNull();
 
     }
 
@@ -61,15 +65,16 @@ class ClubServiceImplTest {
     @Test
     void createClubActivity() {
         // given
-        Club club = Club.of("동아리 이름", ACADEMIC, "동아리 소개", "동아리 소개", "이미지 URL", "회장 UUID", LocalDateTime.now());
+        Club club = createClub("동아리 1", ACADEMIC, "회장 UUID");
         clubRepository.save(club);
 
         // when
-        CreateClubActivityRequest createClubActivityRequest = new CreateClubActivityRequest(1L, "활동 내역 제목", "활동 내역 내용", LocalDate.now());
+        CreateClubActivityRequest createClubActivityRequest = new CreateClubActivityRequest(club.getId(), "활동 내역 제목", "활동 내역 내용", LocalDate.now());
         CreateClubActivityResponse createClubActivityResponse = clubService.createClubActivity("회장 UUID", createClubActivityRequest);
 
         // then
-        assertThat(createClubActivityResponse).extracting("clubId", "activityId").containsExactly(1L, 1L);
+        assertThat(createClubActivityResponse.clubId()).isEqualTo(club.getId());
+        assertThat(createClubActivityResponse.activityId()).isNotNull();
 
     }
 
@@ -77,24 +82,25 @@ class ClubServiceImplTest {
     @Test
     void createClubContactInfo() {
         // given
-        Club club = Club.of("동아리 이름", ACADEMIC, "동아리 소개", "동아리 소개", "이미지 URL", "회장 UUID", LocalDateTime.now());
+        Club club = createClub("동아리 1", ACADEMIC, "회장 UUID");
         clubRepository.save(club);
 
         // when
-        CreateClubContactInfoRequest createClubContactInfoRequest = new CreateClubContactInfoRequest(1L, "동아리 연락처 제목", "010-1234-5678");
+        CreateClubContactInfoRequest createClubContactInfoRequest = new CreateClubContactInfoRequest(club.getId(), "동아리 연락처 제목", "010-1234-5678");
         CreateClubContactInfoResponse createClubContactInfoResponse = clubService.createClubContactInfo("회장 UUID", createClubContactInfoRequest);
 
         // then
-        assertThat(createClubContactInfoResponse).extracting("clubId", "ContactId").containsExactly(1L, 1L);
+        assertThat(createClubContactInfoResponse.clubId()).isEqualTo(club.getId());
+        assertThat(createClubContactInfoResponse.ContactId()).isNotNull();
     }
 
     @DisplayName("모든 동아리를 조회한다.")
     @Test
     void getAllClubs() {
         // given
-        Club club1 = Club.of("동아리 이름1", ACADEMIC, "동아리 소개", "동아리 소개", "이미지 URL", "회장 UUID", LocalDateTime.now());
-        Club club2 = Club.of("동아리 이름2", ACADEMIC, "동아리 소개", "동아리 소개", "이미지 URL", "회장 UUID", LocalDateTime.now());
-        Club club3 = Club.of("동아리 이름3", ACADEMIC, "동아리 소개", "동아리 소개", "이미지 URL", "회장 UUID", LocalDateTime.now());
+        Club club1 = createClub("동아리 A", ACADEMIC, "회장 UUID 1234");
+        Club club2 = createClub("동아리 B", SPORTS, "회장 UUID 1424");
+        Club club3 = createClub("동아리 C", ACADEMIC, "회장 UUID 1265");
 
         clubRepository.saveAll(List.of(club1, club2, club3));
 
@@ -103,11 +109,11 @@ class ClubServiceImplTest {
 
         // then
         assertThat(clubs).hasSize(3)
-                .extracting("clubId", "clubName")
+                .extracting("clubName", "category")
                 .containsExactlyInAnyOrder(
-                        tuple(1L,"동아리 이름1"),
-                        tuple(2L,"동아리 이름2"),
-                        tuple(3L,"동아리 이름3")
+                        tuple("동아리 A", ACADEMIC),
+                        tuple("동아리 B", SPORTS),
+                        tuple("동아리 C", ACADEMIC)
                 );
     }
 
@@ -115,17 +121,28 @@ class ClubServiceImplTest {
     @Test
     void getClub() {
         // given
-        Club club1 = Club.of("동아리 이름1", ACADEMIC, "동아리 소개", "동아리 소개", "이미지 URL", "회장 UUID", LocalDateTime.now());
-        Club club2 = Club.of("동아리 이름2", ACADEMIC, "동아리 소개", "동아리 소개", "이미지 URL", "회장 UUID", LocalDateTime.now());
-        Club club3 = Club.of("동아리 이름3", ACADEMIC, "동아리 소개", "동아리 소개", "이미지 URL", "회장 UUID", LocalDateTime.now());
+        Club club1 = createClub("동아리 1", ACADEMIC, "회장 UUID 1234");
+        Club club2 = createClub("동아리 2", SPORTS, "회장 UUID 1424");
+        Club club3 = createClub("동아리 3", ACADEMIC, "회장 UUID 1265");
 
         clubRepository.saveAll(List.of(club1, club2, club3));
 
         // when
-        ClubResponse club = clubService.getClub(1L);
+        ClubResponse club = clubService.getClub(club1.getId());
 
         // then
-        assertThat(club).extracting("clubId", "clubName").containsExactly(1L, "동아리 이름1");
+        assertThat(club).extracting("clubId", "clubName").containsExactly(club1.getId(), "동아리 1");
+    }
 
+    private Club createClub(String clubName, ClubCategory category, String userReferenceId) {
+        return Club.builder()
+                .name(clubName)
+                .category(category)
+                .shortDescription("동아리 한줄 소개")
+                .introduction("동아리 설명")
+                .clubImageUrl("이미지 URL")
+                .userReferenceId(userReferenceId)
+                .establishedAt(LocalDateTime.now())
+                .build();
     }
 }
