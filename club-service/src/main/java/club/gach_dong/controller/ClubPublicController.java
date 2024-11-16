@@ -8,7 +8,7 @@ import club.gach_dong.dto.response.ClubRecruitmentDetailResponse;
 import club.gach_dong.dto.response.ClubRecruitmentResponse;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
-import club.gach_dong.service.ClubService;
+import club.gach_dong.service.ClubReadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,45 +17,45 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class ClubPublicController implements ClubPublicApiSpecification {
 
-    private final ClubService clubService;
+    private final ClubReadService clubReadService;
 
     @Override
     public ArrayResponse<ClubSummaryResponse> getClubs() {
-        List<ClubSummaryResponse> clubList = clubService.getAllClubs();
+        List<ClubSummaryResponse> clubList = clubReadService.getAllClubs();
         return ArrayResponse.of(clubList);
     }
 
     @Override
     public ClubResponse getClub(Long clubId) {
-        return clubService.getClub(clubId);
+        return clubReadService.getClub(clubId);
     }
 
     @Override
     public ArrayResponse<ClubActivityResponse> getClubActivities(Long clubId) {
-        List<ClubActivityResponse> clubActivityResponse = clubService.getClubActivities(clubId);
+        List<ClubActivityResponse> clubActivityResponse = clubReadService.getClubActivities(clubId);
         return ArrayResponse.of(clubActivityResponse);
     }
 
     @Override
     public ArrayResponse<ClubContactInfoResponse> getClubContactInfo(Long clubId) {
-        List<ClubContactInfoResponse> clubContactInfoResponse = clubService.getClubContactInfo(clubId);
+        List<ClubContactInfoResponse> clubContactInfoResponse = clubReadService.getClubContactInfo(clubId);
         return ArrayResponse.of(clubContactInfoResponse);
     }
 
     @Override
     public ArrayResponse<ClubRecruitmentResponse> getClubsRecruitments() {
-        List<ClubRecruitmentResponse> clubRecruitmentsResponse = clubService.getClubsRecruitments();
+        List<ClubRecruitmentResponse> clubRecruitmentsResponse = clubReadService.getClubsRecruitments();
         return ArrayResponse.of(clubRecruitmentsResponse);
     }
 
     @Override
     public ArrayResponse<ClubRecruitmentDetailResponse> getClubRecruitments(Long clubId) {
-        List<ClubRecruitmentDetailResponse> clubRecruitmentDetailResponse = clubService.getClubRecruitments(clubId);
+        List<ClubRecruitmentDetailResponse> clubRecruitmentDetailResponse = clubReadService.getClubRecruitments(clubId);
         return ArrayResponse.of(clubRecruitmentDetailResponse);
     }
 
     @Override
     public ClubRecruitmentDetailResponse getClubRecruitment(Long clubId, Long recruitmentId) {
-        return clubService.getClubRecruitment(clubId, recruitmentId);
+        return clubReadService.getClubRecruitment(clubId, recruitmentId);
     }
 }

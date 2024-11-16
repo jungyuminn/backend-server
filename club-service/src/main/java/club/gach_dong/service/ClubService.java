@@ -1,40 +1,100 @@
 package club.gach_dong.service;
 
+import static club.gach_dong.exception.ClubException.*;
+
+import club.gach_dong.domain.Activity;
+import club.gach_dong.domain.Club;
+import club.gach_dong.domain.ContactInfo;
+import club.gach_dong.domain.Recruitment;
 import club.gach_dong.dto.request.CreateClubActivityRequest;
 import club.gach_dong.dto.request.CreateClubContactInfoRequest;
 import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
-import club.gach_dong.dto.response.AdminAuthorizedClubResponse;
-import club.gach_dong.dto.response.ClubActivityResponse;
-import club.gach_dong.dto.response.ClubContactInfoResponse;
-import club.gach_dong.dto.response.ClubRecruitmentDetailResponse;
-import club.gach_dong.dto.response.ClubRecruitmentResponse;
 import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
 import club.gach_dong.dto.response.ClubResponse;
-import club.gach_dong.dto.response.ClubSummaryResponse;
+import club.gach_dong.exception.ClubException.ClubNotFoundException;
+import club.gach_dong.repository.ClubRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
-public interface ClubService {
-    List<ClubSummaryResponse> getAllClubs();
-    ClubResponse getClub(Long clubId);
-    List<ClubActivityResponse> getClubActivities(Long clubId);
-    List<ClubContactInfoResponse> getClubContactInfo(Long clubId);
-    List<ClubRecruitmentResponse> getClubsRecruitments();
-    List<ClubRecruitmentDetailResponse> getClubRecruitments(Long clubId);
-    ClubRecruitmentDetailResponse getClubRecruitment(Long clubId, Long recruitmentId);
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class ClubService {
 
-    //admin
-    ClubResponse createClub(String userReferenceId, CreateClubRequest createClubRequest);
-    CreateClubActivityResponse createClubActivity(String userReferenceId, CreateClubActivityRequest createClubActivityRequest);
-    CreateClubContactInfoResponse createClubContactInfo(String userReferenceId, CreateClubContactInfoRequest createClubContactInfoRequest);
-    CreateClubRecruitmentResponse createClubRecruitment(String userReferenceId, CreateClubRecruitmentRequest createClubRecruitmentRequest);
-    List<AdminAuthorizedClubResponse> getAuthorizedClubs(String userReferenceId);
-    Boolean hasAuthority(String userReferenceId, Long clubId);
-    Boolean isValidRecruitment(Long recruitmentId, LocalDateTime currentDateTime);
-    Boolean hasAuthorityByRecruitmentId(String userReferenceId, Long recruitmentId);
-    void authorizeAdmin(String userReferenceId, Long clubId);
+    private final ClubRepository clubRepository;
+
+    // admin
+    public ClubResponse createClub(String userReferenceId, CreateClubRequest createClubRequest) {
+
+        Club club = createClubRequest.toEntity(userReferenceId);
+        Club savedClub = clubRepository.save(club);
+
+        return ClubResponse.of(savedClub);
+    }
+
+    public CreateClubActivityResponse createClubActivity(
+            String userReferenceId,
+            CreateClubActivityRequest createClubActivityRequest
+    ) {
+
+        Club club = clubRepository.findById(createClubActivityRequest.clubId())
+                .orElseThrow(ClubNotFoundException::new);
+
+        Activity activity = createClubActivityRequest.toEntity(club);
+
+        club.addActivity(activity);
+        clubRepository.save(club);
+
+        Activity savedActivity = club.getActivities().stream()
+                .filter(a -> a.getTitle().equals(createClubActivityRequest.title()))
+                .findFirst()
+                .orElseThrow(ActivityNotFoundException::new);
+
+        return CreateClubActivityResponse.of(savedActivity);
+    }
+
+    public CreateClubContactInfoResponse createClubContactInfo(
+            String userReferenceId,
+            CreateClubContactInfoRequest createClubContactInfoRequest
+    ) {
+        Club club = clubRepository.findById(createClubContactInfoRequest.clubId())
+                .orElseThrow(ClubNotFoundException::new);
+
+        ContactInfo contactInfo = createClubContactInfoRequest.toEntity(club);
+
+        club.addContactInfo(contactInfo);
+        clubRepository.save(club);
+
+        ContactInfo savedContactInfo = club.getContactInfo().stream()
+                .filter(c -> c.getContactValue().equals(createClubContactInfoRequest.contact()))
+                .findFirst()
+                .orElseThrow(ContactInfoNotFoundException::new);
+
+        return CreateClubContactInfoResponse.of(savedContactInfo);
+    }
+
+    public CreateClubRecruitmentResponse createClubRecruitment(
+            String userReferenceId,
+            CreateClubRecruitmentRequest createClubRecruitmentRequest
+    ) {
+        Club club = clubRepository.findById(createClubRecruitmentRequest.clubId())
+                .orElseThrow(ClubNotFoundException::new);
+
+        Recruitment recruitment = createClubRecruitmentRequest.toEntity(club);
+
+        club.addRecruitment(recruitment);
+        clubRepository.save(club);
+
+        Recruitment savedRecruitment = club.getRecruitment().stream()
+                .filter(r -> r.getTitle().equals(createClubRecruitmentRequest.title()))
+                .findFirst()
+                .orElseThrow(RecruitmentNotFoundException::new);
+
+        return CreateClubRecruitmentResponse.of(savedRecruitment);
+    }
 }
