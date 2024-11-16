@@ -43,7 +43,7 @@ class ClubServiceImplTest {
     @Autowired
     private ClubService clubService;
 
-    @DisplayName("모집공고를 생성하면, 동아리 ID와 모집공고 ID를 반환한다.")
+    @DisplayName("모집공고를 생성하면, 동아리 ID, 동아리 지원서 양식 ID 및 모집공고 ID를 반환한다.")
     @Test
     void createClubRecruitment() {
         // given
@@ -52,11 +52,12 @@ class ClubServiceImplTest {
 
         // when
         JSONObject data = new JSONObject();
-        CreateClubRecruitmentRequest createClubRecruitmentRequest = new CreateClubRecruitmentRequest(club.getId(), "모집공고 제목","모집공고 내용", 10L,  LocalDateTime.now(), LocalDateTime.now(), data);
+        CreateClubRecruitmentRequest createClubRecruitmentRequest = new CreateClubRecruitmentRequest(club.getId(), "모집공고 제목","모집공고 내용", 10L,  1L, LocalDateTime.now(), LocalDateTime.now(), data);
         CreateClubRecruitmentResponse createClubRecruitmentResponse = clubService.createClubRecruitment("회장 UUID", createClubRecruitmentRequest);
 
         // then
         assertThat(createClubRecruitmentResponse.clubId()).isEqualTo(club.getId());
+        assertThat(createClubRecruitmentResponse.applicationFormId()).isEqualTo(1L);
         assertThat(createClubRecruitmentResponse.clubRecruitmentId()).isNotNull();
 
     }
