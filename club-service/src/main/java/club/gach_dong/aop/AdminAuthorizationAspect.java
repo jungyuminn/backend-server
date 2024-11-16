@@ -2,9 +2,12 @@ package club.gach_dong.aop;
 
 import club.gach_dong.annotation.AdminAuthorizationCheck;
 import club.gach_dong.domain.ClubAdminRole;
+import club.gach_dong.dto.request.ClubIdentifiable;
+import club.gach_dong.exception.ClubException.ClubAdminAccessDeniedException;
 import club.gach_dong.service.ClubService;
 import java.lang.reflect.Field;
 import java.nio.file.AccessDeniedException;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -18,17 +21,14 @@ public class AdminAuthorizationAspect {
 
     private final ClubService clubService;
 
-    @Around(value = "@annotation(adminAuthCheck) && args(userReferenceId, ..)", argNames = "joinPoint,adminAuthCheck,userReferenceId")
+    @Around(value = "@annotation(adminAuthCheck) && args(userReferenceId, clubIdHolder, ..)", argNames = "joinPoint,adminAuthCheck,userReferenceId,clubIdHolder")
     public Object checkAdminAuthorization(
             ProceedingJoinPoint joinPoint,
             AdminAuthorizationCheck adminAuthCheck,
-            String userReferenceId) throws Throwable {
+            String userReferenceId,
+            ClubIdentifiable clubIdHolder) throws Throwable {
 
-        Object[] args = joinPoint.getArgs();
-
-
-        Object requestDto = args[1];
-        Long clubId = extractClubIdFromDto(requestDto);
+        Long clubId = clubIdHolder.clubId();
 
         ClubAdminRole[] requiredRoles = adminAuthCheck.role();
         boolean hasRequiredRole = false;
@@ -44,12 +44,6 @@ public class AdminAuthorizationAspect {
             return joinPoint.proceed();
         }
 
-        throw new AccessDeniedException("사용자가 클럽에 필요한 역할을 가지고 있지 않습니다.");
-
-    }
-
-    private Long extractClubIdFromDto(Object requestDto) throws NoSuchFieldException, IllegalAccessException {
-        Field clubIdField = requestDto.getClass().getDeclaredField("clubId");
-        return (Long) clubIdField.get(requestDto);
+        throw new ClubAdminAccessDeniedException();
     }
 }

@@ -17,7 +17,7 @@ public record CreateClubContactInfoRequest(
         @Schema(description = "연락처", example = "010-1234-5678")
         @NotNull
         String contact
-) {
+) implements ClubIdentifiable {
         public ContactInfo toEntity(Club club) {
                 return ContactInfo.builder()
                         .club(club)

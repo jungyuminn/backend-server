@@ -45,7 +45,7 @@ public record CreateClubRecruitmentRequest(
         @Size(max = 2000, message = "모집 프로세스 설정 너무 큽니다.")
         @JsonProperty("processData")
         Map<String, Object> processData
-) {
+) implements ClubIdentifiable {
 
     public Recruitment toEntity(Club club) {
         return Recruitment.builder()

@@ -24,7 +24,7 @@ public record CreateClubActivityRequest(
         @Schema(description = "활동 날짜", example = "2023-08-31")
         @NotNull
         LocalDate date
-) {
+) implements ClubIdentifiable {
     public Activity toEntity(Club club) {
         return Activity.builder()
                 .club(club)
