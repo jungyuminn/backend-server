@@ -26,7 +26,7 @@ public class Club extends BaseEntity {
     @Schema(description = "동아리 ID", example = "1")
     private Long id;
 
-    @Column(name = "club_name", length = 26, columnDefinition = "CHAR(26)")
+    @Column(name = "club_name", length = 26, columnDefinition = "VARCHAR(26)")
     @Schema(description = "동아리 이름", example = "GDG Gachon")
     private String name;
 

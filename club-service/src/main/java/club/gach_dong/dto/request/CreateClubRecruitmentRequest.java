@@ -22,6 +22,9 @@ public record CreateClubRecruitmentRequest(
         @Schema(description = "모집 인원", example = "10", nullable = false)
         @NotNull
         Long recruitmentCount,
+        @Schema(description = "모집 공고와 연결된 지원서 양식 ID", example = "1", nullable = false)
+        @NotNull
+        Long applicationFormId,
         @Schema(description = "모집 시작일", example = "2021-01-01", nullable = false)
         @NotNull
         LocalDateTime startDate,
@@ -49,6 +52,7 @@ public record CreateClubRecruitmentRequest(
                 .club(club)
                 .title(title())
                 .content(content())
+                .applicationFormId(applicationFormId())
                 .recruitmentCount(recruitmentCount())
                 .startDate(startDate())
                 .endDate(endDate())
