@@ -45,7 +45,7 @@ public record ClubResponse(
         LocalDateTime updatedAt
 ) {
 
-    public static ClubResponse from(Club club) {
+    public static ClubResponse of(Club club) {
         return new ClubResponse(
                 club.getId(),
                 club.getName(),

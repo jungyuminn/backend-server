@@ -1,5 +1,7 @@
 package club.gach_dong.dto.request;
 
+import club.gach_dong.domain.Club;
+import club.gach_dong.domain.ContactInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,4 +18,11 @@ public record CreateClubContactInfoRequest(
         @NotNull
         String contact
 ) {
+        public ContactInfo toEntity(Club club) {
+                return ContactInfo.builder()
+                        .club(club)
+                        .contactMethod(type())
+                        .contactValue(contact())
+                        .build();
+        }
 }

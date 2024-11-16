@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Map;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -60,6 +61,7 @@ public class Recruitment {
     @JoinColumn(name = "club_id")
     private Club club;
 
+    @Builder
     private Recruitment(String title, String content, Long recruitmentCount, LocalDateTime startDate, LocalDateTime endDate, Map<String, Object> processData, Club club) {
         this.title = title;
         this.content = content;

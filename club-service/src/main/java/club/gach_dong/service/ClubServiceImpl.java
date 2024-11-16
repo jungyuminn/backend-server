@@ -46,7 +46,7 @@ public class ClubServiceImpl implements ClubService {
         List<ClubSummaryResponse> clubList = new ArrayList<>();
 
         for (Club club : clubRepository.findAll()) {
-            ClubSummaryResponse from = ClubSummaryResponse.from(club);
+            ClubSummaryResponse from = ClubSummaryResponse.of(club);
             clubList.add(from);
         }
 
@@ -56,7 +56,7 @@ public class ClubServiceImpl implements ClubService {
     @Override
     public ClubResponse getClub(Long clubIId) {
         return clubRepository.findById(clubIId)
-                .map(ClubResponse::from)
+                .map(ClubResponse::of)
                 .orElseThrow(ClubNotFoundException::new);
     }
 
@@ -68,7 +68,7 @@ public class ClubServiceImpl implements ClubService {
         List<Activity> activities = club.getActivities();
 
         return activities.stream()
-                .map(ClubActivityResponse::from)
+                .map(ClubActivityResponse::of)
                 .toList();
     }
 
@@ -80,7 +80,7 @@ public class ClubServiceImpl implements ClubService {
         List<ContactInfo> contactInfos = club.getContactInfo();
 
         return contactInfos.stream()
-                .map(ClubContactInfoResponse::from)
+                .map(ClubContactInfoResponse::of)
                 .toList();
     }
 
@@ -90,7 +90,7 @@ public class ClubServiceImpl implements ClubService {
 
         return clubs.stream()
                 .flatMap(club -> club.getRecruitment().stream()
-                        .map(recruitment -> ClubRecruitmentResponse.of(club, recruitment)))
+                        .map(recruitment -> ClubRecruitmentResponse.from(club, recruitment)))
                 .collect(Collectors.toList());
     }
 
@@ -102,7 +102,7 @@ public class ClubServiceImpl implements ClubService {
         List<Recruitment> recruitments = club.getRecruitment();
 
         return recruitments.stream()
-                .map(recruitment -> ClubRecruitmentDetailResponse.of(club, recruitment))
+                .map(recruitment -> ClubRecruitmentDetailResponse.from(club, recruitment))
                 .toList();
     }
 
@@ -116,7 +116,7 @@ public class ClubServiceImpl implements ClubService {
                 .findFirst()
                 .orElseThrow(ClubException.RecruitmentNotFoundException::new);
 
-        return ClubRecruitmentDetailResponse.of(club, recruitment);
+        return ClubRecruitmentDetailResponse.from(club, recruitment);
     }
 
     // admin
@@ -124,17 +124,10 @@ public class ClubServiceImpl implements ClubService {
     @Transactional
     public ClubResponse createClub(String userReferenceId, CreateClubRequest createClubRequest) {
 
-        Club club = Club.of(
-                createClubRequest.name(),
-                createClubRequest.category(),
-                createClubRequest.shortDescription(),
-                createClubRequest.introduction(),
-                createClubRequest.clubImageUrl(),
-                userReferenceId,
-                createClubRequest.establishedAt()
-        );
+        Club club = createClubRequest.toEntity(userReferenceId);
         Club savedClub = clubRepository.save(club);
-        return ClubResponse.from(savedClub);
+
+        return ClubResponse.of(savedClub);
     }
 
     @Override
@@ -147,12 +140,7 @@ public class ClubServiceImpl implements ClubService {
         Club club = clubRepository.findById(createClubActivityRequest.clubId())
                 .orElseThrow(ClubNotFoundException::new);
 
-        Activity activity = Activity.of(
-                createClubActivityRequest.title(),
-                createClubActivityRequest.date(),
-                createClubActivityRequest.description(),
-                club
-        );
+        Activity activity = createClubActivityRequest.toEntity(club);
 
         club.addActivity(activity);
         clubRepository.save(club);
@@ -162,10 +150,7 @@ public class ClubServiceImpl implements ClubService {
                 .findFirst()
                 .orElseThrow(ClubException.ActivityNotFoundException::new);
 
-        return CreateClubActivityResponse.of(
-                club.getId(),
-                savedActivity.getId()
-        );
+        return CreateClubActivityResponse.of(savedActivity);
     }
 
     @Override
@@ -177,11 +162,7 @@ public class ClubServiceImpl implements ClubService {
         Club club = clubRepository.findById(createClubContactInfoRequest.clubId())
                 .orElseThrow(ClubNotFoundException::new);
 
-        ContactInfo contactInfo = ContactInfo.of(
-                createClubContactInfoRequest.type(),
-                createClubContactInfoRequest.contact(),
-                club
-        );
+        ContactInfo contactInfo = createClubContactInfoRequest.toEntity(club);
 
         club.addContactInfo(contactInfo);
         clubRepository.save(club);
@@ -191,12 +172,10 @@ public class ClubServiceImpl implements ClubService {
                 .findFirst()
                 .orElseThrow(ClubException.ContactInfoNotFoundException::new);
 
-        return CreateClubContactInfoResponse.from(
-                club.getId(),
-                savedContactInfo.getId()
-        );
+        return CreateClubContactInfoResponse.of(savedContactInfo);
     }
 
+    // TODO : 모집 공고와 연관된 지원서 양식 ID를 어떻게 처리할지에 대한 논의 필요
     @Override
     @Transactional
     public CreateClubRecruitmentResponse createClubRecruitment(
@@ -206,15 +185,7 @@ public class ClubServiceImpl implements ClubService {
         Club club = clubRepository.findById(createClubRecruitmentRequest.clubId())
                 .orElseThrow(ClubNotFoundException::new);
 
-        Recruitment recruitment = Recruitment.of(
-                createClubRecruitmentRequest.title(),
-                createClubRecruitmentRequest.content(),
-                createClubRecruitmentRequest.recruitmentCount(),
-                createClubRecruitmentRequest.startDate(),
-                createClubRecruitmentRequest.endDate(),
-                createClubRecruitmentRequest.processData(),
-                club
-        );
+        Recruitment recruitment = createClubRecruitmentRequest.toEntity(club);
 
         club.addRecruitment(recruitment);
         clubRepository.save(club);
@@ -224,10 +195,7 @@ public class ClubServiceImpl implements ClubService {
                 .findFirst()
                 .orElseThrow(ClubException.RecruitmentNotFoundException::new);
 
-        return CreateClubRecruitmentResponse.from(
-                club.getId(),
-                savedRecruitment.getId()
-        );
+        return CreateClubRecruitmentResponse.of(savedRecruitment);
     }
 
     @Override

@@ -41,7 +41,7 @@ public record ClubRecruitmentResponse(
         ClubCategory category
 
 ) {
-    public static ClubRecruitmentResponse of(Club club, Recruitment recruitment) {
+    public static ClubRecruitmentResponse from(Club club, Recruitment recruitment) {
         return new ClubRecruitmentResponse(
                 club.getId(),
                 recruitment.getId(),

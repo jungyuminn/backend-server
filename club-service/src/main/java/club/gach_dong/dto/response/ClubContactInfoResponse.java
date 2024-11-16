@@ -13,7 +13,7 @@ public record ClubContactInfoResponse(
         @NotNull
         String contactValue
 ) {
-    public static ClubContactInfoResponse from(ContactInfo contactInfo) {
+    public static ClubContactInfoResponse of(ContactInfo contactInfo) {
         return new ClubContactInfoResponse(
                 contactInfo.getContactMethod(),
                 contactInfo.getContactValue()

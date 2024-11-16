@@ -43,7 +43,7 @@ public record ClubRecruitmentDetailResponse(
         @NotNull
         LocalDateTime endDate
 ) {
-    public static ClubRecruitmentDetailResponse of(Club club, Recruitment recruitment) {
+    public static ClubRecruitmentDetailResponse from(Club club, Recruitment recruitment) {
         return new ClubRecruitmentDetailResponse(
                 club.getId(),
                 recruitment.getId(),

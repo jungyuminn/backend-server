@@ -1,5 +1,6 @@
 package club.gach_dong.dto.response;
 
+import club.gach_dong.domain.Recruitment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
@@ -13,7 +14,10 @@ public record CreateClubRecruitmentResponse(
         @NotNull
         Long clubRecruitmentId
 ) {
-    public static CreateClubRecruitmentResponse from(Long clubId, Long clubRecruitmentId) {
-        return new CreateClubRecruitmentResponse(clubId, clubRecruitmentId);
+    public static CreateClubRecruitmentResponse of(Recruitment recruitment) {
+        return new CreateClubRecruitmentResponse(
+                recruitment.getClub().getId(),
+                recruitment.getId()
+        );
     }
 }

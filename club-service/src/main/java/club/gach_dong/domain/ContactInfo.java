@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,6 +32,7 @@ public class ContactInfo {
     @JoinColumn(name = "club_id")
     private Club club;
 
+    @Builder
     private ContactInfo(String contactMethod, String contactValue, Club club) {
         this.contactMethod = contactMethod;
         this.contactValue = contactValue;

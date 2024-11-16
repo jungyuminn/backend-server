@@ -1,5 +1,7 @@
 package club.gach_dong.dto.request;
 
+import club.gach_dong.domain.Club;
+import club.gach_dong.domain.Recruitment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -41,4 +43,16 @@ public record CreateClubRecruitmentRequest(
         @JsonProperty("processData")
         Map<String, Object> processData
 ) {
+
+    public Recruitment toEntity(Club club) {
+        return Recruitment.builder()
+                .club(club)
+                .title(title())
+                .content(content())
+                .recruitmentCount(recruitmentCount())
+                .startDate(startDate())
+                .endDate(endDate())
+                .processData(processData())
+                .build();
+    }
 }
