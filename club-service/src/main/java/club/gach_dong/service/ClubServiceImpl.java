@@ -176,7 +176,6 @@ public class ClubServiceImpl implements ClubService {
         return CreateClubContactInfoResponse.of(savedContactInfo);
     }
 
-    // TODO : 모집 공고와 연관된 지원서 양식 ID를 어떻게 처리할지에 대한 논의 필요
     @Override
     @Transactional
     public CreateClubRecruitmentResponse createClubRecruitment(
