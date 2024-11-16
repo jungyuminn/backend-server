@@ -24,9 +24,14 @@ public record ClubRecruitmentResponse(
         @NotNull
         String clubName,
 
+
         @Schema(description = "동아리 이미지 URL", example = "https://gach-dong.club")
         @NotNull
         String clubImageUrl,
+
+        @Schema(description = "동아리 지원서 양식 ID", example = "1", nullable = false)
+        @NotNull
+        Long applicationFormId,
 
         @Schema(description = "모집 시작일", example = "2021-09-01")
         @NotNull
@@ -48,6 +53,7 @@ public record ClubRecruitmentResponse(
                 recruitment.getTitle(),
                 club.getName(),
                 club.getClubImageUrl(),
+                recruitment.getApplicationFormId(),
                 recruitment.getStartDate(),
                 recruitment.getEndDate(),
                 club.getCategory()
