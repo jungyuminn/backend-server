@@ -54,22 +54,28 @@ public class JwtUtil {
 
     public String generateUserRefreshToken(User user) {
         Date expirationDate = Date.from(Instant.now().plus(7, ChronoUnit.DAYS));
-        return Jwts.builder()
+        String refreshToken = Jwts.builder()
                 .setSubject(user.getEmail())
                 .claim("user_reference_id", user.getUserReferenceId())
                 .setExpiration(expirationDate)
                 .signWith(userJwtKey, SignatureAlgorithm.HS512)
                 .compact();
+
+        redisTemplate.opsForValue().set(refreshToken, user.getEmail(), 7, TimeUnit.DAYS);
+        return refreshToken;
     }
 
     public String generateAdminRefreshToken(Admin admin) {
         Date expirationDate = Date.from(Instant.now().plus(7, ChronoUnit.DAYS));
-        return Jwts.builder()
+        String refreshToken = Jwts.builder()
                 .setSubject(admin.getEmail())
                 .claim("user_reference_id", admin.getUserReferenceId())
                 .setExpiration(expirationDate)
                 .signWith(adminJwtKey, SignatureAlgorithm.HS512)
                 .compact();
+
+        redisTemplate.opsForValue().set(refreshToken, admin.getEmail(), 7, TimeUnit.DAYS);
+        return refreshToken;
     }
 
     public String getUserEmailFromToken(String token) {
@@ -158,7 +164,7 @@ public class JwtUtil {
         long remainingValidity = expirationDate.getTime() - currentDate.getTime();
 
         if (remainingValidity > 0) {
-            redisTemplate.opsForValue().set(token, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set("blacklist:" + token, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -174,7 +180,7 @@ public class JwtUtil {
         long remainingValidity = expirationDate.getTime() - currentDate.getTime();
 
         if (remainingValidity > 0) {
-            redisTemplate.opsForValue().set(token, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set("blacklist:" + token, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -190,14 +196,16 @@ public class JwtUtil {
         long remainingValidity = expirationDate.getTime() - currentDate.getTime();
 
         if (remainingValidity > 0) {
-            redisTemplate.opsForValue().set(refreshToken, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set("blacklist:" + refreshToken.replace("Bearer ", ""), "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
         }
     }
 
     public void blacklistAdminRefreshToken(String adminRefreshToken) {
+        String token = adminRefreshToken.replace("Bearer ", "");
+
         Claims claims = Jwts.parser()
                 .setSigningKey(adminJwtKey)
-                .parseClaimsJws(adminRefreshToken.replace("Bearer ", ""))
+                .parseClaimsJws(token)
                 .getBody();
 
         Date expirationDate = claims.getExpiration();
@@ -206,17 +214,19 @@ public class JwtUtil {
         long remainingValidity = expirationDate.getTime() - currentDate.getTime();
 
         if (remainingValidity > 0) {
-            redisTemplate.opsForValue().set(adminRefreshToken, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set("blacklist:" + token, "blacklisted", remainingValidity, TimeUnit.MILLISECONDS);
         }
     }
 
     public boolean validateUserRefreshToken(String refreshToken) {
-        if (isTokenBlacklisted(refreshToken.replace("Bearer ", ""))) {
+        String token = refreshToken.replace("Bearer ", "");
+
+        if (isTokenBlacklisted(token)) {
             return false;
         }
 
         try {
-            Jwts.parser().setSigningKey(userJwtKey).parseClaimsJws(refreshToken.replace("Bearer ", ""));
+            Jwts.parser().setSigningKey(userJwtKey).parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
@@ -224,12 +234,14 @@ public class JwtUtil {
     }
 
     public boolean validateAdminRefreshToken(String adminRefreshToken) {
-        if (isTokenBlacklisted(adminRefreshToken.replace("Bearer ", ""))) {
+        String token = adminRefreshToken.replace("Bearer ", "");
+
+        if (isTokenBlacklisted(token)) {
             return false;
         }
 
         try {
-            Jwts.parser().setSigningKey(adminJwtKey).parseClaimsJws(adminRefreshToken.replace("Bearer ", ""));
+            Jwts.parser().setSigningKey(adminJwtKey).parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
@@ -237,6 +249,6 @@ public class JwtUtil {
     }
 
     public boolean isTokenBlacklisted(String token) {
-        return redisTemplate.hasKey(token);
+        return redisTemplate.hasKey("blacklist:" + token);
     }
 }

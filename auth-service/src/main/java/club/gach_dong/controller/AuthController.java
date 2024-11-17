@@ -113,7 +113,11 @@ public class AuthController implements AuthApiSpecification {
 
             String newAccessToken = jwtUtil.generateUserToken(user);
 
-            return ResponseEntity.ok(TokenResponse.of(newAccessToken));
+            String newRefreshToken = jwtUtil.generateUserRefreshToken(user);
+
+            jwtUtil.blacklistUserRefreshToken(refreshToken);
+
+            return ResponseEntity.ok(TokenResponse.of(newAccessToken, newRefreshToken));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(TokenResponse.withMessage("Access Token 재발급 실패: " + e.getMessage()));

@@ -43,7 +43,7 @@ public interface AuthApiSpecification {
     ResponseEntity<UserProfileResponse> getProfile(
             @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token);
 
-    @Operation(summary = "Refresh Token 재발급", description = "유효한 Refresh Token을 사용하여 새로운 Access Token을 발급받습니다.",
+    @Operation(summary = "Refresh Token 재발급", description = "유효한 Refresh Token을 사용하여 새로운 Refresh Token과 Access Token을 발급받습니다.",
             security = @SecurityRequirement(name = "Authorization"))
     @PostMapping("/refresh-token")
     ResponseEntity<TokenResponse> refreshToken(
