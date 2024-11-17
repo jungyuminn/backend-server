@@ -76,10 +76,9 @@ public class ApplicationRequestDTO {
         @Pattern(regexp = "TEMPORARY_SAVED|SAVED|SAVED_CHANGEABLE", message = "지원 상태는 TEMPORARY_SAVED 또는 SAVED, SAVED_CHANGEABLE 이어야 합니다.")
         private String status;
 
-        @Schema(description = "지원할 동아리 이름", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false, example = "가츠동")
-        @NotNull(message = "동아리 이름이 누락되었습니다.")
-        @Size(max = 80, message = "동이리 이름이 너무 큽니다.")
-        private String clubName;
+        @Schema(description = "지원할 동아리 id", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false, example = "3")
+        @NotNull(message = "동아리 id가 누락되었습니다.")
+        private Long clubId;
     }
 
     @Schema(description = "동아리 지원자 상태 수정 요청 DTO")

@@ -43,8 +43,8 @@ public class Application {
     @Column(name = "application_status", nullable = false, length = 30)
     private String applicationStatus;
 
-    @Column(name = "club_name", nullable = false, length = 80)
-    private String clubName;
+    @Column(name = "club_name", nullable = false)
+    private Long clubId;
 
     @Column(name = "submit_date", nullable = false)
     private LocalDateTime submitDate;
