@@ -114,12 +114,17 @@ public class AdminAuthController implements AdminAuthApiSpecification {
 
             String newAccessToken = jwtUtil.generateAdminToken(admin);
 
-            return ResponseEntity.ok(TokenResponse.of(newAccessToken));
+            String newRefreshToken = jwtUtil.generateAdminRefreshToken(admin);
+
+            jwtUtil.blacklistAdminRefreshToken(refreshToken);
+
+            return ResponseEntity.ok(TokenResponse.of(newAccessToken, newRefreshToken));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(TokenResponse.withMessage("Access Token 재발급 실패: " + e.getMessage()));
         }
     }
+
 
     @Override
     public ResponseEntity<ChangeNameResponse> changeName(@RequestHeader("Authorization") String token, @RequestParam String newName) {
