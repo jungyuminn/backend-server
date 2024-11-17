@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import club.gach_dong.api.AdminAuthApiSpecification;
 import club.gach_dong.dto.request.ChangePasswordRequest;
 import club.gach_dong.dto.response.AuthResponse;
+import club.gach_dong.dto.response.ChangeNameResponse;
 import club.gach_dong.dto.response.TokenResponse;
 import club.gach_dong.dto.response.UserProfileResponse;
 import club.gach_dong.entity.Admin;
@@ -117,6 +118,26 @@ public class AdminAuthController implements AdminAuthApiSpecification {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(TokenResponse.withMessage("Access Token 재발급 실패: " + e.getMessage()));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ChangeNameResponse> changeName(@RequestHeader("Authorization") String token, @RequestParam String newName) {
+        if (!jwtUtil.validateAdminToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        try {
+            String email = jwtUtil.getAdminEmailFromToken(token);
+            Admin admin = adminService.changeAdminName(email, newName);
+
+            if (admin != null) {
+                return ResponseEntity.ok(ChangeNameResponse.of(admin.getUserReferenceId(), newName));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 }

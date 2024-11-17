@@ -178,4 +178,13 @@ public class AdminService {
     public void updateAdminProfileImage(Admin admin) {
         adminRepository.save(admin);
     }
+
+    public Admin changeAdminName(String email, String newName) {
+        Admin admin = findByEmail(email);
+        if (admin != null) {
+            admin.setName(newName);
+            updateUser(admin);
+        }
+        return admin;
+    }
 }
