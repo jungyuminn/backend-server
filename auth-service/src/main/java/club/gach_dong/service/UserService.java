@@ -179,7 +179,7 @@ public class UserService {
     }
 
     public String getProfileImageUrl(String userReferenceId) {
-        String url = userServiceUrl + userReferenceId;
+        String url = userServiceUrl + "/api/v1/profile-image/" + userReferenceId;
 
         try {
             String profileImageUrl = restTemplate.getForObject(url, String.class);
