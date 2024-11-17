@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import club.gach_dong.dto.request.ChangePasswordRequest;
+import club.gach_dong.dto.response.ChangeNameResponse;
 import club.gach_dong.dto.response.TokenResponse;
 import club.gach_dong.dto.response.UserProfileResponse;
 
@@ -41,4 +42,10 @@ public interface AuthApiSpecification {
     @PostMapping("/refresh-token")
     ResponseEntity<TokenResponse> refreshToken(
             @Parameter(description = "Refresh Token") @RequestHeader("Authorization") String refreshToken);
+
+    @Operation(summary = "이름 변경", description = "사용자의 이름을 변경합니다.")
+    @PostMapping("/change-name")
+    ResponseEntity<ChangeNameResponse> changeName(
+            @Parameter(description = "JWT 토큰") @RequestHeader("Authorization") String token,
+            @Parameter(description = "변경할 새로운 이름") @RequestParam String newName);
 }

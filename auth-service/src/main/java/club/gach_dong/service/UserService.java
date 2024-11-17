@@ -197,4 +197,13 @@ public class UserService {
     public void updateUserProfileImage(User user) {
         userRepository.save(user);
     }
+
+    public User changeUserName(String email, String newName) {
+        User user = findByEmail(email);
+        if (user != null) {
+            user.setName(newName);
+            updateUser(user);
+        }
+        return user;
+    }
 }

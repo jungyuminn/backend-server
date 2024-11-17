@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import club.gach_dong.api.AuthApiSpecification;
 import club.gach_dong.dto.request.ChangePasswordRequest;
+import club.gach_dong.dto.response.ChangeNameResponse;
 import club.gach_dong.dto.response.TokenResponse;
 import club.gach_dong.dto.response.UserProfileResponse;
 import club.gach_dong.entity.User;
@@ -116,6 +117,26 @@ public class AuthController implements AuthApiSpecification {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(TokenResponse.withMessage("Access Token 재발급 실패: " + e.getMessage()));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ChangeNameResponse> changeName(@RequestHeader("Authorization") String token, @RequestParam String newName) {
+        if (!jwtUtil.validateUserToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        try {
+            String email = jwtUtil.getUserEmailFromToken(token);
+            User user = userService.changeUserName(email, newName);
+
+            if (user != null) {
+                return ResponseEntity.ok(ChangeNameResponse.of(user.getUserReferenceId(), newName));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 }
