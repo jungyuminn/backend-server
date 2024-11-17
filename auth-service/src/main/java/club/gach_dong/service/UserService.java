@@ -179,7 +179,7 @@ public class UserService {
     }
 
     public String getProfileImageUrl(String userReferenceId) {
-        String url = userServiceUrl + userReferenceId;
+        String url = userServiceUrl + "/api/v1/profile-image/" + userReferenceId;
 
         try {
             String profileImageUrl = restTemplate.getForObject(url, String.class);
@@ -196,5 +196,14 @@ public class UserService {
 
     public void updateUserProfileImage(User user) {
         userRepository.save(user);
+    }
+
+    public User changeUserName(String email, String newName) {
+        User user = findByEmail(email);
+        if (user != null) {
+            user.setName(newName);
+            updateUser(user);
+        }
+        return user;
     }
 }

@@ -160,7 +160,7 @@ public class AdminService {
     }
 
     public String getProfileImageUrl(String userReferenceId) {
-        String url = userServiceUrl + userReferenceId;
+        String url = userServiceUrl + "/api/v1/profile-image/" + userReferenceId;
 
         try {
             String profileImageUrl = restTemplate.getForObject(url, String.class);
@@ -177,5 +177,14 @@ public class AdminService {
 
     public void updateAdminProfileImage(Admin admin) {
         adminRepository.save(admin);
+    }
+
+    public Admin changeAdminName(String email, String newName) {
+        Admin admin = findByEmail(email);
+        if (admin != null) {
+            admin.setName(newName);
+            updateUser(admin);
+        }
+        return admin;
     }
 }
