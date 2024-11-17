@@ -57,14 +57,14 @@ public class ApplicationResponseDTO {
         @Schema(description = "지원 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
         private Long applicationId;
 
-        @Schema(description = "지원한 동아리 이름", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
-        private String clubName;
-
         @Schema(description = "지원 상태(합격, 불합격, 서류 합격 등)", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
         private String status;
 
         @Schema(description = "지원한 날짜", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
         private LocalDateTime submitDate;
+
+        @Schema(description = "지원한 동아리 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+        private Long clubId;
 
 //        @Schema(description = "지원 응답 내용(Json)", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
 //        private Map<String, Object> applicationBody;

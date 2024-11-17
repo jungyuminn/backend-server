@@ -173,7 +173,7 @@ public class ApplicationService {
                 .applicationFormId(toApplyClub.getApplicationFormId())
                 .applicationBody(toApplyClub.getFormBody())
                 .applicationStatus(toApplyClub.getStatus())
-                .clubName(toApplyClub.getClubName())
+                .clubId(toApplyClub.getClubId())
                 .submitDate(LocalDateTime.now())
                 .build();
 
@@ -246,7 +246,7 @@ public class ApplicationService {
         List<ApplicationResponseDTO.ToGetApplicationHistoryDTO> applicationHistoryDTOs = applicationList.stream()
                 .map(application -> ApplicationResponseDTO.ToGetApplicationHistoryDTO.builder()
                         .applicationId(application.getId())
-                        .clubName(application.getClubName())
+                        .clubId(application.getClubId())
                         .status(application.getApplicationStatus())
                         .submitDate(application.getSubmitDate())
 //                        .applicationBody(application.getApplicationBody())
