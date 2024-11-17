@@ -24,4 +24,16 @@ public class ClubException {
             super(ErrorCode.ACTIVITY_NOT_FOUND);
         }
     }
+
+    public static class ClubAdminNotFoundException extends DomainException {
+        public ClubAdminNotFoundException() {
+            super(ErrorCode.CLUB_ADMIN_NOT_FOUND);
+        }
+    }
+
+    public static class ClubAdminAccessDeniedException extends DomainException {
+        public ClubAdminAccessDeniedException() {
+            super(ErrorCode.CLUB_ADMIN_ACCESS_DENIED);
+        }
+    }
 }

@@ -2,8 +2,11 @@ package club.gach_dong.service;
 
 import static club.gach_dong.exception.ClubException.*;
 
+import club.gach_dong.annotation.AdminAuthorizationCheck;
 import club.gach_dong.domain.Activity;
 import club.gach_dong.domain.Club;
+import club.gach_dong.domain.ClubAdmin;
+import club.gach_dong.domain.ClubAdminRole;
 import club.gach_dong.domain.ContactInfo;
 import club.gach_dong.domain.Recruitment;
 import club.gach_dong.dto.request.CreateClubActivityRequest;
@@ -37,11 +40,11 @@ public class ClubService {
         return ClubResponse.of(savedClub);
     }
 
+    @AdminAuthorizationCheck(role = {ClubAdminRole.PRESIDENT, ClubAdminRole.MEMBER})
     public CreateClubActivityResponse createClubActivity(
             String userReferenceId,
             CreateClubActivityRequest createClubActivityRequest
     ) {
-
         Club club = clubRepository.findById(createClubActivityRequest.clubId())
                 .orElseThrow(ClubNotFoundException::new);
 
@@ -58,13 +61,13 @@ public class ClubService {
         return CreateClubActivityResponse.of(savedActivity);
     }
 
+    @AdminAuthorizationCheck(role = {ClubAdminRole.PRESIDENT, ClubAdminRole.MEMBER})
     public CreateClubContactInfoResponse createClubContactInfo(
             String userReferenceId,
             CreateClubContactInfoRequest createClubContactInfoRequest
     ) {
         Club club = clubRepository.findById(createClubContactInfoRequest.clubId())
                 .orElseThrow(ClubNotFoundException::new);
-
         ContactInfo contactInfo = createClubContactInfoRequest.toEntity(club);
 
         club.addContactInfo(contactInfo);
@@ -78,6 +81,7 @@ public class ClubService {
         return CreateClubContactInfoResponse.of(savedContactInfo);
     }
 
+    @AdminAuthorizationCheck(role = {ClubAdminRole.PRESIDENT, ClubAdminRole.MEMBER})
     public CreateClubRecruitmentResponse createClubRecruitment(
             String userReferenceId,
             CreateClubRecruitmentRequest createClubRecruitmentRequest
@@ -96,5 +100,17 @@ public class ClubService {
                 .orElseThrow(RecruitmentNotFoundException::new);
 
         return CreateClubRecruitmentResponse.of(savedRecruitment);
+    }
+
+    public boolean hasRoleForClub(String userReferenceId, Long clubId, ClubAdminRole requiredRole) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(ClubNotFoundException::new);
+
+        ClubAdmin adminInfo = club.getAdmins().stream()
+                .filter(admin -> admin.getUserReferenceId().equals(userReferenceId))
+                .findFirst()
+                .orElseThrow(ClubAdminNotFoundException::new);
+
+        return adminInfo.getClubAdminRole().equals(requiredRole);
     }
 }
