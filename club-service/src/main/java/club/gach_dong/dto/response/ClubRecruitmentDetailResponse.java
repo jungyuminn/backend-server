@@ -24,6 +24,9 @@ public record ClubRecruitmentDetailResponse(
         @Schema(description = "모집 인원", example = "5")
         @NotNull
         Long recruitmentCount,
+        @Schema(description = "동아리 지원서 양식 ID", example = "1", nullable = false)
+        @NotNull
+        Long applicationFormId,
         @Schema(description = "모집 상태", example = "true")
         @NotNull
         boolean recruitmentStatus,
@@ -43,13 +46,14 @@ public record ClubRecruitmentDetailResponse(
         @NotNull
         LocalDateTime endDate
 ) {
-    public static ClubRecruitmentDetailResponse of(Club club, Recruitment recruitment) {
+    public static ClubRecruitmentDetailResponse from(Club club, Recruitment recruitment) {
         return new ClubRecruitmentDetailResponse(
                 club.getId(),
                 recruitment.getId(),
                 recruitment.getTitle(),
                 recruitment.getContent(),
                 recruitment.getRecruitmentCount(),
+                recruitment.getApplicationFormId(),
                 recruitment.isRecruitmentStatus(),
                 recruitment.getProcessData(),
                 recruitment.getStartDate(),

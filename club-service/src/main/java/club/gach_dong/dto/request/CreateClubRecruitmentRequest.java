@@ -1,5 +1,7 @@
 package club.gach_dong.dto.request;
 
+import club.gach_dong.domain.Club;
+import club.gach_dong.domain.Recruitment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +22,9 @@ public record CreateClubRecruitmentRequest(
         @Schema(description = "모집 인원", example = "10", nullable = false)
         @NotNull
         Long recruitmentCount,
+        @Schema(description = "모집 공고와 연결된 지원서 양식 ID", example = "1", nullable = false)
+        @NotNull
+        Long applicationFormId,
         @Schema(description = "모집 시작일", example = "2021-01-01", nullable = false)
         @NotNull
         LocalDateTime startDate,
@@ -40,5 +45,18 @@ public record CreateClubRecruitmentRequest(
         @Size(max = 2000, message = "모집 프로세스 설정 너무 큽니다.")
         @JsonProperty("processData")
         Map<String, Object> processData
-) {
+) implements ClubIdentifiable {
+
+    public Recruitment toEntity(Club club) {
+        return Recruitment.builder()
+                .club(club)
+                .title(title())
+                .content(content())
+                .applicationFormId(applicationFormId())
+                .recruitmentCount(recruitmentCount())
+                .startDate(startDate())
+                .endDate(endDate())
+                .processData(processData())
+                .build();
+    }
 }

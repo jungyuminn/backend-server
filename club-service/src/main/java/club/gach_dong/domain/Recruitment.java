@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Map;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -29,6 +30,10 @@ public class Recruitment {
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     @Schema(description = "공고 내용", example = "<h1>GDSC Gachon 2024 멤버를 모집합니다.</h1> ..")
     private String content;
+
+    @Column(name = "application_form_id", nullable = false)
+    @Schema(description = "모집 공고와 연결된 지원서 양식 ID", example = "1")
+    private Long applicationFormId;
 
     @Column(name = "recruitment_status", nullable = false)
     @Schema(description = "모집 상태", example = "true")
@@ -60,18 +65,16 @@ public class Recruitment {
     @JoinColumn(name = "club_id")
     private Club club;
 
-    private Recruitment(String title, String content, Long recruitmentCount, LocalDateTime startDate, LocalDateTime endDate, Map<String, Object> processData, Club club) {
+    @Builder
+    private Recruitment(String title, String content, Long recruitmentCount, Long applicationFormId, LocalDateTime startDate, LocalDateTime endDate, Map<String, Object> processData, Club club) {
         this.title = title;
         this.content = content;
         this.recruitmentCount = recruitmentCount;
+        this.applicationFormId = applicationFormId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.processData = processData;
         this.club = club;
-    }
-
-    public static Recruitment of(String title, String content, Long recruitmentCount, LocalDateTime startDate, LocalDateTime endDate, Map<String, Object> processData, Club club) {
-        return new Recruitment(title, content, recruitmentCount, startDate, endDate, processData, club);
     }
 
     public Boolean isRecruiting(LocalDateTime currentDateTime) {

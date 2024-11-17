@@ -3,6 +3,7 @@ package club.gach_dong.domain;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -25,7 +26,7 @@ public class Club extends BaseEntity {
     @Schema(description = "동아리 ID", example = "1")
     private Long id;
 
-    @Column(name = "club_name", length = 26, columnDefinition = "CHAR(26)")
+    @Column(name = "club_name", length = 26, columnDefinition = "VARCHAR(26)")
     @Schema(description = "동아리 이름", example = "GDG Gachon")
     private String name;
 
@@ -70,6 +71,7 @@ public class Club extends BaseEntity {
     @Schema(description = "동아리 관리자 목록")
     private List<ClubAdmin> admins = new ArrayList<>();
 
+    @Builder
     private Club(
             String name,
                  ClubCategory category,

@@ -3,6 +3,7 @@ package club.gach_dong.domain;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,6 +37,7 @@ public class Activity {
     @JoinColumn(name = "club_id")
     private Club club;
 
+    @Builder
     private Activity(String title, LocalDate date, String description, Club club) {
         this.title = title;
         this.date = date;

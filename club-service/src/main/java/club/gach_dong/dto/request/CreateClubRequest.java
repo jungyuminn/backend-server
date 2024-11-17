@@ -1,5 +1,6 @@
 package club.gach_dong.dto.request;
 
+import club.gach_dong.domain.Club;
 import club.gach_dong.domain.ClubCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -30,4 +31,15 @@ public record CreateClubRequest(
         @Schema(description = "동아리 설립일", example = "2023-01-01T00:00:00")
         LocalDateTime establishedAt
 ) {
+        public Club toEntity(String userReferenceId) {
+                return Club.builder()
+                        .name(name())
+                        .userReferenceId(userReferenceId)
+                        .category(category())
+                        .shortDescription(shortDescription())
+                        .introduction(introduction())
+                        .clubImageUrl(clubImageUrl())
+                        .establishedAt(establishedAt())
+                        .build();
+        }
 }

@@ -1,5 +1,6 @@
 package club.gach_dong.dto.response;
 
+import club.gach_dong.domain.Activity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
@@ -12,7 +13,10 @@ public record CreateClubActivityResponse(
         @NotNull
         Long activityId
 ) {
-    public static CreateClubActivityResponse of(Long clubId, Long activityId) {
-        return new CreateClubActivityResponse(clubId, activityId);
+    public static CreateClubActivityResponse of(Activity activity) {
+        return new CreateClubActivityResponse(
+                activity.getClub().getId(),
+                activity.getId()
+        );
     }
 }

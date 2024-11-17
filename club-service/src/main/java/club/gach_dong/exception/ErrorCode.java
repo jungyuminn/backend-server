@@ -27,7 +27,10 @@ public enum ErrorCode {
 
     CONTACT_INFO_NOT_FOUND("CONTACT001", "연락처 정보를 찾을 수 없습니다."),
 
-    ACTIVITY_NOT_FOUND("ACTIVITY001", "활동을 찾을 수 없습니다.");
+    ACTIVITY_NOT_FOUND("ACTIVITY001", "활동을 찾을 수 없습니다."),
+
+    CLUB_ADMIN_NOT_FOUND("CLUBADMIN001", "동아리 관리자를 찾을 수 없습니다."),
+    CLUB_ADMIN_ACCESS_DENIED("CLUBADMIN403", "동아리 관리자 권한이 없습니다.");
 
     private final String code;
     private final String message;

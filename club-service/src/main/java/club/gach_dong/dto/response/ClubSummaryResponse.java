@@ -30,7 +30,7 @@ public record ClubSummaryResponse(
         @NotNull
         boolean recruitingStatus
 ) {
-    public static ClubSummaryResponse from(Club club) {
+    public static ClubSummaryResponse of(Club club) {
         return new ClubSummaryResponse(
                 club.getId(),
                 club.getName(),

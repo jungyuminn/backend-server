@@ -19,7 +19,7 @@ public record ClubActivityResponse (
         @NotNull
         String description
 ) {
-    public static ClubActivityResponse from(Activity activity) {
+    public static ClubActivityResponse of(Activity activity) {
         return new ClubActivityResponse(
                 activity.getTitle(),
                 activity.getDate(),

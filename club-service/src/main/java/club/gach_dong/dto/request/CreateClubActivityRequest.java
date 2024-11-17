@@ -1,5 +1,7 @@
 package club.gach_dong.dto.request;
 
+import club.gach_dong.domain.Activity;
+import club.gach_dong.domain.Club;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -22,5 +24,13 @@ public record CreateClubActivityRequest(
         @Schema(description = "활동 날짜", example = "2023-08-31")
         @NotNull
         LocalDate date
-) {
+) implements ClubIdentifiable {
+    public Activity toEntity(Club club) {
+        return Activity.builder()
+                .club(club)
+                .title(title())
+                .description(description())
+                .date(date())
+                .build();
+    }
 }
