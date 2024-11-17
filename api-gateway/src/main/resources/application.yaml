@@ -147,6 +147,21 @@ spring:
             - RewritePath=/notification/(?<segment>.*), /$\{segment}
             - JWTAuthenticationFilter
 
+        - id: admin-service-swagger
+          uri: http://admin-service:8080
+          predicates:
+            - Path=/admin/v3/api-docs/**
+          filters:
+            - RewritePath=/admin/(?<segment>.*), /$\{segment}
+
+        - id: admin-service
+          uri: http://admin-service:8080
+          predicates:
+            - Path=/admin/**
+          filters:
+            - RewritePath=/admin/(?<segment>.*), /$\{segment}
+            - JWTAuthenticationFilter
+
 springdoc:
   swagger-ui:
     enabled: true
@@ -169,6 +184,10 @@ springdoc:
     urls[4]:
       name: "알림 서비스"
       url: https://gateway.gachdong.club/notification/v3/api-docs
+
+    urls[5]:
+      name: "어드민 서비스"
+      url: https://gateway.gachdong.club/admin/v3/api-docs
 
 logging:
   level:

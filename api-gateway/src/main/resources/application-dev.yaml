@@ -16,3 +16,6 @@ springdoc:
     urls[4]:
       name: "알림 서비스"
       url: https://gateway-dev.gachdong.club/notification/v3/api-docs
+    urls[5]:
+      name: "어드민 서비스"
+      url: https://gateway-dev.gachdong.club/admin/v3/api-docs
