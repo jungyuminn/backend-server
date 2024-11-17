@@ -45,18 +45,18 @@ public class ApplicationService {
     private final ApplicationDocsRepository applicationDocsRepository;
     private final AuthorizationService authorizationService;
     private final ServiceMeshService serviceMeshService;
+    private final club.gach_dong.Application application;
 
     @Transactional
     public ApplicationResponseDTO.ToCreateApplicationFormDTO createApplicationForm(
             ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO, String userId) {
 
-        //Verify Club Admin Auth with Apply_Id, User_Id
-        authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getRecruitmentId());
+        //Verify Club Admin Auth with Club_Id, User_Id
+        authorizationService.getAuthByUserIdAndClubId(userId, toCreateApplicationFormDTO.getClubId());
 
         ApplicationForm applicationForm = ApplicationForm.builder()
                 .applicationFormStatus(ApplicationFormStatus.valueOf(toCreateApplicationFormDTO.getStatus()))
                 .formName(toCreateApplicationFormDTO.getFormName())
-                .recruitmentId(toCreateApplicationFormDTO.getRecruitmentId())
                 .clubId(toCreateApplicationFormDTO.getClubId())
                 .body(toCreateApplicationFormDTO.getFormBody())
                 .build();
@@ -75,7 +75,7 @@ public class ApplicationService {
                 .orElseThrow(ApplicationException.ApplicationFormNotFoundException::new);
 
         //Verify Club Admin Auth with Apply_Id, User_Id
-        authorizationService.getAuthByUserIdAndApplyId(userId, applicationForm.getRecruitmentId());
+        authorizationService.getAuthByUserIdAndClubId(userId, applicationForm.getClubId());
 
         return ApplicationResponseDTO.ToGetFormInfoAdminDTO.builder()
                 .formId(applicationForm.getId())
@@ -83,7 +83,6 @@ public class ApplicationService {
                 .formBody(applicationForm.getBody())
                 .formStatus(String.valueOf(applicationForm.getApplicationFormStatus()))
                 .clubId(applicationForm.getClubId())
-                .recruitmentId(applicationForm.getRecruitmentId())
                 .build();
     }
 
@@ -107,7 +106,7 @@ public class ApplicationService {
                 .orElseThrow(ApplicationException.ApplicationFormNotFoundException::new);
 
         //Verify Club Admin Auth with Apply_Id, User_Id
-        authorizationService.getAuthByUserIdAndApplyId(userId, applicationForm.getRecruitmentId());
+        authorizationService.getAuthByUserIdAndClubId(userId, applicationForm.getClubId());
 
         if (applicationForm.getApplicationFormStatus() == ApplicationFormStatus.IN_USE) {
             throw new ApplicationFormInUseException();
@@ -122,11 +121,8 @@ public class ApplicationService {
                                                                                    ApplicationRequestDTO.ToCreateApplicationFormDTO toCreateApplicationFormDTO,
                                                                                    String userId) {
 
-        //Verify it is valid apply
-        authorizationService.getApplyIsValid(toCreateApplicationFormDTO.getRecruitmentId());
-
         //Verify Club Admin Auth with Apply_Id, User_Id
-        authorizationService.getAuthByUserIdAndApplyId(userId, toCreateApplicationFormDTO.getRecruitmentId());
+        authorizationService.getAuthByUserIdAndClubId(userId, toCreateApplicationFormDTO.getClubId());
 
         ApplicationForm applicationForm = applicationFormRepository.findById(formId)
                 .orElseThrow(ApplicationException.ApplicationFormNotFoundException::new);
@@ -376,7 +372,7 @@ public class ApplicationService {
         }
 
         ApplicationForm firstForm = applicationFormList.get(0);
-        authorizationService.getAuthByUserIdAndApplyId(userId, firstForm.getRecruitmentId());
+        authorizationService.getAuthByUserIdAndClubId(userId, firstForm.getClubId());
 
         return applicationFormList.stream()
                 .map(applicationForm -> ApplicationResponseDTO.ToGetFormInfoAdminDTO.builder()
@@ -385,7 +381,6 @@ public class ApplicationService {
                         .formBody(applicationForm.getBody())
                         .formStatus(String.valueOf(applicationForm.getApplicationFormStatus()))
                         .clubId(applicationForm.getClubId())
-                        .recruitmentId(applicationForm.getRecruitmentId())
                         .build())
                 .collect(Collectors.toList());
     }

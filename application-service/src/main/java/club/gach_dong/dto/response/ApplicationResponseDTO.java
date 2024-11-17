@@ -27,8 +27,6 @@ public class ApplicationResponseDTO {
         @Schema(description = "동아리 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
         private Long clubId;
 
-        @Schema(description = "지원 ID", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
-        private Long recruitmentId;
     }
 
     @Getter

@@ -100,6 +100,38 @@ public class AuthorizationService {
         }
     }
 
+    public void getAuthByUserIdAndClubId(String userId, Long clubId) {
+
+        String uri = UriComponentsBuilder.fromHttpUrl(clubUrl)
+                .path("/has-authority/{clubId}")
+                .queryParam("clubId", clubId)
+                .buildAndExpand(clubId)
+                .toUriString();
+
+        try {
+            Boolean result = restClient.get()
+                    .uri(uri)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .header(REFERENCE_ID_HEADER_KEY, userId)
+                    .retrieve()
+                    .body(Boolean.class);
+
+            if (Boolean.FALSE.equals(result)) {
+                throw new ClubException.ClubAdminUnauthorizedException();
+            }
+//            return result != null ? result : false;
+
+        } catch (RestClientException e) {
+            System.err.println("REST 클라이언트 오류 발생: " + e.getMessage());
+            throw new ClubException.ClubAdminCommunicateFailedException();
+//            return false;
+        } catch (Exception e) {
+            System.err.println("예상치 못한 오류 발생: " + e.getMessage());
+            throw new ClubException.ClubAdminCommunicateFailedException();
+//            return false;
+        }
+    }
+
     @Deprecated
     public String getToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
