@@ -54,8 +54,8 @@ public interface ApplicationAdminApiSpecification {
             @RequestUserReferenceId String userReferenceId);
 
     @Operation(summary = "지원 목록 조회 API", description = "지원 ID를(recruitmentId) 이용해 지원 목록을 조회합니다.", security = @SecurityRequirement(name = "Authorization"))
-    @GetMapping("/{applyId}")
-    ResForm<?> getClubApplicationList(@PathVariable("applyId") Long recruitmentId,
+    @GetMapping("/{recruitmentId}")
+    ResForm<?> getClubApplicationList(@PathVariable("recruitmentId") Long recruitmentId,
                                       @RequestUserReferenceId String userReferenceId);
 
     @Operation(summary = "지원 내역 단건 조회 API", description = "applicationId를 이용해 지원 내역 단건을 조회합니다.", security = @SecurityRequirement(name = "Authorization"))
