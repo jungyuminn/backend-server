@@ -1,3 +1,12 @@
 app:
   gateway:
     endpoint: https://gateway-dev.gachdong.club
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus

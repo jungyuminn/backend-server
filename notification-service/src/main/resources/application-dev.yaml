@@ -28,3 +28,12 @@ spring:
           timeout: 5000
           starttls:
             enable: true
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus

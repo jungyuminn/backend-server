@@ -5,3 +5,12 @@ app:
 springdoc:
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus

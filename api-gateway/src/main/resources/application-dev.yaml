@@ -19,3 +19,12 @@ springdoc:
     urls[5]:
       name: "어드민 서비스"
       url: https://gateway-dev.gachdong.club/admin/v3/api-docs
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
