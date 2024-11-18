@@ -40,7 +40,7 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 
 	// metrics
-	implementation "io.micrometer:micrometer-registry-prometheus:1.13.2"
+	implementation "io.micrometer:micrometer-registry-prometheus"
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

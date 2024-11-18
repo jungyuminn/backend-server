@@ -17,14 +17,10 @@ spring:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
 
 management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
   endpoints:
     web:
       exposure:
         include: health, metrics, prometheus
-  metrics:
-    export:
-      prometheus:
-        enabled: true
-  tracing:
-    sampling:
-      probability: 1.0
