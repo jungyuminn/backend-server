@@ -5,6 +5,7 @@ import club.gach_dong.dto.request.CreateClubContactInfoRequest;
 import club.gach_dong.dto.request.CreateClubActivityRequest;
 import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
+import club.gach_dong.dto.request.UpdateClubActivityRequest;
 import club.gach_dong.dto.request.UpdateClubRequest;
 import club.gach_dong.dto.request.UpdateContactInfoRequest;
 import club.gach_dong.dto.response.AdminAuthorizedClubResponse;
@@ -15,6 +16,7 @@ import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
 import club.gach_dong.dto.response.ClubResponse;
+import club.gach_dong.dto.response.UpdateClubActivityResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -177,5 +179,19 @@ public interface ClubAdminApiSpecification {
             @Valid
             @RequestBody
             UpdateContactInfoRequest updateContactInfoRequest
+    );
+
+    @Operation(
+            summary = "동아리 활동 내역 수정",
+            description = "동아리 활동 내역을 입력받아 활동 내역을 수정합니다.",
+            security = @SecurityRequirement(name = "Authorization")
+    )
+    @PutMapping("/activities/update")
+    ResponseEntity<UpdateClubActivityResponse> updateClubActivity(
+            @RequestUserReferenceId
+            String userReferenceId,
+            @Valid
+            @RequestBody
+            UpdateClubActivityRequest updateClubActivityRequest
     );
 }

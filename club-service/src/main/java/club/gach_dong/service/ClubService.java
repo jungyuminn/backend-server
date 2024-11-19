@@ -13,6 +13,7 @@ import club.gach_dong.dto.request.CreateClubActivityRequest;
 import club.gach_dong.dto.request.CreateClubContactInfoRequest;
 import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
+import club.gach_dong.dto.request.UpdateClubActivityRequest;
 import club.gach_dong.dto.request.UpdateClubRequest;
 import club.gach_dong.dto.request.UpdateContactInfoRequest;
 import club.gach_dong.dto.response.ContactInfoResponse;
@@ -20,6 +21,7 @@ import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
 import club.gach_dong.dto.response.ClubResponse;
+import club.gach_dong.dto.response.UpdateClubActivityResponse;
 import club.gach_dong.exception.ClubException.ClubNotFoundException;
 import club.gach_dong.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
@@ -137,6 +139,26 @@ public class ClubService {
                 .orElseThrow(ContactInfoNotFoundException::new);
 
         return ContactInfoResponse.from(updateContactInfo);
+    }
+
+    @AdminAuthorizationCheck(role = {ClubAdminRole.PRESIDENT, ClubAdminRole.MEMBER})
+    public UpdateClubActivityResponse updateClubActivity(String userReferenceId, UpdateClubActivityRequest updateClubActivityRequest) {
+        Club club = clubRepository.findById(updateClubActivityRequest.clubId())
+                .orElseThrow(ClubNotFoundException::new);
+
+        Activity activity = club.getActivities().stream()
+                .filter(a -> a.getId().equals(updateClubActivityRequest.activityId()))
+                .findFirst()
+                .orElseThrow(ActivityNotFoundException::new);
+
+        updateClubActivityRequest.updateToEntity(activity);
+
+        Activity updatedActivity = clubRepository.save(club).getActivities().stream()
+                .filter(a -> a.getId().equals(updateClubActivityRequest.activityId()))
+                .findFirst()
+                .orElseThrow(ActivityNotFoundException::new);
+
+        return UpdateClubActivityResponse.from(updatedActivity);
     }
 
     public boolean hasRoleForClub(String userReferenceId, Long clubId, ClubAdminRole requiredRole) {

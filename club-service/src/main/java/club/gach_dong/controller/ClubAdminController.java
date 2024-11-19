@@ -5,6 +5,7 @@ import club.gach_dong.dto.request.CreateClubActivityRequest;
 import club.gach_dong.dto.request.CreateClubContactInfoRequest;
 import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
+import club.gach_dong.dto.request.UpdateClubActivityRequest;
 import club.gach_dong.dto.request.UpdateClubRequest;
 import club.gach_dong.dto.request.UpdateContactInfoRequest;
 import club.gach_dong.dto.response.AdminAuthorizedClubResponse;
@@ -15,6 +16,7 @@ import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
 import club.gach_dong.dto.response.ClubResponse;
+import club.gach_dong.dto.response.UpdateClubActivityResponse;
 import club.gach_dong.service.ClubReadService;
 import club.gach_dong.service.ClubService;
 import java.time.LocalDateTime;
@@ -115,6 +117,12 @@ public class ClubAdminController implements ClubAdminApiSpecification {
                                                                  UpdateContactInfoRequest updateContactInfoRequest) {
         ContactInfoResponse updateContactInfoResponse = clubService.updateContactInfo(userReferenceId, updateContactInfoRequest);
         return new ResponseEntity<>(updateContactInfoResponse, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<UpdateClubActivityResponse> updateClubActivity(String userReferenceId, UpdateClubActivityRequest updateClubActivityRequest) {
+        UpdateClubActivityResponse updateClubActivityResponse = clubService.updateClubActivity(userReferenceId, updateClubActivityRequest);
+        return new ResponseEntity<>(updateClubActivityResponse, HttpStatus.OK);
     }
 
 }
