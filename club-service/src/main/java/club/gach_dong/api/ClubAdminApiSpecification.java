@@ -5,6 +5,7 @@ import club.gach_dong.dto.request.CreateClubContactInfoRequest;
 import club.gach_dong.dto.request.CreateClubActivityRequest;
 import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
+import club.gach_dong.dto.request.UpdateClubRequest;
 import club.gach_dong.dto.response.AdminAuthorizedClubResponse;
 import club.gach_dong.dto.response.ArrayResponse;
 import club.gach_dong.dto.response.AutorizeAdminResponse;
@@ -21,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -145,5 +147,19 @@ public interface ClubAdminApiSpecification {
             @RequestUserReferenceId
             String userReferenceId,
             @RequestBody Long clubId
+    );
+
+    @Operation(
+            summary = "동아리 정보 수정",
+            description = "동아리 정보를 입력받아 동아리를 수정합니다.",
+            security = @SecurityRequirement(name = "Authorization")
+    )
+    @PutMapping("/update")
+    ResponseEntity<ClubResponse> updateClubInfo(
+            @RequestUserReferenceId
+            String userReferenceId,
+            @Valid
+            @RequestBody
+            UpdateClubRequest updateClubRequest
     );
 }

@@ -13,6 +13,7 @@ import club.gach_dong.dto.request.CreateClubActivityRequest;
 import club.gach_dong.dto.request.CreateClubContactInfoRequest;
 import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
+import club.gach_dong.dto.request.UpdateClubRequest;
 import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
@@ -100,6 +101,19 @@ public class ClubService {
                 .orElseThrow(RecruitmentNotFoundException::new);
 
         return CreateClubRecruitmentResponse.of(savedRecruitment);
+    }
+
+    @AdminAuthorizationCheck(role = {ClubAdminRole.PRESIDENT, ClubAdminRole.MEMBER})
+    public ClubResponse updateClubInfo(String userReferenceId, UpdateClubRequest updateClubRequest) {
+
+        Club club = clubRepository.findById(updateClubRequest.clubId())
+                .orElseThrow(ClubNotFoundException::new);
+
+        updateClubRequest.updateToEntity(club);
+
+        Club updateClub = clubRepository.save(club);
+
+        return ClubResponse.of(updateClub);
     }
 
     public boolean hasRoleForClub(String userReferenceId, Long clubId, ClubAdminRole requiredRole) {

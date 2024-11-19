@@ -1,5 +1,6 @@
 package club.gach_dong.domain;
 
+import club.gach_dong.dto.request.UpdateClubRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -121,5 +122,24 @@ public class Club extends BaseEntity {
 
     public void addAdminMember(ClubAdmin clubAdmin) {
         this.admins.add(clubAdmin);
+    }
+
+    public Club update(
+            Long clubId,
+            String name,
+            ClubCategory category,
+            String shortDescription,
+            String introduction,
+            String clubImageUrl,
+            LocalDateTime establishedAt
+    ) {
+        this.id = clubId;
+        this.name = name;
+        this.category = category;
+        this.shortDescription = shortDescription;
+        this.introduction = introduction;
+        this.clubImageUrl = clubImageUrl;
+        this.establishedAt = establishedAt;
+        return this;
     }
 }

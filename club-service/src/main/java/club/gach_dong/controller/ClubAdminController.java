@@ -5,6 +5,7 @@ import club.gach_dong.dto.request.CreateClubActivityRequest;
 import club.gach_dong.dto.request.CreateClubContactInfoRequest;
 import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
+import club.gach_dong.dto.request.UpdateClubRequest;
 import club.gach_dong.dto.response.AdminAuthorizedClubResponse;
 import club.gach_dong.dto.response.ArrayResponse;
 import club.gach_dong.dto.response.AutorizeAdminResponse;
@@ -99,6 +100,12 @@ public class ClubAdminController implements ClubAdminApiSpecification {
     public ResponseEntity<AutorizeAdminResponse> authorizeAdmin(String userReferenceId, Long clubId) {
         clubReadService.authorizeAdmin(userReferenceId, clubId);
         return new ResponseEntity<>(new AutorizeAdminResponse(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ClubResponse> updateClubInfo(String userReferenceId, UpdateClubRequest updateClubRequest) {
+        ClubResponse updateClubResponse = clubService.updateClubInfo(userReferenceId, updateClubRequest);
+        return new ResponseEntity<>(updateClubResponse, HttpStatus.OK);
     }
 
 }
