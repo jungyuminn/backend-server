@@ -8,6 +8,7 @@ import club.gach_dong.dto.request.UpdateClubRequest;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.repository.ClubRepository;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ class ClubServiceTest {
     private ClubRepository clubRepository;
 
 
-    @DisplayName("")
+    @DisplayName("동아리 정보 업데이트가 정상적으로 이루어진다.")
     @Test
     void updateClubInfo() {
         // given
@@ -46,6 +47,11 @@ class ClubServiceTest {
         ClubResponse updateClubInfo = clubService.updateClubInfo("userReferenceId", updateClubRequest);
 
         // then
+        Club assertClub = clubRepository.findById(1L).get();
+
+        assertThat(assertClub).extracting("id", "name", "category", "shortDescription", "introduction", "clubImageUrl")
+                .containsExactly(1L, "newName", ClubCategory.EXHIBITION, "newShortDescription", "newIntroduction", "newClubImageUrl");
+
         assertThat(updateClubInfo).extracting("clubId", "clubName", "category", "shortDescription", "introduction", "clubImageUrl")
                 .containsExactly(1L, "newName", ClubCategory.EXHIBITION, "newShortDescription", "newIntroduction", "newClubImageUrl");
     }
