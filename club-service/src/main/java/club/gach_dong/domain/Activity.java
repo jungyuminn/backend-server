@@ -2,6 +2,7 @@ package club.gach_dong.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,5 +48,11 @@ public class Activity {
 
     public static Activity of(String title, LocalDate date, String description, Club club) {
         return new Activity(title, date, description, club);
+    }
+
+    public void update(String title, String description, LocalDate date) {
+        this.title = title;
+        this.description = description;
+        this.date = date;
     }
 }
