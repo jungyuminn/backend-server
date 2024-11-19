@@ -14,6 +14,8 @@ import club.gach_dong.dto.request.CreateClubContactInfoRequest;
 import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
 import club.gach_dong.dto.request.UpdateClubRequest;
+import club.gach_dong.dto.request.UpdateContactInfoRequest;
+import club.gach_dong.dto.response.ContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
@@ -114,6 +116,27 @@ public class ClubService {
         Club updateClub = clubRepository.save(club);
 
         return ClubResponse.of(updateClub);
+    }
+
+    @AdminAuthorizationCheck(role = {ClubAdminRole.PRESIDENT, ClubAdminRole.MEMBER})
+    public ContactInfoResponse updateContactInfo(String userReferenceId, UpdateContactInfoRequest updateContactInfoRequest) {
+
+        Club club = clubRepository.findById(updateContactInfoRequest.clubId())
+                .orElseThrow(ClubNotFoundException::new);
+
+        ContactInfo contactInfo = club.getContactInfo().stream()
+                .filter(c -> c.getId().equals(updateContactInfoRequest.contactInfoId()))
+                .findFirst()
+                .orElseThrow(ContactInfoNotFoundException::new);
+
+        updateContactInfoRequest.updateToEntity(contactInfo);
+
+        ContactInfo updateContactInfo = clubRepository.save(club).getContactInfo().stream()
+                .filter(c -> c.getId().equals(updateContactInfoRequest.contactInfoId()))
+                .findFirst()
+                .orElseThrow(ContactInfoNotFoundException::new);
+
+        return ContactInfoResponse.from(updateContactInfo);
     }
 
     public boolean hasRoleForClub(String userReferenceId, Long clubId, ClubAdminRole requiredRole) {

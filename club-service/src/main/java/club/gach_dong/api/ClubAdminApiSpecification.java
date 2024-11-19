@@ -6,9 +6,11 @@ import club.gach_dong.dto.request.CreateClubActivityRequest;
 import club.gach_dong.dto.request.CreateClubRecruitmentRequest;
 import club.gach_dong.dto.request.CreateClubRequest;
 import club.gach_dong.dto.request.UpdateClubRequest;
+import club.gach_dong.dto.request.UpdateContactInfoRequest;
 import club.gach_dong.dto.response.AdminAuthorizedClubResponse;
 import club.gach_dong.dto.response.ArrayResponse;
 import club.gach_dong.dto.response.AutorizeAdminResponse;
+import club.gach_dong.dto.response.ContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubActivityResponse;
 import club.gach_dong.dto.response.CreateClubContactInfoResponse;
 import club.gach_dong.dto.response.CreateClubRecruitmentResponse;
@@ -161,5 +163,19 @@ public interface ClubAdminApiSpecification {
             @Valid
             @RequestBody
             UpdateClubRequest updateClubRequest
+    );
+
+    @Operation(
+            summary = "동아리 연락처 정보 수정",
+            description = "동아리 연락처 정보를 입력받아 연락처 정보를 수정합니다.",
+            security = @SecurityRequirement(name = "Authorization")
+    )
+    @PutMapping("/contact-info/update")
+    ResponseEntity<ContactInfoResponse> updateContactInfo(
+            @RequestUserReferenceId
+            String userReferenceId,
+            @Valid
+            @RequestBody
+            UpdateContactInfoRequest updateContactInfoRequest
     );
 }

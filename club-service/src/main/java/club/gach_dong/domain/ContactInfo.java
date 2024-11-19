@@ -42,4 +42,9 @@ public class ContactInfo {
     public static ContactInfo of(String contactMethod, String contactValue, Club club) {
         return new ContactInfo(contactMethod, contactValue, club);
     }
+
+    public void update(String contactMethod, String contactValue) {
+        this.contactMethod = contactMethod;
+        this.contactValue = contactValue;
+    }
 }

@@ -32,7 +32,7 @@ public record UpdateClubRequest(
 
         @Schema(description = "동아리 설립일", example = "2023-01-01T00:00:00")
         LocalDateTime establishedAt
-) {
+) implements ClubIdentifiable {
     public void updateToEntity(Club club) {
         club.update(clubId, name, category, shortDescription, introduction, clubImageUrl, establishedAt);
     }
