@@ -1,6 +1,5 @@
 package club.gach_dong.domain;
 
-import club.gach_dong.dto.request.UpdateClubRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

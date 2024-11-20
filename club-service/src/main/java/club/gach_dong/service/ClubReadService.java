@@ -7,6 +7,7 @@ import club.gach_dong.domain.Club;
 import club.gach_dong.domain.ClubAdmin;
 import club.gach_dong.domain.ContactInfo;
 import club.gach_dong.domain.Recruitment;
+import club.gach_dong.domain.RecruitmentStatus;
 import club.gach_dong.dto.response.AdminAuthorizedClubResponse;
 import club.gach_dong.dto.response.ClubActivityResponse;
 import club.gach_dong.dto.response.ClubContactInfoResponse;
@@ -17,8 +18,16 @@ import club.gach_dong.dto.response.ClubSummaryResponse;
 import club.gach_dong.exception.ClubException.ClubNotFoundException;
 import club.gach_dong.repository.ClubRepository;
 import club.gach_dong.repository.RecruitmentRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,8 +55,8 @@ public class ClubReadService {
         return clubList;
     }
 
-    public ClubResponse getClub(Long clubIId) {
-        return clubRepository.findById(clubIId)
+    public ClubResponse getClub(Long clubId) {
+        return clubRepository.findById(clubId)
                 .map(ClubResponse::of)
                 .orElseThrow(ClubNotFoundException::new);
     }
@@ -74,27 +83,35 @@ public class ClubReadService {
                 .toList();
     }
 
-    public List<ClubRecruitmentResponse> getClubsRecruitments() {
+    public List<ClubRecruitmentResponse> getClubsRecruitments(LocalDateTime currentTime) {
         List<Club> clubs = clubRepository.findAllWithRecruitments();
 
         return clubs.stream()
                 .flatMap(club -> club.getRecruitment().stream()
-                        .map(recruitment -> ClubRecruitmentResponse.from(club, recruitment)))
+                        .map(recruitment -> {
+                            RecruitmentStatus recruitmentStatus = updateStatusBasedOnTime(currentTime, recruitment.getEndDate());
+                            return ClubRecruitmentResponse.from(club, recruitment, recruitmentStatus);
+                        }))
                 .collect(Collectors.toList());
     }
 
-    public List<ClubRecruitmentDetailResponse> getClubRecruitments(Long clubId) {
+    public List<ClubRecruitmentDetailResponse> getClubRecruitments(Long clubId, LocalDateTime currentTime) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(ClubNotFoundException::new);
 
         List<Recruitment> recruitments = club.getRecruitment();
 
         return recruitments.stream()
-                .map(recruitment -> ClubRecruitmentDetailResponse.from(club, recruitment))
+                .map(recruitment -> {
+                    RecruitmentStatus recruitmentStatus = updateStatusBasedOnTime(currentTime, recruitment.getEndDate());
+                    return ClubRecruitmentDetailResponse.from(club, recruitment, recruitmentStatus);
+                })
                 .toList();
     }
 
-    public ClubRecruitmentDetailResponse getClubRecruitment(Long clubId, Long recruitmentId) {
+    // TODO : read service 인지 타당성 검토 ..
+    @Transactional
+    public ClubRecruitmentDetailResponse getClubRecruitment(Long clubId, Long recruitmentId, HttpServletRequest request, HttpServletResponse response, LocalDateTime currentTime) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(ClubNotFoundException::new);
 
@@ -103,7 +120,9 @@ public class ClubReadService {
                 .findFirst()
                 .orElseThrow(RecruitmentNotFoundException::new);
 
-        return ClubRecruitmentDetailResponse.from(club, recruitment);
+        validateAndIncrementViewCount(recruitment, request, response);
+        RecruitmentStatus recruitmentStatus = updateStatusBasedOnTime(currentTime, recruitment.getEndDate());
+        return ClubRecruitmentDetailResponse.from(club, recruitment, recruitmentStatus);
     }
 
     public Boolean hasAuthority(String userReferenceId, Long clubId) {
@@ -158,5 +177,41 @@ public class ClubReadService {
                         .orElse(null))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    private void validateAndIncrementViewCount(Recruitment recruitment, HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = Optional.ofNullable(request.getCookies()).orElse(new Cookie[0]);
+
+        Cookie viewCookie = Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals("clubView"))
+                .findFirst()
+                .orElseGet(() -> {
+                    recruitment.incrementViewCount();
+                    Cookie newCookie = new Cookie("clubView", "[" + recruitment.getId() + "]");
+                    setCookieAttributes(newCookie, response);
+                    return newCookie;
+                });
+
+        if (!viewCookie.getValue().contains("[" + recruitment.getId() + "]")) {
+            recruitment.incrementViewCount();
+            viewCookie.setValue(viewCookie.getValue() + "[" + recruitment.getId() + "]");
+            setCookieAttributes(viewCookie, response);
+        }
+    }
+
+    private void setCookieAttributes(Cookie cookie, HttpServletResponse response) {
+        long todayEndSecond = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC);
+        long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        cookie.setPath("/");
+        cookie.setMaxAge((int) (todayEndSecond - currentSecond));
+        response.addCookie(cookie);
+    }
+
+    private RecruitmentStatus updateStatusBasedOnTime(LocalDateTime currentTime, LocalDateTime endDate) {
+        if (currentTime.isAfter(endDate)) {
+            return RecruitmentStatus.RECRUITMENT_END;
+        } else {
+            return RecruitmentStatus.RECRUITING;
+        }
     }
 }

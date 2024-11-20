@@ -9,6 +9,9 @@ import club.gach_dong.dto.response.ClubRecruitmentResponse;
 import club.gach_dong.dto.response.ClubResponse;
 import club.gach_dong.dto.response.ClubSummaryResponse;
 import club.gach_dong.service.ClubReadService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -44,18 +47,21 @@ public class ClubPublicController implements ClubPublicApiSpecification {
 
     @Override
     public ArrayResponse<ClubRecruitmentResponse> getClubsRecruitments() {
-        List<ClubRecruitmentResponse> clubRecruitmentsResponse = clubReadService.getClubsRecruitments();
+        LocalDateTime currentTime = LocalDateTime.now();
+        List<ClubRecruitmentResponse> clubRecruitmentsResponse = clubReadService.getClubsRecruitments(currentTime);
         return ArrayResponse.of(clubRecruitmentsResponse);
     }
 
     @Override
     public ArrayResponse<ClubRecruitmentDetailResponse> getClubRecruitments(Long clubId) {
-        List<ClubRecruitmentDetailResponse> clubRecruitmentDetailResponse = clubReadService.getClubRecruitments(clubId);
+        LocalDateTime currentTime = LocalDateTime.now();
+        List<ClubRecruitmentDetailResponse> clubRecruitmentDetailResponse = clubReadService.getClubRecruitments(clubId, currentTime);
         return ArrayResponse.of(clubRecruitmentDetailResponse);
     }
 
     @Override
-    public ClubRecruitmentDetailResponse getClubRecruitment(Long clubId, Long recruitmentId) {
-        return clubReadService.getClubRecruitment(clubId, recruitmentId);
+    public ClubRecruitmentDetailResponse getClubRecruitment(Long clubId, Long recruitmentId, HttpServletRequest request, HttpServletResponse response) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        return clubReadService.getClubRecruitment(clubId, recruitmentId, request, response, currentTime);
     }
 }

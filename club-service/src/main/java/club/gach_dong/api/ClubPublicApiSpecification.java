@@ -10,6 +10,8 @@ import club.gach_dong.dto.response.ClubSummaryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -85,6 +87,8 @@ public interface ClubPublicApiSpecification {
             @Parameter(description = "동아리 ID", example = "1", required = true)
             @PathVariable Long clubId,
             @Parameter(description = "모집 공고 ID", example = "1", required = true)
-            @PathVariable Long recruitmentId
+            @PathVariable Long recruitmentId,
+            HttpServletRequest request,
+            HttpServletResponse response
     );
 }
