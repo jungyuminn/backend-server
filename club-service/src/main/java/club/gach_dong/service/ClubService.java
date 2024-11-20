@@ -99,6 +99,7 @@ public class ClubService {
         club.addRecruitment(recruitment);
         clubRepository.save(club);
 
+        // TODO: recruitment title is not unique
         Recruitment savedRecruitment = club.getRecruitment().stream()
                 .filter(r -> r.getTitle().equals(createClubRecruitmentRequest.title()))
                 .findFirst()

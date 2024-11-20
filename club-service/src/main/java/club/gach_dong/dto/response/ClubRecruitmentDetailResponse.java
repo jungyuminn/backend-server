@@ -16,6 +16,9 @@ public record ClubRecruitmentDetailResponse(
         @Schema(description = "모집 ID", example = "1")
         @NotNull
         Long recruitmentId,
+        @Schema(description = "모집공고 조회수", example = "1")
+        @NotNull
+        int viewCount,
         @Schema(description = "모집공고 이름", example = "GDSC Gachon 24-25 Member 모집")
         @NotNull
         String title,
@@ -51,6 +54,7 @@ public record ClubRecruitmentDetailResponse(
         return new ClubRecruitmentDetailResponse(
                 club.getId(),
                 recruitment.getId(),
+                recruitment.getViewCount(),
                 recruitment.getTitle(),
                 recruitment.getContent(),
                 recruitment.getRecruitmentCount(),
