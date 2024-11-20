@@ -31,7 +31,7 @@ public class ClubAdmin extends BaseEntity {
     private String userReferenceId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "club_admin_role", columnDefinition = "ENUM('PRESIDENT', 'GENERAL_MEMBER')")
+    @Column(name = "club_admin_role", nullable = false)
     @Schema(description = "동아리 관리자 권한", example = "PRESIDENT")
     private ClubAdminRole clubAdminRole;
 
