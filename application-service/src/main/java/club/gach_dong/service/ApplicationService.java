@@ -167,19 +167,19 @@ public class ApplicationService {
             }
         }
 
-        String applicationStatus = null;
-        if (!Objects.equals(toApplyClub.getStatus(), "TEMPORARY_SAVED")) {
-            applicationStatus = serviceMeshService.getFirstStatus(toApplyClub.getClubId(), recruitmentId);
-        } else {
-            applicationStatus = toApplyClub.getStatus();
-        }
+//        String applicationStatus = null;
+//        if (!Objects.equals(toApplyClub.getStatus(), "TEMPORARY_SAVED")) {
+//            applicationStatus = serviceMeshService.getFirstStatus(toApplyClub.getClubId(), recruitmentId);
+//        } else {
+//            applicationStatus = toApplyClub.getStatus();
+//        }
 
         Application application = Application.builder()
                 .userId(userId)
                 .recruitmentId(recruitmentId)
                 .applicationFormId(toApplyClub.getApplicationFormId())
                 .applicationBody(toApplyClub.getFormBody())
-                .applicationStatus(applicationStatus)
+                .applicationStatus(toApplyClub.getStatus())
                 .clubId(toApplyClub.getClubId())
                 .submitDate(LocalDateTime.now())
                 .build();
