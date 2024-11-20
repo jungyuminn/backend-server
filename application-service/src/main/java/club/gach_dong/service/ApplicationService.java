@@ -167,12 +167,19 @@ public class ApplicationService {
             }
         }
 
+        String applicationStatus = null;
+        if (!Objects.equals(toApplyClub.getStatus(), "TEMPORARY_SAVED")) {
+            applicationStatus = serviceMeshService.getFirstStatus(toApplyClub.getClubId(), recruitmentId);
+        } else {
+            applicationStatus = toApplyClub.getStatus();
+        }
+
         Application application = Application.builder()
                 .userId(userId)
                 .recruitmentId(recruitmentId)
                 .applicationFormId(toApplyClub.getApplicationFormId())
                 .applicationBody(toApplyClub.getFormBody())
-                .applicationStatus(toApplyClub.getStatus())
+                .applicationStatus(applicationStatus)
                 .clubId(toApplyClub.getClubId())
                 .submitDate(LocalDateTime.now())
                 .build();
@@ -213,7 +220,7 @@ public class ApplicationService {
         }
 
         //If application couldn't be deleted.
-        if (Objects.equals(application.getApplicationStatus(), "SAVED")) {
+        if (!Objects.equals(application.getApplicationStatus(), "TEMPORARY_SAVED")) {
             throw new ApplicationNotChangeableException();
         }
 
@@ -280,8 +287,7 @@ public class ApplicationService {
         authorizationService.getAuthByUserIdAndApplyId(userId, recruitmentId);
 
         List<Application> applicationList = applicationRepository.findAllByRecruitmentIdAndApplicationStatus(
-                recruitmentId,
-                "SAVED");
+                recruitmentId);
 
         if (applicationList.isEmpty()) {
             return ApplicationResponseDTO.ToGetApplicationListAdminDTO.builder()

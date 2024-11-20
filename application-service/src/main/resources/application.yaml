@@ -44,5 +44,6 @@ spring:
 msa:
   url:
     club: ${CLUB_URL}
+    clubPublic: ${CLUB_PUBLIC_URL}
     userDetail: ${USER_DETAIL_URL}
 
