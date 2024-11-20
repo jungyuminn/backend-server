@@ -103,7 +103,7 @@ public class ClubAdminController implements ClubAdminApiSpecification {
 
     @Override
     public ResponseEntity<AutorizeAdminResponse> authorizeAdmin(String userReferenceId, Long clubId) {
-        clubReadService.authorizeAdmin(userReferenceId, clubId);
+        clubService.authorizeAdmin(userReferenceId, clubId);
         return new ResponseEntity<>(new AutorizeAdminResponse(), HttpStatus.OK);
     }
 

@@ -164,16 +164,6 @@ public class ClubReadService {
                 .orElse(false);
     }
 
-    public void authorizeAdmin(String userReferenceId, Long clubId) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(ClubNotFoundException::new);
-
-        ClubAdmin clubAdmin = ClubAdmin.createMember(userReferenceId, club);
-
-        club.addAdminMember(clubAdmin);
-        clubRepository.save(club);
-    }
-
     public List<AdminAuthorizedClubResponse> getAuthorizedClubs(String userReferenceId) {
         List<Club> clubs = clubRepository.findAll();
 

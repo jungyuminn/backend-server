@@ -45,6 +45,16 @@ public class ClubService {
         return ClubResponse.of(savedClub);
     }
 
+    public void authorizeAdmin(String userReferenceId, Long clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(ClubNotFoundException::new);
+
+        ClubAdmin clubAdmin = ClubAdmin.createMember(userReferenceId, club);
+
+        club.addAdminMember(clubAdmin);
+        clubRepository.save(club);
+    }
+
     @AdminAuthorizationCheck(role = {ClubAdminRole.PRESIDENT, ClubAdminRole.MEMBER})
     public CreateClubActivityResponse createClubActivity(
             String userReferenceId,
