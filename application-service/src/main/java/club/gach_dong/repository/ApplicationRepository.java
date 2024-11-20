@@ -20,7 +20,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Query("UPDATE application a SET a.applicationStatus = :status WHERE a = :application")
     void updateApplicationStatus(@Param("status") String status, @Param("application") Application application);
 
-    List<Application> findAllByRecruitmentIdAndApplicationStatus(Long recruitmentId, String status);
+    @Query("SELECT a FROM application a WHERE a.recruitmentId = :recruitmentId AND a.applicationStatus NOT IN ('TEMPORARY_SAVED')")
+    List<Application> findAllByRecruitmentIdAndApplicationStatus(@Param("recruitmentId") Long recruitmentId);
 
     Optional<Application> findByRecruitmentIdAndApplicationStatusAndUserId(Long recruitmentId, String status,
                                                                            String userId);
