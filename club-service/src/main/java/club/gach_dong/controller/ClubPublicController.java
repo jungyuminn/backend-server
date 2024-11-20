@@ -60,6 +60,11 @@ public class ClubPublicController implements ClubPublicApiSpecification {
     }
 
     @Override
+    public ClubRecruitmentDetailResponse getClubRecruitmentsInService(Long clubId, Long recruitmentId) {
+        return clubReadService.getClubRecruitmentInService(clubId, recruitmentId);
+    }
+
+    @Override
     public ClubRecruitmentDetailResponse getClubRecruitment(Long clubId, Long recruitmentId, HttpServletRequest request, HttpServletResponse response) {
         LocalDateTime currentTime = LocalDateTime.now();
         return clubReadService.getClubRecruitment(clubId, recruitmentId, request, response, currentTime);

@@ -79,6 +79,18 @@ public interface ClubPublicApiSpecification {
     );
 
     @Operation(
+            summary = "동아리 별 모집 공고 조회 (내부 서비스 용)",
+            description = "특정 동아리의 모집 공고를 조회합니다."
+    )
+    @GetMapping("/inner-service/{clubId}/recruitments/{recruitmentId}")
+    ClubRecruitmentDetailResponse getClubRecruitmentsInService(
+            @Parameter(description = "동아리 ID", example = "1", required = true)
+            @PathVariable Long clubId,
+            @Parameter(description = "모집 공고 ID", example = "1", required = true)
+            @PathVariable Long recruitmentId
+    );
+
+    @Operation(
             summary = "특정 동아리 모집 공고 상세 조회",
             description = "특정 동아리의 특정 모집 공고를 조회합니다."
     )

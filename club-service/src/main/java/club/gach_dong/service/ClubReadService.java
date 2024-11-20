@@ -125,6 +125,20 @@ public class ClubReadService {
         return ClubRecruitmentDetailResponse.from(club, recruitment, recruitmentStatus);
     }
 
+    public ClubRecruitmentDetailResponse getClubRecruitmentInService(Long clubId, Long recruitmentId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(ClubNotFoundException::new);
+
+        Recruitment recruitment = club.getRecruitment().stream()
+                .filter(r -> r.getId().equals(recruitmentId))
+                .findFirst()
+                .orElseThrow(RecruitmentNotFoundException::new);
+
+        RecruitmentStatus recruitmentStatus = updateStatusBasedOnTime(LocalDateTime.now(), recruitment.getEndDate());
+
+        return ClubRecruitmentDetailResponse.from(club, recruitment, recruitmentStatus);
+    }
+
     public Boolean hasAuthority(String userReferenceId, Long clubId) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(ClubNotFoundException::new);
