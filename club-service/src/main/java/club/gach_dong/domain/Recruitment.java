@@ -37,7 +37,7 @@ public class Recruitment {
 
     @Column(name = "recruitment_status", nullable = false)
     @Schema(description = "모집 상태", example = "true")
-    private boolean recruitmentStatus = true;
+    private RecruitmentStatus recruitmentStatus = RecruitmentStatus.RECRUITING;
 
     @Column(name = "recruitment_count", nullable = false)
     @Schema(description = "모집 인원", example = "10")
@@ -61,6 +61,10 @@ public class Recruitment {
             "}")
     private Map<String, Object> processData;
 
+    @Column(name = "view_count", nullable = false)
+    @Schema(description = "조회수", example = "0")
+    private int viewCount = 0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id")
     private Club club;
@@ -79,5 +83,9 @@ public class Recruitment {
 
     public Boolean isRecruiting(LocalDateTime currentDateTime) {
         return currentDateTime.isBefore(this.endDate);
+    }
+
+    public void incrementViewCount() {
+        this.viewCount++;
     }
 }

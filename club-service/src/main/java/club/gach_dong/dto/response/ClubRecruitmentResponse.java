@@ -3,6 +3,7 @@ package club.gach_dong.dto.response;
 import club.gach_dong.domain.Club;
 import club.gach_dong.domain.ClubCategory;
 import club.gach_dong.domain.Recruitment;
+import club.gach_dong.domain.RecruitmentStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -16,6 +17,10 @@ public record ClubRecruitmentResponse(
         @NotNull
         Long recruitmentId,
 
+        @Schema(description = "조회수", example = "1")
+        @NotNull
+        int viewCount,
+
         @Schema(description = "모집공고 이름", example = "GDSC Gachon 24-25 Member 모집")
         @NotNull
         String title,
@@ -24,6 +29,9 @@ public record ClubRecruitmentResponse(
         @NotNull
         String clubName,
 
+        @Schema(description = "모집 상태", example = "RECRUITING")
+        @NotNull
+        RecruitmentStatus recruitmentStatus,
 
         @Schema(description = "동아리 이미지 URL", example = "https://gach-dong.club")
         @NotNull
@@ -46,12 +54,14 @@ public record ClubRecruitmentResponse(
         ClubCategory category
 
 ) {
-    public static ClubRecruitmentResponse from(Club club, Recruitment recruitment) {
+    public static ClubRecruitmentResponse from(Club club, Recruitment recruitment, RecruitmentStatus recruitmentStatus) {
         return new ClubRecruitmentResponse(
                 club.getId(),
                 recruitment.getId(),
+                recruitment.getViewCount(),
                 recruitment.getTitle(),
                 club.getName(),
+                recruitmentStatus,
                 club.getClubImageUrl(),
                 recruitment.getApplicationFormId(),
                 recruitment.getStartDate(),

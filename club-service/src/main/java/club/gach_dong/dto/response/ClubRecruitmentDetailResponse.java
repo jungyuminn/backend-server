@@ -2,6 +2,7 @@ package club.gach_dong.dto.response;
 
 import club.gach_dong.domain.Club;
 import club.gach_dong.domain.Recruitment;
+import club.gach_dong.domain.RecruitmentStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +16,9 @@ public record ClubRecruitmentDetailResponse(
         @Schema(description = "모집 ID", example = "1")
         @NotNull
         Long recruitmentId,
+        @Schema(description = "모집공고 조회수", example = "1")
+        @NotNull
+        int viewCount,
         @Schema(description = "모집공고 이름", example = "GDSC Gachon 24-25 Member 모집")
         @NotNull
         String title,
@@ -29,7 +33,7 @@ public record ClubRecruitmentDetailResponse(
         Long applicationFormId,
         @Schema(description = "모집 상태", example = "true")
         @NotNull
-        boolean recruitmentStatus,
+        RecruitmentStatus recruitmentStatus,
         @Schema(description = "모집 프로세스 설정", example = "{\n" +
                 "  \"process1\": \"서류 심사\",\n" +
                 "  \"process2\": \"1차 면접\",\n" +
@@ -46,15 +50,16 @@ public record ClubRecruitmentDetailResponse(
         @NotNull
         LocalDateTime endDate
 ) {
-    public static ClubRecruitmentDetailResponse from(Club club, Recruitment recruitment) {
+    public static ClubRecruitmentDetailResponse from(Club club, Recruitment recruitment, RecruitmentStatus recruitmentStatus) {
         return new ClubRecruitmentDetailResponse(
                 club.getId(),
                 recruitment.getId(),
+                recruitment.getViewCount(),
                 recruitment.getTitle(),
                 recruitment.getContent(),
                 recruitment.getRecruitmentCount(),
                 recruitment.getApplicationFormId(),
-                recruitment.isRecruitmentStatus(),
+                recruitmentStatus,
                 recruitment.getProcessData(),
                 recruitment.getStartDate(),
                 recruitment.getEndDate()
