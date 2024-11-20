@@ -40,7 +40,7 @@ public class AdminService {
         }
 
         Long clubId = existingCode.getClubId();
-        String url = clubServiceUrl + "/api/v1/authorize-admin";
+        String url = clubServiceUrl + "/admin/api/v1/authorize-admin";
 
         AuthorizeAdminRequest request = new AuthorizeAdminRequest(clubId, userReferenceId);
 
