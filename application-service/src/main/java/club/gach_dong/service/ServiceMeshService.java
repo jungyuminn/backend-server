@@ -58,7 +58,7 @@ public class ServiceMeshService {
     public String getFirstStatus(Long clubId, Long recruitmentId) {
 
         String uri = UriComponentsBuilder.fromHttpUrl(clubPublicUrl)
-                .path("/{clubId}/recruitments/{recruitmentId}")
+                .path("/inner-service/{clubId}/recruitments/{recruitmentId}")
                 .buildAndExpand(clubId, recruitmentId)
                 .toUriString();
         try {
