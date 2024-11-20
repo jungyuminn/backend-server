@@ -2,13 +2,16 @@ package club.gach_dong.service;
 
 import static club.gach_dong.exception.ClubException.*;
 
+import club.gach_dong.annotation.AdminAuthorizationCheck;
 import club.gach_dong.domain.Activity;
 import club.gach_dong.domain.Club;
 import club.gach_dong.domain.ClubAdmin;
+import club.gach_dong.domain.ClubAdminRole;
 import club.gach_dong.domain.ContactInfo;
 import club.gach_dong.domain.Recruitment;
 import club.gach_dong.domain.RecruitmentStatus;
 import club.gach_dong.dto.response.AdminAuthorizedClubResponse;
+import club.gach_dong.dto.response.AdminInfoResponse;
 import club.gach_dong.dto.response.ClubActivityResponse;
 import club.gach_dong.dto.response.ClubContactInfoResponse;
 import club.gach_dong.dto.response.ClubRecruitmentDetailResponse;
@@ -190,6 +193,18 @@ public class ClubReadService {
                         .map(admin -> AdminAuthorizedClubResponse.from(club, admin))
                         .orElse(null))
                 .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    @AdminAuthorizationCheck(role = {ClubAdminRole.PRESIDENT, ClubAdminRole.MEMBER})
+    public List<AdminInfoResponse> getAdmins(String userReferenceId, Long clubId) {
+        Club club = clubRepository.findByIdWithAdmins(clubId)
+                .orElseThrow(ClubNotFoundException::new);
+
+        List <ClubAdmin> admins = club.getAdmins();
+
+        return admins.stream()
+                .map(AdminInfoResponse::from)
                 .collect(Collectors.toList());
     }
 

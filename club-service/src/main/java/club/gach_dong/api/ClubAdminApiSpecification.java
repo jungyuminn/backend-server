@@ -9,6 +9,7 @@ import club.gach_dong.dto.request.UpdateClubActivityRequest;
 import club.gach_dong.dto.request.UpdateClubRequest;
 import club.gach_dong.dto.request.UpdateContactInfoRequest;
 import club.gach_dong.dto.response.AdminAuthorizedClubResponse;
+import club.gach_dong.dto.response.AdminInfoResponse;
 import club.gach_dong.dto.response.ArrayResponse;
 import club.gach_dong.dto.response.AutorizeAdminResponse;
 import club.gach_dong.dto.response.ContactInfoResponse;
@@ -193,5 +194,18 @@ public interface ClubAdminApiSpecification {
             @Valid
             @RequestBody
             UpdateClubActivityRequest updateClubActivityRequest
+    );
+    
+    @Operation(
+            summary = "동아리 관리자 조회",
+            description = "동아리 관리자를 조회합니다.",
+            security = @SecurityRequirement(name = "Authorization")
+    )
+    @GetMapping("/{clubId}/admins")
+    ArrayResponse<AdminInfoResponse> getAdmins(
+            @RequestUserReferenceId
+            String userReferenceId,
+            @PathVariable("clubId")
+            Long clubId
     );
 }
