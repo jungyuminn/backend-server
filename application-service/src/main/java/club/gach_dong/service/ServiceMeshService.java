@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -27,6 +29,8 @@ public class ServiceMeshService {
     private String clubPublicUrl;
 
     public final RestClient restClient;
+
+    private static final Logger logger = LogManager.getLogger(ServiceMeshService.class);
 
     public List<AuthResponseDTO.getUserProfile> getUserProfiles(List<String> userIds) {
         String uri = UriComponentsBuilder.fromHttpUrl(userDetailUrl)
@@ -70,13 +74,14 @@ public class ServiceMeshService {
 
             ClubResponseDTO.RecruitmentResponseDto responseBody = responseEntity.getBody();
             if (responseBody != null && responseBody.getProcessData() != null) {
-                return responseBody.getProcessData().get("process1");
+                return (String) responseBody.getProcessData().get("process1");
             }
 
             throw new ClubException.ClubCommunicateFailedException();
 
         } catch (RestClientException e) {
             System.err.println("REST 클라이언트 오류 발생: " + e.getMessage());
+            logger.error("RestClientException");
             throw new ClubException.ClubAdminCommunicateFailedException();
 //            return false;
         } catch (Exception e) {
