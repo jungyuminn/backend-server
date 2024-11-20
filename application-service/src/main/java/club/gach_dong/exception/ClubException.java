@@ -15,4 +15,10 @@ public class ClubException {
             super(ErrorCode.CLUB_UNABLE_TO_REQUEST);
         }
     }
+
+    public static class ClubCommunicateFailedException extends DomainException {
+        public ClubCommunicateFailedException() {
+            super(ErrorCode.CLUB_UNABLE_TO_REQUEST);
+        }
+    }
 }

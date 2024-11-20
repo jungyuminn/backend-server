@@ -19,6 +19,8 @@ public enum ErrorCode {
     CLUB_UNAUTHORIZED("CLUBADMIN401", "인증이 필요합니다."),
     CLUB_UNABLE_TO_REQUEST("CLUBADMIN402", "클럽 서비스의 인증 요청이 실패했습니다."),
 
+    CLUB_UNABLE_TO_GET_PROCESS("CLUB401", "클럽 서비스의 신청 절차(Process)를 불러오는데 실패했습니다."),
+
     USER_NOT_FOUND("USER401", "사용자 ID를 찾을 수 없습니다."),
 
     APPLICATION_FORM_NOT_FOUND("APPLICATIONFORM401", "ApplicationForm이 없습니다."),

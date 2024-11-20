@@ -1,6 +1,8 @@
 package club.gach_dong.service;
 
 import club.gach_dong.dto.response.AuthResponseDTO;
+import club.gach_dong.dto.response.ClubResponseDTO;
+import club.gach_dong.exception.ClubException;
 import club.gach_dong.exception.UserException;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
@@ -19,6 +22,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ServiceMeshService {
     @Value("${msa.url.userDetail}")
     private String userDetailUrl;
+
+    @Value("${msa.url.clubPublic}")
+    private String clubPublicUrl;
 
     public final RestClient restClient;
 
@@ -46,6 +52,37 @@ public class ServiceMeshService {
         } catch (Exception e) {
             System.err.println("예상치 못한 오류 발생: " + e.getMessage());
             throw new UserException.UserNotFound();
+        }
+    }
+
+    public String getFirstStatus(Long clubId, Long recruitmentId) {
+
+        String uri = UriComponentsBuilder.fromHttpUrl(clubPublicUrl)
+                .path("/{clubId}/recruitments/{recruitmentId}")
+                .buildAndExpand(clubId, recruitmentId)
+                .toUriString();
+        try {
+            ResponseEntity<ClubResponseDTO.RecruitmentResponseDto> responseEntity = restClient.get()
+                    .uri(uri)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .toEntity(ClubResponseDTO.RecruitmentResponseDto.class);
+
+            ClubResponseDTO.RecruitmentResponseDto responseBody = responseEntity.getBody();
+            if (responseBody != null && responseBody.getProcessData() != null) {
+                return responseBody.getProcessData().get("process1");
+            }
+
+            throw new ClubException.ClubCommunicateFailedException();
+
+        } catch (RestClientException e) {
+            System.err.println("REST 클라이언트 오류 발생: " + e.getMessage());
+            throw new ClubException.ClubAdminCommunicateFailedException();
+//            return false;
+        } catch (Exception e) {
+            System.err.println("예상치 못한 오류 발생: " + e.getMessage());
+            throw new ClubException.ClubAdminCommunicateFailedException();
+//            return false;
         }
     }
 }
