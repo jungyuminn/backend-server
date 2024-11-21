@@ -43,9 +43,9 @@ public class AdminService {
         String url = clubServiceUrl + "/admin/api/v1/authorize-admin";
 
         try {
-            ResponseEntity<Boolean> response = restTemplate.postForEntity(url, clubId, Boolean.class);
+            ResponseEntity<Void> response = restTemplate.postForEntity(url, clubId, Void.class);
 
-            if (!response.getStatusCode().is2xxSuccessful() || Boolean.FALSE.equals(response.getBody())) {
+            if (!response.getStatusCode().is2xxSuccessful()) {
                 throw new IllegalArgumentException("동아리 관리자 권한 부여 실패");
             }
 
